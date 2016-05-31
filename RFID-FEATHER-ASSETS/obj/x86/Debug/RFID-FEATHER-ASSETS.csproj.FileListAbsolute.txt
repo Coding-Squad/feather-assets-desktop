@@ -57,3 +57,15 @@ C:\Users\USER\Desktop\Git\RFID-FEATHER-ASSETS\RFID-FEATHER-ASSETS\obj\x86\Debug\
 C:\Users\USER\Desktop\Git\RFID-FEATHER-ASSETS\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.RegisterUser.resources
 C:\Users\USER\Desktop\Git\RFID-FEATHER-ASSETS\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.Properties.Resources.resources
 C:\Users\USER\Desktop\Git\RFID-FEATHER-ASSETS\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID-FEATHER-ASSETS.csproj.GenerateResource.Cache
+C:\Users\USER\Desktop\Git\Tentative-Desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID-FEATHER-ASSETS.exe
+C:\Users\USER\Desktop\Git\Tentative-Desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID-FEATHER-ASSETS.pdb
+C:\Users\USER\Desktop\Git\Tentative-Desktop\RFID-FEATHER-ASSETS\bin\Debug\RFID-FEATHER-ASSETS.exe
+C:\Users\USER\Desktop\Git\Tentative-Desktop\RFID-FEATHER-ASSETS\bin\Debug\RFID-FEATHER-ASSETS.pdb
+C:\Users\USER\Desktop\Git\Tentative-Desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID-FEATHER-ASSETS.csprojResolveAssemblyReference.cache
+C:\Users\USER\Desktop\Git\Tentative-Desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.LoginActivity.resources
+C:\Users\USER\Desktop\Git\Tentative-Desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.Verification.resources
+C:\Users\USER\Desktop\Git\Tentative-Desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.AssetRegistration.resources
+C:\Users\USER\Desktop\Git\Tentative-Desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.MainMenu.resources
+C:\Users\USER\Desktop\Git\Tentative-Desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.RegisterUser.resources
+C:\Users\USER\Desktop\Git\Tentative-Desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.Properties.Resources.resources
+C:\Users\USER\Desktop\Git\Tentative-Desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID-FEATHER-ASSETS.csproj.GenerateResource.Cache

@@ -81,7 +81,6 @@
             this.label4.Size = new System.Drawing.Size(82, 28);
             this.label4.TabIndex = 3;
             this.label4.Text = "Position:";
-            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // label5
             // 
@@ -92,15 +91,13 @@
             this.label5.Size = new System.Drawing.Size(109, 28);
             this.label5.TabIndex = 4;
             this.label5.Text = "Last Name: ";
-            this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // firstName
             // 
             this.firstName.Location = new System.Drawing.Point(112, 19);
             this.firstName.Name = "firstName";
             this.firstName.Size = new System.Drawing.Size(159, 20);
-            this.firstName.TabIndex = 5;
-            this.firstName.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.firstName.TabIndex = 1;
             // 
             // description
             // 
@@ -108,28 +105,28 @@
             this.description.Multiline = true;
             this.description.Name = "description";
             this.description.Size = new System.Drawing.Size(159, 39);
-            this.description.TabIndex = 6;
+            this.description.TabIndex = 4;
             // 
             // position
             // 
             this.position.Location = new System.Drawing.Point(112, 94);
             this.position.Name = "position";
             this.position.Size = new System.Drawing.Size(159, 20);
-            this.position.TabIndex = 7;
+            this.position.TabIndex = 3;
             // 
             // lastName
             // 
             this.lastName.Location = new System.Drawing.Point(112, 54);
             this.lastName.Name = "lastName";
             this.lastName.Size = new System.Drawing.Size(159, 20);
-            this.lastName.TabIndex = 8;
+            this.lastName.TabIndex = 2;
             // 
             // email
             // 
             this.email.Location = new System.Drawing.Point(113, 191);
             this.email.Name = "email";
             this.email.Size = new System.Drawing.Size(159, 20);
-            this.email.TabIndex = 9;
+            this.email.TabIndex = 5;
             // 
             // button2
             // 
@@ -138,7 +135,7 @@
             this.button2.Location = new System.Drawing.Point(200, 238);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(81, 41);
-            this.button2.TabIndex = 11;
+            this.button2.TabIndex = 7;
             this.button2.Text = "Cancel";
             this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.button2_Click);
@@ -150,7 +147,7 @@
             this.button1.Location = new System.Drawing.Point(112, 238);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(82, 41);
-            this.button1.TabIndex = 10;
+            this.button1.TabIndex = 6;
             this.button1.Text = "Submit";
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -176,7 +173,6 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "RegisterUser";
             this.Text = "User Registration";
-            this.Load += new System.EventHandler(this.RegisterUser_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -14,15 +14,18 @@ namespace RFID_FEATHER_ASSETS
     public partial class LoginActivity : Form
     {
         string connectionString = "server=128.199.83.107;port=3306;uid=root;pwd=aws123;database=feather_assets;";
+
         public LoginActivity()
         {
             InitializeComponent();
         }
+
         private void ClearFields()
         {
             userName.Text = string.Empty;
             passWord.Text = string.Empty;
         }
+
         private void button1_Click(object sender, EventArgs e)
         {
             {
@@ -63,5 +66,18 @@ namespace RFID_FEATHER_ASSETS
                 }
             }
         }
-    }
+
+        private void passWord_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyValue == 13)
+                {
+                    button1_Click(sender, e);
+                }
+          }
+
+        private void LoginActivity_Load(object sender, EventArgs e)
+        {
+           
+        }
+     }
 }

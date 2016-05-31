@@ -54,23 +54,6 @@ namespace RFID_FEATHER_ASSETS
 
         private void Verification_Load(object sender, EventArgs e)
         {
-            ////RFID Compare & Verify
-            //string constring = "datasource=128.199.83.107;port=3306;Database=feather_assets;username=root;password=aws123";
-            //string Query = "select * from asset WHERE rfid_tag = ";
-            //MySqlConnection conn = new MySqlConnection(constring);
-            //MySqlCommand command = new MySqlCommand(Query, conn);
-            //MySqlDataReader myReader = command.ExecuteReader();
-          
-                
-            //    while (myReader.Read())
-            //    {
-            //        txtAssetName.Text = (myReader["name"].ToString());
-            //        txtAssetOwner.Text = (myReader["description"].ToString());
-            //        txtTakeOutAvailability.Text = (myReader["take_out_allowed"].ToString());
-            //        txtTakeOutNote.Text = (myReader["take_out_info"].ToString());
-
-            //    }
-            //    myReader.Close();
             ClearTimer.Interval = 7000;
             VerifyTimer.Interval = 7000;
 
@@ -81,9 +64,7 @@ namespace RFID_FEATHER_ASSETS
                 reader.AnalyCallback = AnalyData;
                 reader.ReceiveCallback = ReceiveData;
                 reader.SendCallback = SendData;
-                ////BaudBox.SelectedIndex = 1;
                 auto_connect();
-                ////countRecords();
             }
             catch (Exception ex)
             {
@@ -96,7 +77,6 @@ namespace RFID_FEATHER_ASSETS
         {
             int nReturnValue = 0;
             string tagInfo = "";
-            //listBox1.Items.Clear();
 
             nReturnValue = realTimeInventory(255, 255, 1);  //Public address reader , fast inventory mode , 5 seconds timeout control
 

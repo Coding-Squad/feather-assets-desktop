@@ -14,16 +14,13 @@ namespace RFID_FEATHER_ASSETS
     public partial class RegisterUser : Form
     {
         string connectionString = "server=128.199.83.107;port=3306;uid=root;pwd=aws123;database=feather_assets;";
+
         public RegisterUser()
         {
             InitializeComponent();
 
         }
 
-        private void label5_Click(object sender, EventArgs e)
-        {
-
-        }
         private void ClearFields()
         {
             firstName.Text = string.Empty;
@@ -31,7 +28,6 @@ namespace RFID_FEATHER_ASSETS
             position.Text = string.Empty;
             description.Text = string.Empty;
             email.Text = string.Empty;
-
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -39,25 +35,10 @@ namespace RFID_FEATHER_ASSETS
             this.Close();
         }
 
-        private void RegisterUser_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             string password = "aws123";
-            string authorities = "guard";
+            string authorities = "User";
             DateTime created_at = DateTime.Now;
             DateTime updated_at = DateTime.Now;
             DateTime deleted_at = DateTime.Now;
@@ -68,7 +49,6 @@ namespace RFID_FEATHER_ASSETS
                     MessageBox.Show("Complete information is required.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
                     return;
                 }
-
                 MySqlConnection con = new MySqlConnection(connectionString);
                 con.Open();
                 MySqlCommand cmd = new MySqlCommand("insert into user(company_id,first_name,last_name,position,description,email,password,authorities,created_at,updated_at) values (@company_id,@first_name, @last_name, @position, @description, @email,@password,@authorities,@created_at,@updated_at)", con);

@@ -49,6 +49,7 @@
             this.passWord.PasswordChar = '*';
             this.passWord.Size = new System.Drawing.Size(144, 20);
             this.passWord.TabIndex = 1;
+            this.passWord.KeyDown += new System.Windows.Forms.KeyEventHandler(this.passWord_KeyDown);
             // 
             // label1
             // 
@@ -97,6 +98,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "LoginActivity";
             this.Text = "Feather Assets";
+            this.Load += new System.EventHandler(this.LoginActivity_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

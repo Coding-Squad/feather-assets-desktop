@@ -49,6 +49,7 @@ namespace RFID_FEATHER_ASSETS
                 registerAsset.Show();
             } 
         }
+
         private void button4_Click(object sender, EventArgs e)
         {
             RegisterUser registerUser = new RegisterUser();
@@ -58,6 +59,11 @@ namespace RFID_FEATHER_ASSETS
         private void MainMenu_FormClosed(object sender, FormClosedEventArgs e)
         {
             Environment.Exit(0);
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
