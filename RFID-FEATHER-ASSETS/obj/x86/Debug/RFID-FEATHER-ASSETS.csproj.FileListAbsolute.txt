@@ -70,8 +70,6 @@ C:\Users\USER\Desktop\Git\Tentative-Desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RF
 C:\Users\USER\Desktop\Git\Tentative-Desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.Properties.Resources.resources
 C:\Users\USER\Desktop\Git\Tentative-Desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID-FEATHER-ASSETS.csproj.GenerateResource.Cache
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID-FEATHER-ASSETS.csprojResolveAssemblyReference.cache
-C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.LoginInfo.resources
-C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.Asset.resources
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.MainMenu.resources
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.RegisterUser.resources
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.Properties.Resources.resources
@@ -128,4 +126,6 @@ C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\bin\Debug\zh-Hant\System.Spatial.resources.dll
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID-FEATHER-ASSETS.exe
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID-FEATHER-ASSETS.pdb
-C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.VerifyRequest.resources
+C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.LoginActivity.resources
+C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.Verification.resources
+C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.AssetRegistration.resources

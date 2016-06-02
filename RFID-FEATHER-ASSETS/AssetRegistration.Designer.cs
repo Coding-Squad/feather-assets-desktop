@@ -88,7 +88,7 @@
             this.txtAssetName.Name = "txtAssetName";
             this.txtAssetName.Size = new System.Drawing.Size(259, 21);
             this.txtAssetName.TabIndex = 3;
-            this.txtAssetName.TextChanged += new System.EventHandler(this.txtAssetName_TextChanged);
+            //this.txtAssetName.TextChanged += new System.EventHandler(this.txtAssetName_TextChanged);
             // 
             // label3
             // 
@@ -153,7 +153,7 @@
             this.txtTakeOutNote.Name = "txtTakeOutNote";
             this.txtTakeOutNote.Size = new System.Drawing.Size(258, 68);
             this.txtTakeOutNote.TabIndex = 7;
-            this.txtTakeOutNote.TextChanged += new System.EventHandler(this.txtTakeOutNote_TextChanged);
+            //this.txtTakeOutNote.TextChanged += new System.EventHandler(this.txttakeOutNote_TextChanged);
             // 
             // txtDescription
             // 
@@ -164,7 +164,7 @@
             this.txtDescription.Name = "txtDescription";
             this.txtDescription.Size = new System.Drawing.Size(259, 22);
             this.txtDescription.TabIndex = 4;
-            this.txtDescription.TextChanged += new System.EventHandler(this.txtDescription_TextChanged);
+            //this.txtDescription.TextChanged += new System.EventHandler(this.txtdescription_TextChanged);
             // 
             // btnSubmit
             // 

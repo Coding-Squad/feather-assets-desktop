@@ -17,71 +17,6 @@ using RestSharp.Deserializers;
 
 namespace RFID_FEATHER_ASSETS
 {
-    public class VerifyRequest
-    {
-        public int companyId
-        {
-            get;
-            set;
-        }
-
-        public string tag
-        {
-            get;
-            set;
-        }
-
-        public int tagType
-        {
-            get;
-            set;
-        }
-    }
-
-    public class verifyResult
-    {
-        public string name
-        {
-            get;
-            set;
-        }
-
-        public string description
-        {
-            get;
-            set;
-        }
-
-        public string imageUrls
-        {
-            get;
-            set;
-        }
-
-        public bool takOutAllowed
-        {
-            get;
-            set;
-        }
-
-        public string takeOutInfo
-        {
-            get;
-            set;
-        }
-
-        public string result
-        {
-            get;
-            set;
-        }
-
-        public string message
-        {
-            get;
-            set;
-        }
-    }
     public partial class Verification : Form
     {
         string connectionString = "server=128.199.83.107;port=3306;uid=root;pwd=aws123;database=feather_assets;";
@@ -95,11 +30,13 @@ namespace RFID_FEATHER_ASSETS
         string portname; //= "COM3";
         string baudrate = "115200";
         bool IsPortError = false;
+        string tokenvalue;
 
-        public Verification(string portnamesource)
+        public Verification(string tokenvaluesource, string portnamesource)
         {
             InitializeComponent();
             portname = portnamesource;
+            tokenvalue = tokenvaluesource;
         }
 
         private void auto_connect()
@@ -197,7 +134,7 @@ namespace RFID_FEATHER_ASSETS
             //initialize web service
             RestClient client = new RestClient("http://feather-assets.herokuapp.com/");
             RestRequest verify = new RestRequest("/api/asset/verify", Method.POST);
-            var authToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1ZGllbmNlIjoidW5rbm93biIsImNyZWF0ZWQiOjE0NjQ4NTExNDQ1NzQsImV4cCI6MTQ2NTQ1NTk0NH0.xKPl5zGiSzNO_EyX2nTYH471XrSCrIqiMlwsbMkoVp66Giq2tqoeDkPdWQNqxn7OB7KLjCcC1CWljDQ8KmxzFQ";
+            var authToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1ZGllbmNlIjoidW5rbm93biIsImNyZWF0ZWQiOjE0NjQ4NTY4NTcyMjAsImV4cCI6MTQ2NTQ2MTY1N30.xV5hCGm3EQ0qJANsIfkuZJofKBsZGr9A6uKviTTW5mpfb3g5CBXN3cDizXJpYpcXlIAvIU5ihxsPjhh_aHvcIg";
 
             verify.AddHeader("X-Auth-Token", authToken);
             verify.AddHeader("Content-Type", "application/json; charset=utf-8");
@@ -212,34 +149,40 @@ namespace RFID_FEATHER_ASSETS
             
             if (response.StatusCode == HttpStatusCode.OK)
             {
-
+                
                 //deserialize JSON -> Object
                 JsonDeserializer deserial = new JsonDeserializer();
-                verifyResult verifyResult = deserial.Deserialize<verifyResult>(response);
-
-                txtAssetName.Text = verifyResult.name;
-                txtOwnerName.Text = verifyResult.description;
-                ////txtTakeOutAvailability.Text = (rd["take_out_allowed"].ToString());
-                if (Boolean.Parse(verifyResult.takOutAllowed.ToString()))
+                VerifyResult verifyResult = deserial.Deserialize<VerifyResult>(response);
+                if (verifyResult.result == "OK")
                 {
-                    txtTakeOutAvailability.Text = "Allowed to take-out.";
+                    txtAssetName.Text = verifyResult.name;
+                    txtOwnerName.Text = verifyResult.description;
+                    ////txtTakeOutAvailability.Text = (rd["take_out_allowed"].ToString());
+                    if (Boolean.Parse(verifyResult.takOutAllowed.ToString()))
+                    {
+                        txtTakeOutAvailability.Text = "Allowed to take-out.";
+                    }
+                    else
+                    {
+                        txtTakeOutAvailability.Text = "Not allowed to take-out.";
+                    }
+                    txtTakeOutNote.Text = verifyResult.takeOutInfo;
+
+                    if (File.Exists(verifyResult.imageUrls))
+                    {
+                        picOwner.Image = Image.FromFile(verifyResult.imageUrls);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Image not found for this path: " + verifyResult.imageUrls, "Asset Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        btnVerifyAsset.Focus();
+                        //rd.Close();
+                        return;
+                    }
                 }
                 else
                 {
-                    txtTakeOutAvailability.Text = "Not allowed to take-out.";
-                }
-                txtTakeOutNote.Text = verifyResult.takeOutInfo;
-
-                if (File.Exists(verifyResult.imageUrls))
-                {
-                    picOwner.Image = Image.FromFile(verifyResult.imageUrls);
-                }
-                else
-                {
-                    MessageBox.Show("Image not found for this path: " + verifyResult.imageUrls, "Asset Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    btnVerifyAsset.Focus();
-                    //rd.Close();
-                    return;
+                    MessageBox.Show(verifyResult.result + " " + verifyResult.message);
                 }
                 //test if response results are stored in object
 
@@ -550,7 +493,7 @@ namespace RFID_FEATHER_ASSETS
             {
                 this.Hide();
                 reader.CloseCom();
-                MainMenu MenuForm = new MainMenu(portname);
+                MainMenu MenuForm = new MainMenu(tokenvalue, portname);
                 MenuForm.Show();
             }
         }
@@ -566,7 +509,7 @@ namespace RFID_FEATHER_ASSETS
         {
             this.Hide();
             reader.CloseCom();
-            MainMenu MenuForm = new MainMenu(portname);
+            MainMenu MenuForm = new MainMenu(tokenvalue, portname);
             MenuForm.Show();
         }
 
@@ -574,9 +517,76 @@ namespace RFID_FEATHER_ASSETS
         {
             this.Hide();
             reader.CloseCom();
-            MainMenu MenuForm = new MainMenu(portname);
+            MainMenu MenuForm = new MainMenu(tokenvalue, portname);
             MenuForm.Show();
         }
+    }
+
+    public class VerifyRequest
+    {
+        public int companyId
+        {
+            get;
+            set;
+        }
+
+        public string tag
+        {
+            get;
+            set;
+        }
+
+        public int tagType
+        {
+            get;
+            set;
+        }
+    }
+
+    public class VerifyResult
+    {
+        public string name
+        {
+            get;
+            set;
+        }
+
+        public string description
+        {
+            get;
+            set;
+        }
+
+        public string imageUrls
+        {
+            get;
+            set;
+        }
+
+        public bool takOutAllowed
+        {
+            get;
+            set;
+        }
+
+        public string takeOutInfo
+        {
+            get;
+            set;
+        }
+
+        public string result
+        {
+            get;
+            set;
+        }
+
+        public string message
+        {
+            get;
+            set;
+        }
+
     }
 }
 

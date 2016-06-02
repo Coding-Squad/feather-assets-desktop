@@ -16,21 +16,100 @@ using Microsoft.Win32;
 
 namespace RFID_FEATHER_ASSETS
 {
-
-    /*public class UserLogin
+    public partial class LoginActivity : Form
     {
-        public string Token
+        //string connectionString = "server=128.199.83.107;port=3306;uid=root;pwd=aws123;database=feather_assets;";
+
+        public LoginActivity()
         {
-            get;
-            set;
+            InitializeComponent();           
         }
 
-        public string Secret
+        private void ClearFields()
         {
-            get;
-            set;
+            userName.Text = string.Empty;
+            passWord.Text = string.Empty;
         }
-    }*/
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            LoginInfo loginInfo = new LoginInfo();
+            //store information to object
+            loginInfo.email = userName.Text;
+            loginInfo.password = passWord.Text;
+
+            //initialize web service
+            RestClient client = new RestClient("http://feather-assets.herokuapp.com/");
+            RestRequest login = new RestRequest("/login", Method.POST);
+
+            //pass information to web service
+            login.AddHeader("Content-Type", "application/json; charset=utf-8");
+            login.RequestFormat = DataFormat.Json;          
+            login.AddBody(loginInfo);
+           
+            //retrieve response
+            IRestResponse response = client.Execute(login);
+            var content = response.Content;           
+
+            //check for errors
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                
+                //deserialize JSON -> Object
+                JsonDeserializer deserial = new JsonDeserializer();
+                LoginResult loginResult = deserial.Deserialize<LoginResult>(response);
+                
+                
+                //Registry.CurrentUser.DeleteSubKey("FeatherTraq", false);
+                //RegistryKey rk = Registry.CurrentUser.CreateSubKey("FeatherTraq");
+                //rk.SetValue("authenticationKey", loginResult.authenticationToken, RegistryValueKind.String);
+                    
+               
+                //Registry.SetValue("Login Result" , "authToken", loginResult.authenticationToken);
+                //Session["authToken"] = loginResult.authenticationToken;
+                //test if response results are stored in object
+                MessageBox.Show("" + loginResult.authenticationToken);
+
+                //go to main menu if result code OK
+                MainMenu MenuForm = new MainMenu(loginResult.authenticationToken,  string.Empty);
+                MenuForm.ShowDialog();
+                this.Hide();
+            }
+            else if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                MessageBox.Show("Error connecting to server.. please try again later");
+            }
+            else
+            {
+                HttpStatusCode statusCode = response.StatusCode;
+                int numericStatusCode = (int)statusCode;
+                //show error code
+                MessageBox.Show("Error" + numericStatusCode);
+            }
+            
+             
+        }
+
+        private void registryKeyHandler()
+        {
+            
+        }
+
+        private void passWord_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyValue == 13)
+                {
+                    button1_Click(sender, e);
+                }
+          }
+
+        private void LoginActivity_Load(object sender, EventArgs e)
+        {
+           
+        }
+     }
+
+    //Getters and Setters
 
     public class LoginInfo
     {
@@ -46,7 +125,7 @@ namespace RFID_FEATHER_ASSETS
             set;
         }
     }
-    
+
     public class LoginResult
     {
         public int companyId
@@ -91,97 +170,6 @@ namespace RFID_FEATHER_ASSETS
             set;
         }
 
-        
+
     }
-    public partial class LoginActivity : Form
-    {
-        //string connectionString = "server=128.199.83.107;port=3306;uid=root;pwd=aws123;database=feather_assets;";
-
-        public LoginActivity()
-        {
-            InitializeComponent();
-        }
-
-        private void ClearFields()
-        {
-            userName.Text = string.Empty;
-            passWord.Text = string.Empty;
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            LoginInfo loginInfo = new LoginInfo();
-            //store information to object
-            loginInfo.email = userName.Text;
-            loginInfo.password = passWord.Text;
-
-            //initialize web service
-            RestClient client = new RestClient("http://feather-assets.herokuapp.com/");
-            RestRequest login = new RestRequest("/login", Method.POST);
-
-            //pass information to web service
-            login.AddHeader("Content-Type", "application/json; charset=utf-8");
-            login.RequestFormat = DataFormat.Json;          
-            login.AddBody(loginInfo);
-           
-            //retrieve response
-            IRestResponse response = client.Execute(login);
-            var content = response.Content;           
-
-            //check for errors
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                
-                //deserialize JSON -> Object
-                JsonDeserializer deserial = new JsonDeserializer();
-                LoginResult loginResult = deserial.Deserialize<LoginResult>(response);
-                
-                //Registry.CurrentUser.DeleteSubKey("FeatherTraq", false);
-                //RegistryKey rk = Registry.CurrentUser.CreateSubKey("FeatherTraq");
-                //rk.SetValue("authenticationKey", loginResult.authenticationToken, RegistryValueKind.String);
-                    
-               
-                //Registry.SetValue("Login Result" , "authToken", loginResult.authenticationToken);
-                //Session["authToken"] = loginResult.authenticationToken;
-                //test if response results are stored in object
-                MessageBox.Show("" + loginResult.authenticationToken);
-
-                //go to main menu if result code OK
-                MainMenu MenuForm = new MainMenu(string.Empty);
-                MenuForm.ShowDialog();
-                this.Hide();
-            }
-            else if (response.StatusCode == HttpStatusCode.NotFound)
-            {
-                MessageBox.Show("Error connecting to server.. please try again later");
-            }
-            else
-            {
-                HttpStatusCode statusCode = response.StatusCode;
-                int numericStatusCode = (int)statusCode;
-                //show error code
-                MessageBox.Show("Error" + numericStatusCode);
-            }
-            
-             
-        }
-
-        private void registryKeyHandler()
-        {
-            
-        }
-
-        private void passWord_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyValue == 13)
-                {
-                    button1_Click(sender, e);
-                }
-          }
-
-        private void LoginActivity_Load(object sender, EventArgs e)
-        {
-           
-        }
-     }
 }

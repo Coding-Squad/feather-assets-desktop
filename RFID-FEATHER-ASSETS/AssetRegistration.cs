@@ -10,73 +10,20 @@ using System.Data.SqlClient;
 using UHFDemo;
 using System.IO;
 using MySql.Data.MySqlClient;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Newtonsoft.Json;
+using System.Threading.Tasks;
 using RestSharp;
 using System.Net;
-using Microsoft.Win32;
+using RestSharp.Deserializers;
 
 namespace RFID_FEATHER_ASSETS
 {
-
-    public class Asset
-    {
-        public int companyId
-        {
-            get;
-            set;
-        }
-
-        public int ownerId
-        {
-            get;
-            set;
-        }
-
-        public string name
-        {
-            get;
-            set;
-        }
-
-        public string description
-        {
-            get;
-            set;
-        }
-
-        public string takeOutInfo
-        {
-            get;
-            set;
-        }
-
-        public string imageUrls
-        {
-            get;
-            set;
-        }
-
-        public Boolean takeOutAllowed
-        {
-            get;
-            set;
-        }
-        public string tag
-        {
-            get;
-            set;
-        }
-
-        public int tagType
-        {
-            get;
-            set;
-        }
-    }
-
     public partial class AssetRegistration : Form
     {
         ////string str = "Data Source=DESKTOPI5-PC\\MSSQL2014;Initial Catalog=RFID;User ID=sa;Password=systemadmin";
-        string connectionString = "server=128.199.83.107;port=3306;uid=root;pwd=aws123;database=feather_assets;";
+        //string connectionString = "server=128.199.83.107;port=3306;uid=root;pwd=aws123;database=feather_assets;";
 
         private Reader.ReaderMethod reader;
         private ReaderSetting m_curSetting = new ReaderSetting();
@@ -88,11 +35,13 @@ namespace RFID_FEATHER_ASSETS
         string portname;// = "COM3";
         string baudrate = "115200";
         string ownerid;
+        string tokenvalue;
 
-        public AssetRegistration(string portnamesource)
+        public AssetRegistration(string tokenvaluesource, string portnamesource)
         {
             InitializeComponent();
             portname = portnamesource;
+            tokenvalue = tokenvaluesource;
         }
 
         private void auto_connect()
@@ -117,7 +66,7 @@ namespace RFID_FEATHER_ASSETS
         {
             this.Hide();
             reader.CloseCom();
-            MainMenu MenuForm = new MainMenu(portname);
+            MainMenu MenuForm = new MainMenu(tokenvalue, portname);
             MenuForm.Show();
         }  
 
@@ -131,83 +80,101 @@ namespace RFID_FEATHER_ASSETS
                     btnBrowseImage.Focus();
                     return; 
                 }
-                if (!CheckDuplicateRFID())
+                /*if (!CheckDuplicateRFID())
                 {
                     MessageBox.Show("RFID Tag is already assigned.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     txtRFIDTag.Focus();
                     return;
+                }*/
+
+                //For MySqlConnection
+                //MySqlConnection con = new MySqlConnection(connectionString);
+                //con.Open();
+                //MySqlCommand cmd = new MySqlCommand("insert into asset(rfid_tag,company_id,name,description,images,take_out_allowed,take_out_info,created_at,updated_at) values (@rfid_tag,@company_id,@name,@description,@images,@take_out_allowed,@take_out_info,@created_at,@updated_at)", con);
+                //cmd.Parameters.AddWithValue("@rfid_tag", txtRFIDTag.Text);
+                ////cmd.Parameters.AddWithValue("@owner_id", 1);
+                //cmd.Parameters.AddWithValue("@company_id", 1);
+                //cmd.Parameters.AddWithValue("@name", txtAssetName.Text);
+                //cmd.Parameters.AddWithValue("@description", txtDescription.Text);
+                //if (radbtnYes.Checked)
+                //{
+                //    cmd.Parameters.AddWithValue("@take_out_allowed", 1);
+                //}
+                //else
+                //{
+                //    cmd.Parameters.AddWithValue("@take_out_allowed", 0);
+                //}
+                //cmd.Parameters.AddWithValue("@take_out_info", txtTakeOutNote.Text);
+                ////cmd.Parameters.AddWithValue("@Section", combosec.SelectedItem.ToString());  
+                //cmd.Parameters.AddWithValue("@created_at", DateTime.Now);
+                //cmd.Parameters.AddWithValue("@updated_at", DateTime.Now);
+                //cmd.Parameters.AddWithValue("@images", txtImagePath.Text);
+
+                //cmd.ExecuteNonQuery();
+                //con.Close();
+                //MessageBox.Show("Asset successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //ClearFields();
+
+                //For Web Service
+                //HttpClient client = new HttpClient();
+                //client.BaseAddress = new Uri("http://feather-assets.herokuapp.com/");
+                //client.DefaultRequestHeaders.Accept.Clear();
+                //client.DefaultRequestHeaders.Accept.Add(
+                //   new MediaTypeWithQualityHeaderValue("application/json"));
+
+                var AssetDet = new Asset();
+
+                AssetDet.tag = txtRFIDTag.Text;
+                AssetDet.companyId = 1;
+                AssetDet.name = txtAssetName.Text;
+                AssetDet.description = txtDescription.Text;
+                if (radbtnYes.Checked)
+                {
+                    AssetDet.takeOutAllowed = 1;
                 }
+                else
+                {
+                    AssetDet.takeOutAllowed = 0;
+                }
+                AssetDet.takeOutInfo = txtTakeOutNote.Text;
+                AssetDet.imageUrls = txtImagePath.Text;
 
-                Asset asset = new Asset();
-                asset.companyId = 1;
-                asset.ownerId = 0;
-                asset.tag = txtRFIDTag.Text;
-                asset.tagType = 1;
-                asset.name = txtAssetName.Text;
-                asset.description = txtDescription.Text;
-                asset.takeOutInfo = txtTakeOutNote.Text;
-                asset.imageUrls = txtImagePath.Text;
-                asset.takeOutAllowed = true;
+                //var response = client.PostAsJsonAsync("api/asset", AssetDet).Result;
 
-               
-                //initialize web service
                 RestClient client = new RestClient("http://feather-assets.herokuapp.com/");
                 RestRequest register = new RestRequest("/api/asset/add", Method.POST);
-                
-                //RegistryKey rk = Registry.CurrentUser.OpenSubKey("FeatherTraq");
-                var authToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1ZGllbmNlIjoidW5rbm93biIsImNyZWF0ZWQiOjE0NjQ4NTExNDQ1NzQsImV4cCI6MTQ2NTQ1NTk0NH0.xKPl5zGiSzNO_EyX2nTYH471XrSCrIqiMlwsbMkoVp66Giq2tqoeDkPdWQNqxn7OB7KLjCcC1CWljDQ8KmxzFQ";
-                //string authToken = (string)rk.GetValue("authenticationToken");/*Registry.GetValue("FeatherTraq\\key","authToken",null)*/;
-                
+                var authToken = tokenvalue;//"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1ZGllbmNlIjoidW5rbm93biIsImNyZWF0ZWQiOjE0NjQ4NTAxNDM2NjQsImV4cCI6MTQ2NTQ1NDk0M30.IJQiKfK0iDqLD28JfTD5gJVy9vIKexMKGaJynB8-mJINi__jkmlCTiqQ8zGM-kiZyPcXKAq-nYi91IOkQQCg-A";
+
                 register.AddHeader("X-Auth-Token", authToken);
                 register.AddHeader("Content-Type", "application/json; charset=utf-8");
                 register.RequestFormat = DataFormat.Json;
-                register.AddBody(asset);
+                register.AddBody(AssetDet);
 
                 IRestResponse response = client.Execute(register);
                 var content = response.Content;
 
-                if (response.StatusCode == HttpStatusCode.OK)
+                if (response.StatusCode == HttpStatusCode.OK)//if (response.IsSuccessStatusCode)
                 {
-                    MessageBox.Show("Asset successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    ClearFields();
+                    JsonDeserializer deserial = new JsonDeserializer();
+                    RestResult restResult = deserial.Deserialize<RestResult>(response);
+
+                    if (restResult.result == "OK")
+                    {
+                        MessageBox.Show("Asset successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        ClearFields();
+                    }
+                    else
+                    {
+                        MessageBox.Show(restResult.result + " " + restResult.message);
+                    }
+                        
                 }
                 else
                 {
-                    HttpStatusCode statusCode = response.StatusCode;
-                    int numericStatusCode = (int)statusCode;
-                    //show error code
-                    MessageBox.Show("Error" + numericStatusCode);
+                    MessageBox.Show("Error Code" +
+                    response.StatusCode + " : Message - " + response.ErrorMessage);//response.ReasonPhrase);
+                    return;
                 }
-
-
-                /*MySqlConnection con = new MySqlConnection(connectionString);
-                con.Open();
-                MySqlCommand cmd = new MySqlCommand("insert into asset(rfid_tag,company_id,name,description,images,take_out_allowed,take_out_info,created_at,updated_at) values (@rfid_tag,@company_id,@name,@description,@images,@take_out_allowed,@take_out_info,@created_at,@updated_at)", con);
-                cmd.Parameters.AddWithValue("@rfid_tag", txtRFIDTag.Text);
-                //cmd.Parameters.AddWithValue("@owner_id", 1);
-                cmd.Parameters.AddWithValue("@company_id", 1);
-                cmd.Parameters.AddWithValue("@name", txtAssetName.Text);
-                cmd.Parameters.AddWithValue("@description", txtDescription.Text);
-                if (radbtnYes.Checked)
-                {
-                    cmd.Parameters.AddWithValue("@take_out_allowed", 1);
-                }
-                else
-                {
-                    cmd.Parameters.AddWithValue("@take_out_allowed", 0);
-                }
-                cmd.Parameters.AddWithValue("@take_out_info", txtTakeOutNote.Text);
-                //cmd.Parameters.AddWithValue("@Section", combosec.SelectedItem.ToString());  
-                cmd.Parameters.AddWithValue("@created_at", DateTime.Now);
-                cmd.Parameters.AddWithValue("@updated_at", DateTime.Now);
-                cmd.Parameters.AddWithValue("@images", txtImagePath.Text);
-
-                cmd.ExecuteNonQuery();
-                con.Close();
-
-                MessageBox.Show("Asset successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                ClearFields();*/
 
             }
             catch (System.Exception ex)
@@ -228,64 +195,64 @@ namespace RFID_FEATHER_ASSETS
             btnBrowseImage.Focus();
         }
 
-        private bool CheckDuplicateRFID()
-        {
+        //private bool CheckDuplicateRFID()
+        //{
             ////SqlConnection con = new SqlConnection(connectionString);
             ////con.Open();
             ////SqlCommand cmd = new SqlCommand("select * from asset where rfid_tag='" + txtRFIDTag.Text + "'", con);
             ////SqlDataReader rd = cmd.ExecuteReader();
-            MySqlConnection con = new MySqlConnection(connectionString);
-            con.Open();
-            MySqlCommand cmd = new MySqlCommand("select * from asset where rfid_tag='" + txtRFIDTag.Text + "'", con);
-            MySqlDataReader rd = cmd.ExecuteReader();
-            if (rd.HasRows)
-            {
-                rd.Close();
-                return false;
-            }
-            else
-            {
-                rd.Close();
-                return true;
-            }
-        } 
+            //MySqlConnection con = new MySqlConnection(connectionString);
+            //con.Open();
+            //MySqlCommand cmd = new MySqlCommand("select * from asset where rfid_tag='" + txtRFIDTag.Text + "'", con);
+            //MySqlDataReader rd = cmd.ExecuteReader();
+            //if (rd.HasRows)
+            //{
+            //    rd.Close();
+            //    return false;
+            //}
+            //else
+            //{
+            //    rd.Close();
+            //    return true;
+            //}
+        //} 
 
         private void RegisterAsset_FormClosed(object sender, FormClosedEventArgs e)
         {
             this.Hide();
             reader.CloseCom();
-            MainMenu MenuForm = new MainMenu(portname);
+            MainMenu MenuForm = new MainMenu(tokenvalue, portname);
             MenuForm.Show();
         }
 
         private void comboOwner_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SqlConnection con = new SqlConnection(connectionString);
-            con.Open();
-            SqlCommand cmd = new SqlCommand("select * from User_Master where first_name ='" + comboOwner.Text.Trim() + "'", con);
-            SqlDataReader rd = cmd.ExecuteReader();
+            //SqlConnection con = new SqlConnection(connectionString);
+            //con.Open();
+            //SqlCommand cmd = new SqlCommand("select * from User_Master where first_name ='" + comboOwner.Text.Trim() + "'", con);
+            //SqlDataReader rd = cmd.ExecuteReader();
 
-            while (rd.Read())
-            {
-                ownerid = rd["user_id"].ToString();
-            }
-            rd.Close();
+            //while (rd.Read())
+            //{
+            //    ownerid = rd["user_id"].ToString();
+            //}
+            //rd.Close();
         }
 
         private void comboOwner_DropDown(object sender, EventArgs e)
         {
             comboOwner.Items.Clear();
 
-            SqlConnection con = new SqlConnection(connectionString);
-            con.Open();
-            SqlCommand cmd = new SqlCommand("select * from User_Master", con);
-            SqlDataReader rd = cmd.ExecuteReader();
+            //SqlConnection con = new SqlConnection(connectionString);
+            //con.Open();
+            //SqlCommand cmd = new SqlCommand("select * from User_Master", con);
+            //SqlDataReader rd = cmd.ExecuteReader();
 
-            while (rd.Read())
-            {
-                comboOwner.Items.Add(rd["first_name"].ToString());
-            }
-            rd.Close(); 
+            //while (rd.Read())
+            //{
+            //    comboOwner.Items.Add(rd["first_name"].ToString());
+            //}
+            //rd.Close(); 
         }
 
         private void btnGetRFIDTag_Click(object sender, EventArgs e)
@@ -332,7 +299,7 @@ namespace RFID_FEATHER_ASSETS
         {
             this.Hide();
             reader.CloseCom();
-            MainMenu MenuForm = new MainMenu(portname);
+            MainMenu MenuForm = new MainMenu(tokenvalue, portname);
             MenuForm.Show();
         }
 
@@ -569,36 +536,40 @@ namespace RFID_FEATHER_ASSETS
 
         private bool CheckDuplicatePicture()
         {
-            MySqlConnection con = new MySqlConnection(connectionString);
-            con.Open();
-            MySqlCommand cmd = new MySqlCommand("select * from asset where images like '%" + Path.GetFileName(fd1.FileName) + "%'", con);
-            MySqlDataReader rd = cmd.ExecuteReader();
-            if (rd.HasRows)
-            {
-                rd.Close();
-                return false;
-            }
-            else
-            {
-                rd.Close();
+            //MySqlConnection con = new MySqlConnection(connectionString);
+            //con.Open();
+            //MySqlCommand cmd = new MySqlCommand("select * from asset where images like '%" + Path.GetFileName(fd1.FileName) + "%'", con);
+            //MySqlDataReader rd = cmd.ExecuteReader();
+            //if (rd.HasRows)
+            //{
+            //    rd.Close();
+            //    return false;
+            //}
+            //else
+            //{
+            //   rd.Close();
                 return true;
-            }
+            // }
         }
 
-        private void txtAssetName_TextChanged(object sender, EventArgs e)
-        {
+    }
 
-        }
+    public class Asset
+    {
+        public string tag { get; set; }
+        public int companyId { get; set; }
+        public string name { get; set; }
+        public string description { get; set; }
+        public int takeOutAllowed { get; set; }
+        public string takeOutInfo { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        public string imageUrls { get; set; }
+    }
 
-        private void txtDescription_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtTakeOutNote_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
+    public class RestResult
+    {
+        public string result { get; set; }
+        public string message { get; set; }
     }
 }
