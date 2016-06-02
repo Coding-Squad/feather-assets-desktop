@@ -10,10 +10,78 @@ using System.Data.SqlClient;
 using UHFDemo;
 using System.IO;
 using MySql.Data.MySqlClient;
+using RestSharp;
+using System.Net;
+using RestSharp.Deserializers;
 //using System.Threading;
 
 namespace RFID_FEATHER_ASSETS
 {
+    public class VerifyRequest
+    {
+        public int companyId
+        {
+            get;
+            set;
+        }
+
+        public string tag
+        {
+            get;
+            set;
+        }
+
+        public int tagType
+        {
+            get;
+            set;
+        }
+    }
+
+    public class verifyResult
+    {
+        public string name
+        {
+            get;
+            set;
+        }
+
+        public string description
+        {
+            get;
+            set;
+        }
+
+        public string imageUrls
+        {
+            get;
+            set;
+        }
+
+        public bool takOutAllowed
+        {
+            get;
+            set;
+        }
+
+        public string takeOutInfo
+        {
+            get;
+            set;
+        }
+
+        public string result
+        {
+            get;
+            set;
+        }
+
+        public string message
+        {
+            get;
+            set;
+        }
+    }
     public partial class Verification : Form
     {
         string connectionString = "server=128.199.83.107;port=3306;uid=root;pwd=aws123;database=feather_assets;";
@@ -119,14 +187,91 @@ namespace RFID_FEATHER_ASSETS
         {
             btnVerifyAsset.Text = "Verifying Tag. Please wait ...";
 
-            MySqlConnection con = new MySqlConnection(connectionString);
+            
+
+            VerifyRequest verifyRequest = new VerifyRequest();
+            verifyRequest.tag = txtRFIDTag.Text;
+            verifyRequest.companyId = 1;
+            verifyRequest.tagType = 1;
+
+            //initialize web service
+            RestClient client = new RestClient("http://feather-assets.herokuapp.com/");
+            RestRequest verify = new RestRequest("/api/asset/verify", Method.POST);
+            var authToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1ZGllbmNlIjoidW5rbm93biIsImNyZWF0ZWQiOjE0NjQ4NTExNDQ1NzQsImV4cCI6MTQ2NTQ1NTk0NH0.xKPl5zGiSzNO_EyX2nTYH471XrSCrIqiMlwsbMkoVp66Giq2tqoeDkPdWQNqxn7OB7KLjCcC1CWljDQ8KmxzFQ";
+
+            verify.AddHeader("X-Auth-Token", authToken);
+            verify.AddHeader("Content-Type", "application/json; charset=utf-8");
+            verify.RequestFormat = DataFormat.Json;
+            verify.AddBody(verifyRequest);
+
+            //retrieve response
+            IRestResponse response = client.Execute(verify);
+            var content = response.Content;
+            
+            btnVerifyAsset.Text = "Click to verify RFID Tag";
+            
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+
+                //deserialize JSON -> Object
+                JsonDeserializer deserial = new JsonDeserializer();
+                verifyResult verifyResult = deserial.Deserialize<verifyResult>(response);
+
+                txtAssetName.Text = verifyResult.name;
+                txtOwnerName.Text = verifyResult.description;
+                ////txtTakeOutAvailability.Text = (rd["take_out_allowed"].ToString());
+                if (Boolean.Parse(verifyResult.takOutAllowed.ToString()))
+                {
+                    txtTakeOutAvailability.Text = "Allowed to take-out.";
+                }
+                else
+                {
+                    txtTakeOutAvailability.Text = "Not allowed to take-out.";
+                }
+                txtTakeOutNote.Text = verifyResult.takeOutInfo;
+
+                if (File.Exists(verifyResult.imageUrls))
+                {
+                    picOwner.Image = Image.FromFile(verifyResult.imageUrls);
+                }
+                else
+                {
+                    MessageBox.Show("Image not found for this path: " + verifyResult.imageUrls, "Asset Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    btnVerifyAsset.Focus();
+                    //rd.Close();
+                    return;
+                }
+                //test if response results are stored in object
+
+
+                VerifyTimer.Stop();
+                VerifyTimer.Start();
+
+                ClearTimer.Stop();
+                ClearTimer.Start();
+
+                return;
+            }
+            else if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                MessageBox.Show("Error connecting to server.. please try again later");
+            }
+            else
+            {
+                HttpStatusCode statusCode = response.StatusCode;
+                int numericStatusCode = (int)statusCode;
+                //show error code
+                MessageBox.Show("Error" + numericStatusCode);
+            }
+
+            /*MySqlConnection con = new MySqlConnection(connectionString);
             con.Open();
             MySqlCommand cmd = new MySqlCommand("select * from asset where rfid_tag='" + txtRFIDTag.Text + "'", con);
             MySqlDataReader rd = cmd.ExecuteReader();
+            */
+            
 
-            btnVerifyAsset.Text = "Click to verify RFID Tag";
-
-            if (rd.Read())
+            /*if (rd.Read())
             {
                 txtAssetName.Text = (rd["name"].ToString());
                 txtOwnerName.Text = (rd["description"].ToString());
@@ -161,8 +306,8 @@ namespace RFID_FEATHER_ASSETS
 
                 rd.Close();
                 return;
-            }
-            else
+            }*/
+            /*else
             {
                 rd.Close();
                 DialogResult result = MessageBox.Show("RFID Tag not found. Do you want to register the asset?", "Asset Verification", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2);
@@ -179,7 +324,7 @@ namespace RFID_FEATHER_ASSETS
                     return;
                 }
                 
-            }
+            }*/
         }
 
         //start of the Reader's default codes//

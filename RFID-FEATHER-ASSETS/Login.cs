@@ -90,6 +90,8 @@ namespace RFID_FEATHER_ASSETS
             get;
             set;
         }
+
+        
     }
     public partial class LoginActivity : Form
     {
@@ -133,8 +135,13 @@ namespace RFID_FEATHER_ASSETS
                 //deserialize JSON -> Object
                 JsonDeserializer deserial = new JsonDeserializer();
                 LoginResult loginResult = deserial.Deserialize<LoginResult>(response);
-
-                //Registry.SetValue("FeatherTraq\\key" , "authToken", loginResult.authenticationToken);
+                
+                //Registry.CurrentUser.DeleteSubKey("FeatherTraq", false);
+                //RegistryKey rk = Registry.CurrentUser.CreateSubKey("FeatherTraq");
+                //rk.SetValue("authenticationKey", loginResult.authenticationToken, RegistryValueKind.String);
+                    
+               
+                //Registry.SetValue("Login Result" , "authToken", loginResult.authenticationToken);
                 //Session["authToken"] = loginResult.authenticationToken;
                 //test if response results are stored in object
                 MessageBox.Show("" + loginResult.authenticationToken);
@@ -157,6 +164,11 @@ namespace RFID_FEATHER_ASSETS
             }
             
              
+        }
+
+        private void registryKeyHandler()
+        {
+            
         }
 
         private void passWord_KeyDown(object sender, KeyEventArgs e)

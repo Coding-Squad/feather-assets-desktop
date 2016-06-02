@@ -140,20 +140,27 @@ namespace RFID_FEATHER_ASSETS
 
                 Asset asset = new Asset();
                 asset.companyId = 1;
+                asset.ownerId = 0;
+                asset.tag = txtRFIDTag.Text;
+                asset.tagType = 1;
                 asset.name = txtAssetName.Text;
                 asset.description = txtDescription.Text;
                 asset.takeOutInfo = txtTakeOutNote.Text;
                 asset.imageUrls = txtImagePath.Text;
+                asset.takeOutAllowed = true;
 
                
                 //initialize web service
                 RestClient client = new RestClient("http://feather-assets.herokuapp.com/");
                 RestRequest register = new RestRequest("/api/asset/add", Method.POST);
-
-                string authToken = "test value"/*Registry.GetValue("FeatherTraq\\key","authToken",null)*/;
-
-                register.AddHeader("Content-Type", "application/json; charset=utf-8");
+                
+                //RegistryKey rk = Registry.CurrentUser.OpenSubKey("FeatherTraq");
+                var authToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1ZGllbmNlIjoidW5rbm93biIsImNyZWF0ZWQiOjE0NjQ4NTExNDQ1NzQsImV4cCI6MTQ2NTQ1NTk0NH0.xKPl5zGiSzNO_EyX2nTYH471XrSCrIqiMlwsbMkoVp66Giq2tqoeDkPdWQNqxn7OB7KLjCcC1CWljDQ8KmxzFQ";
+                //string authToken = (string)rk.GetValue("authenticationToken");/*Registry.GetValue("FeatherTraq\\key","authToken",null)*/;
+                
                 register.AddHeader("X-Auth-Token", authToken);
+                register.AddHeader("Content-Type", "application/json; charset=utf-8");
+                register.RequestFormat = DataFormat.Json;
                 register.AddBody(asset);
 
                 IRestResponse response = client.Execute(register);
@@ -166,7 +173,10 @@ namespace RFID_FEATHER_ASSETS
                 }
                 else
                 {
-                    MessageBox.Show("Error Connecting to Server... please try again later");
+                    HttpStatusCode statusCode = response.StatusCode;
+                    int numericStatusCode = (int)statusCode;
+                    //show error code
+                    MessageBox.Show("Error" + numericStatusCode);
                 }
 
 
