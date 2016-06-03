@@ -96,7 +96,9 @@
             this.Controls.Add(this.passWord);
             this.Controls.Add(this.userName);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "LoginActivity";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Feather Assets";
             this.Load += new System.EventHandler(this.LoginActivity_Load);
             this.ResumeLayout(false);

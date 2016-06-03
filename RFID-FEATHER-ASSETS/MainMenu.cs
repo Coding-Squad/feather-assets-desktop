@@ -12,7 +12,7 @@ namespace RFID_FEATHER_ASSETS
     public partial class MainMenu : Form
     {
         string tokenvalue;
-        public MainMenu(string portnamesource, string tokenvaluesource)
+        public MainMenu(string tokenvaluesource, string portnamesource)
         {
             InitializeComponent();
             cmbComPort.Text = portnamesource;

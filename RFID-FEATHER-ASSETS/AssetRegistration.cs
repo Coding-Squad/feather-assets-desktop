@@ -34,7 +34,6 @@ namespace RFID_FEATHER_ASSETS
         //string portname = "COM3";
         string portname;// = "COM3";
         string baudrate = "115200";
-        string ownerid;
         string tokenvalue;
 
         public AssetRegistration(string tokenvaluesource, string portnamesource)
@@ -122,33 +121,35 @@ namespace RFID_FEATHER_ASSETS
                 //client.DefaultRequestHeaders.Accept.Add(
                 //   new MediaTypeWithQualityHeaderValue("application/json"));
 
-                var AssetDet = new Asset();
+                Asset asset = new Asset();
 
-                AssetDet.tag = txtRFIDTag.Text;
-                AssetDet.companyId = 1;
-                AssetDet.name = txtAssetName.Text;
-                AssetDet.description = txtDescription.Text;
+                asset.tag = txtRFIDTag.Text;
+                asset.tagType = 1;
+                asset.companyId = 1;
+                asset.ownerId = 0;
+                asset.name = txtAssetName.Text;
+                asset.description = txtDescription.Text;
                 if (radbtnYes.Checked)
                 {
-                    AssetDet.takeOutAllowed = 1;
+                    asset.takeOutAllowed = true;
                 }
                 else
                 {
-                    AssetDet.takeOutAllowed = 0;
+                    asset.takeOutAllowed = false;
                 }
-                AssetDet.takeOutInfo = txtTakeOutNote.Text;
-                AssetDet.imageUrls = txtImagePath.Text;
+                asset.takeOutInfo = txtTakeOutNote.Text;
+                asset.imageUrls = txtImagePath.Text;
 
                 //var response = client.PostAsJsonAsync("api/asset", AssetDet).Result;
 
                 RestClient client = new RestClient("http://feather-assets.herokuapp.com/");
                 RestRequest register = new RestRequest("/api/asset/add", Method.POST);
-                var authToken = tokenvalue;//"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1ZGllbmNlIjoidW5rbm93biIsImNyZWF0ZWQiOjE0NjQ4NTAxNDM2NjQsImV4cCI6MTQ2NTQ1NDk0M30.IJQiKfK0iDqLD28JfTD5gJVy9vIKexMKGaJynB8-mJINi__jkmlCTiqQ8zGM-kiZyPcXKAq-nYi91IOkQQCg-A";
+                var authToken = tokenvalue;
 
                 register.AddHeader("X-Auth-Token", authToken);
                 register.AddHeader("Content-Type", "application/json; charset=utf-8");
                 register.RequestFormat = DataFormat.Json;
-                register.AddBody(AssetDet);
+                register.AddBody(asset);
 
                 IRestResponse response = client.Execute(register);
                 var content = response.Content;
@@ -165,14 +166,14 @@ namespace RFID_FEATHER_ASSETS
                     }
                     else
                     {
-                        MessageBox.Show(restResult.result + " " + restResult.message);
+                        MessageBox.Show(restResult.result + " " + restResult.message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                         
                 }
                 else
                 {
-                    MessageBox.Show("Error Code" +
-                    response.StatusCode + " : Message - " + response.ErrorMessage);//response.ReasonPhrase);
+                    MessageBox.Show("Error Code " +
+                    response.StatusCode /*+ " : Message - " + response.ErrorMessage*/);//response.ReasonPhrase);
                     return;
                 }
 
@@ -557,10 +558,12 @@ namespace RFID_FEATHER_ASSETS
     public class Asset
     {
         public string tag { get; set; }
+        public int tagType { get; set; }
         public int companyId { get; set; }
+        public int ownerId { get; set; }
         public string name { get; set; }
         public string description { get; set; }
-        public int takeOutAllowed { get; set; }
+        public bool takeOutAllowed { get; set; }
         public string takeOutInfo { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

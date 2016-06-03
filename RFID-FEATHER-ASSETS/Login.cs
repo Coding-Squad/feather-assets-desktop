@@ -68,12 +68,13 @@ namespace RFID_FEATHER_ASSETS
                 //Registry.SetValue("Login Result" , "authToken", loginResult.authenticationToken);
                 //Session["authToken"] = loginResult.authenticationToken;
                 //test if response results are stored in object
-                MessageBox.Show("" + loginResult.authenticationToken);
+                //MessageBox.Show("" + loginResult.authenticationToken);
 
                 //go to main menu if result code OK
+                this.Hide();
                 MainMenu MenuForm = new MainMenu(loginResult.authenticationToken,  string.Empty);
                 MenuForm.ShowDialog();
-                this.Hide();
+                
             }
             else if (response.StatusCode == HttpStatusCode.NotFound)
             {

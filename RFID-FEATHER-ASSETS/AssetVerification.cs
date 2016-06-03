@@ -19,7 +19,7 @@ namespace RFID_FEATHER_ASSETS
 {
     public partial class Verification : Form
     {
-        string connectionString = "server=128.199.83.107;port=3306;uid=root;pwd=aws123;database=feather_assets;";
+        //string connectionString = "server=128.199.83.107;port=3306;uid=root;pwd=aws123;database=feather_assets;";
 
         private Reader.ReaderMethod reader;
         private ReaderSetting m_curSetting = new ReaderSetting();
@@ -124,8 +124,6 @@ namespace RFID_FEATHER_ASSETS
         {
             btnVerifyAsset.Text = "Verifying Tag. Please wait ...";
 
-            
-
             VerifyRequest verifyRequest = new VerifyRequest();
             verifyRequest.tag = txtRFIDTag.Text;
             verifyRequest.companyId = 1;
@@ -134,7 +132,7 @@ namespace RFID_FEATHER_ASSETS
             //initialize web service
             RestClient client = new RestClient("http://feather-assets.herokuapp.com/");
             RestRequest verify = new RestRequest("/api/asset/verify", Method.POST);
-            var authToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1ZGllbmNlIjoidW5rbm93biIsImNyZWF0ZWQiOjE0NjQ4NTY4NTcyMjAsImV4cCI6MTQ2NTQ2MTY1N30.xV5hCGm3EQ0qJANsIfkuZJofKBsZGr9A6uKviTTW5mpfb3g5CBXN3cDizXJpYpcXlIAvIU5ihxsPjhh_aHvcIg";
+            var authToken = tokenvalue;
 
             verify.AddHeader("X-Auth-Token", authToken);
             verify.AddHeader("Content-Type", "application/json; charset=utf-8");
@@ -144,7 +142,7 @@ namespace RFID_FEATHER_ASSETS
             //retrieve response
             IRestResponse response = client.Execute(verify);
             var content = response.Content;
-            
+
             btnVerifyAsset.Text = "Click to verify RFID Tag";
             
             if (response.StatusCode == HttpStatusCode.OK)
@@ -155,6 +153,7 @@ namespace RFID_FEATHER_ASSETS
                 VerifyResult verifyResult = deserial.Deserialize<VerifyResult>(response);
                 if (verifyResult.result == "OK")
                 {
+
                     txtAssetName.Text = verifyResult.name;
                     txtOwnerName.Text = verifyResult.description;
                     ////txtTakeOutAvailability.Text = (rd["take_out_allowed"].ToString());
@@ -179,6 +178,14 @@ namespace RFID_FEATHER_ASSETS
                         //rd.Close();
                         return;
                     }
+
+                    VerifyTimer.Stop();
+                    VerifyTimer.Start();
+
+                    ClearTimer.Stop();
+                    ClearTimer.Start();
+
+                    return;
                 }
                 else
                 {
@@ -186,14 +193,7 @@ namespace RFID_FEATHER_ASSETS
                 }
                 //test if response results are stored in object
 
-
-                VerifyTimer.Stop();
-                VerifyTimer.Start();
-
-                ClearTimer.Stop();
-                ClearTimer.Start();
-
-                return;
+                
             }
             else if (response.StatusCode == HttpStatusCode.NotFound)
             {
@@ -206,6 +206,8 @@ namespace RFID_FEATHER_ASSETS
                 //show error code
                 MessageBox.Show("Error" + numericStatusCode);
             }
+
+            
 
             /*MySqlConnection con = new MySqlConnection(connectionString);
             con.Open();
