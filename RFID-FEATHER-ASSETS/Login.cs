@@ -8,7 +8,6 @@ using System.Text;
 using System.Windows.Forms;
 using System.Web;
 using System.Data.SqlClient;
-using MySql.Data.MySqlClient;
 using RestSharp;
 using System.Net;
 using RestSharp.Deserializers;
@@ -16,13 +15,16 @@ using Microsoft.Win32;
 
 namespace RFID_FEATHER_ASSETS
 {
+
+    
     public partial class LoginActivity : Form
     {
         //string connectionString = "server=128.199.83.107;port=3306;uid=root;pwd=aws123;database=feather_assets;";
 
-        public LoginActivity()
+        public LoginActivity(string portnamesource)
         {
-            InitializeComponent();           
+            InitializeComponent();
+            cmbComPort.Text = portnamesource;
         }
 
         private void ClearFields()
@@ -39,9 +41,11 @@ namespace RFID_FEATHER_ASSETS
             loginInfo.password = passWord.Text;
 
             //initialize web service
-            RestClient client = new RestClient("http://feather-assets.herokuapp.com/");
+            //RestClient(request);
+            RestClient client = new RestClient("http://52.163.93.95:8080/FeatherAssets/");
             RestRequest login = new RestRequest("/login", Method.POST);
-
+            
+        
             //pass information to web service
             login.AddHeader("Content-Type", "application/json; charset=utf-8");
             login.RequestFormat = DataFormat.Json;          
@@ -56,24 +60,47 @@ namespace RFID_FEATHER_ASSETS
             {
                 
                 //deserialize JSON -> Object
-                JsonDeserializer deserial = new JsonDeserializer();
-                LoginResult loginResult = deserial.Deserialize<LoginResult>(response);
-                
-                
-                //Registry.CurrentUser.DeleteSubKey("FeatherTraq", false);
-                //RegistryKey rk = Registry.CurrentUser.CreateSubKey("FeatherTraq");
-                //rk.SetValue("authenticationKey", loginResult.authenticationToken, RegistryValueKind.String);
-                    
-               
-                //Registry.SetValue("Login Result" , "authToken", loginResult.authenticationToken);
-                //Session["authToken"] = loginResult.authenticationToken;
-                //test if response results are stored in object
-                //MessageBox.Show("" + loginResult.authenticationToken);
+                LoginResult loginResult = new LoginResult();
 
-                //go to main menu if result code OK
-                this.Hide();
-                MainMenu MenuForm = new MainMenu(loginResult.authenticationToken,  string.Empty);
-                MenuForm.ShowDialog();
+                JsonDeserializer deserial = new JsonDeserializer();
+                loginResult = deserial.Deserialize<LoginResult>(response);
+                      
+                //check authorities                       
+                if (loginResult.roles == "ROLE_ADMIN")
+                {
+                    if (string.IsNullOrEmpty(cmbComPort.Text))
+                    {
+                        MessageBox.Show("Please select Port number.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        cmbComPort.Focus();
+                        return;
+                    }
+                    else
+                    {
+                        this.Hide();
+                        MainMenu MenuForm = new MainMenu(loginResult.authenticationToken, cmbComPort.Text, loginResult.roles);
+                        MenuForm.ShowDialog();
+                    }
+                }
+                else if (loginResult.roles == "ROLE_GUARD")
+                {
+                    if (string.IsNullOrEmpty(cmbComPort.Text))
+                    {
+                        MessageBox.Show("Please select Port number.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        cmbComPort.Focus();
+                        return;
+                    }
+                    else
+                    {
+                        //TODO RFID SCAN CODE MISSING
+                        this.Hide();
+                        Verification m = new Verification(loginResult.authenticationToken, cmbComPort.Text, loginResult.roles);
+                        m.Show();
+                    }
+                }
+                else if (loginResult.roles == "ROLE_USER")
+                {
+                    MessageBox.Show("Useless");
+                }
                 
             }
             else if (response.StatusCode == HttpStatusCode.NotFound)
@@ -85,16 +112,17 @@ namespace RFID_FEATHER_ASSETS
                 HttpStatusCode statusCode = response.StatusCode;
                 int numericStatusCode = (int)statusCode;
                 //show error code
-                MessageBox.Show("Error" + numericStatusCode);
+                MessageBox.Show("Error: " + numericStatusCode + response.ErrorMessage);
             }
             
              
         }
 
-        private void registryKeyHandler()
+       
+        /*private void registryKeyHandler()
         {
             
-        }
+        }*/
 
         private void passWord_KeyDown(object sender, KeyEventArgs e)
         {
@@ -107,6 +135,11 @@ namespace RFID_FEATHER_ASSETS
         private void LoginActivity_Load(object sender, EventArgs e)
         {
            
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
         }
      }
 

@@ -7,20 +7,83 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Data.SqlClient;
-using MySql.Data.MySqlClient;
+using RestSharp.Deserializers;
+using RestSharp;
+using System.Net;
+using AForge.Video;
+using AForge.Video.DirectShow;
 
 namespace RFID_FEATHER_ASSETS
 {
+
     public partial class RegisterUser : Form
     {
-        string connectionString = "server=128.199.83.107;port=3306;uid=root;pwd=aws123;database=feather_assets;";
+        string tokenvalue;
 
-        public RegisterUser()
+        public RegisterUser(string tokenvaluesource)
         {
             InitializeComponent();
-
+            tokenvalue = tokenvaluesource;
+            //CCT.Completed += new EventHandler<PhotoResult>(capture_completed);
         }
 
+        private FilterInfoCollection webcam;
+        private VideoCaptureDevice cam;
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //TODO: ERROR 400
+            userInfo userinfo = new userInfo();
+            userinfo.companyId = 1;
+            userinfo.imageUrl = "wew";
+            userinfo.password = "aws123";
+            userinfo.confirmPassword = "aws123";
+            userinfo.authorities = "user";
+            userinfo.firstName = firstName.Text;
+            userinfo.lastName = lastName.Text;
+            userinfo.description = description.Text;
+            userinfo.position = position.Text;
+            userinfo.email = email.Text;
+           
+
+            if (firstName.Text.Length == 0 || lastName.Text.Length == 0 || position.Text.Length == 0 || description.Text.Length == 0 || email.Text.Length == 0)
+            {
+                MessageBox.Show("Complete information is required.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
+
+            RestClient client = new RestClient("http://feather-assets.herokuapp.com/");
+            RestRequest user = new RestRequest("/api/user/add", Method.POST);
+            var authToken = tokenvalue;
+            user.AddHeader("X-Auth-Token", authToken);
+            user.AddHeader("Content-Type", "application/json; charset=utf-8");
+            user.RequestFormat = DataFormat.Json;
+            user.AddBody(userinfo);
+
+            IRestResponse response = client.Execute(user);
+            var content = response.Content;
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                MessageBox.Show("User successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                ClearFields();
+                this.Hide();
+                MainMenu MenuForm = new MainMenu(tokenvalue, string.Empty, string.Empty);
+                MenuForm.ShowDialog();
+            }
+            else
+            {
+                HttpStatusCode statusCode = response.StatusCode;
+                int numericStatusCode = (int)statusCode;
+                MessageBox.Show("Error" + numericStatusCode);
+                return;
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
         private void ClearFields()
         {
             firstName.Text = string.Empty;
@@ -30,50 +93,121 @@ namespace RFID_FEATHER_ASSETS
             email.Text = string.Empty;
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void RegisterUser_Load(object sender, EventArgs e)
         {
-            this.Close();
+            webcam = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+            foreach (FilterInfo VideoCaptureDevice in webcam)
+            {
+                comboBox1.Items.Add(VideoCaptureDevice.Name);
+            }
+            comboBox1.SelectedIndex = 0;
+
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void CaptureImg_Click(object sender, EventArgs e)
         {
-            string password = "aws123";
-            string authorities = "User";
-            DateTime created_at = DateTime.Now;
-            DateTime updated_at = DateTime.Now;
-            DateTime deleted_at = DateTime.Now;
-            try
+            cam.Stop();
+            saveFileDialog1.InitialDirectory = @"C:\Users\USER\Pictures\";
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                if (firstName.Text.Length == 0 || lastName.Text.Length == 0 || position.Text.Length == 0 || description.Text.Length == 0 || email.Text.Length == 0)
-                {
-                    MessageBox.Show("Complete information is required.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                    return;
-                }
-                MySqlConnection con = new MySqlConnection(connectionString);
-                con.Open();
-                MySqlCommand cmd = new MySqlCommand("insert into user(company_id,first_name,last_name,position,description,email,password,authorities,created_at,updated_at) values (@company_id,@first_name, @last_name, @position, @description, @email,@password,@authorities,@created_at,@updated_at)", con);
-                cmd.Parameters.AddWithValue("@company_id", 1);
-                cmd.Parameters.AddWithValue("@password", password);
-                cmd.Parameters.AddWithValue("@authorities", authorities);
-                cmd.Parameters.AddWithValue("@created_at", created_at);
-                cmd.Parameters.AddWithValue("@updated_at", updated_at);
-                //cmd.Parameters.AddWithValue("@deleted_at", deleted_at);
-                cmd.Parameters.AddWithValue("@first_name", firstName.Text);
-                cmd.Parameters.AddWithValue("@last_name", lastName.Text);
-                cmd.Parameters.AddWithValue("@position", position.Text);
-                cmd.Parameters.AddWithValue("@description", description.Text);
-                cmd.Parameters.AddWithValue("@email", email.Text);
-
-                cmd.ExecuteNonQuery();
-                con.Close();
-
-                MessageBox.Show("User successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                ClearFields();
+                pictureBox1.Image.Save(saveFileDialog1.FileName + ".jpg");
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+
+            //string imageDir = saveFileDialog1.InitialDirectory + saveFileDialog1.FileName;
+            
+            //MessageBox.Show(imageDir);
         }
+
+        void cam_NewFrame(object sender, NewFrameEventArgs eventArgs)
+        {
+            Bitmap bit = (Bitmap)eventArgs.Frame.Clone();
+            pictureBox1.Image = bit;
+        }
+
+
+        private void btnStart_Click(object sender, EventArgs e)
+        {
+            cam = new VideoCaptureDevice(webcam[comboBox1.SelectedIndex].MonikerString);
+            cam.NewFrame += new NewFrameEventHandler(cam_NewFrame);
+            cam.Start();
+        }
+
     }
-}
+
+
+    public class userInfo
+    {
+        public string firstName
+        {
+            get;
+            set;
+        }
+
+        public int companyId
+        {
+            get;
+            set;
+        }
+
+        public string confirmPassword
+        {
+            get;
+            set;
+        }
+
+        public string authorities
+        {
+            get;
+            set;
+        }
+
+        public string lastName
+        {
+            get;
+            set;
+        }
+
+        public string imageUrl
+        {
+            get;
+            set;
+        }
+
+        public string position
+        {
+            get;
+            set;
+        }
+        public string description
+        {
+            get;
+            set;
+        }
+
+        public string password
+        {
+            get;
+            set;
+        }
+        //public string authenticationToken
+        //{
+        //    get;
+        //    set;
+        //}
+        public string email
+        {
+            get;
+            set;
+        }
+
+    }
+
+    //public class CameraCaptureTask {
+    //    private byte[] _imageBytes;      
+    //    CameraCaptureTask CCT = new CameraCaptureTask();
+    //    private static string imgFileName = "CharlesGay";
+    //    string imageFolder = @"\CharlesHandsome\Not";
+    //    string imageFileName = imgFileName+".jpg";
+
+    }
+

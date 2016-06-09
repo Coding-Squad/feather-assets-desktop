@@ -12,11 +12,13 @@ namespace RFID_FEATHER_ASSETS
     public partial class MainMenu : Form
     {
         string tokenvalue;
-        public MainMenu(string tokenvaluesource, string portnamesource)
+        string roleValue;
+        public MainMenu(string tokenvaluesource, string portnamesource, string roleSource)
         {
             InitializeComponent();
             cmbComPort.Text = portnamesource;
             tokenvalue = tokenvaluesource;
+            roleValue = roleSource;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -31,7 +33,7 @@ namespace RFID_FEATHER_ASSETS
             {
                 //TODO RFID SCAN CODE MISSING
                 this.Hide();
-                Verification m = new Verification(tokenvalue, cmbComPort.Text);
+                Verification m = new Verification(tokenvalue, cmbComPort.Text, roleValue);
                 m.Show();
             }
         }
@@ -54,7 +56,7 @@ namespace RFID_FEATHER_ASSETS
 
         private void button4_Click(object sender, EventArgs e)
         {
-            RegisterUser registerUser = new RegisterUser();
+            RegisterUser registerUser = new RegisterUser(tokenvalue);
             registerUser.Show();
         }
 
@@ -64,6 +66,11 @@ namespace RFID_FEATHER_ASSETS
         }
 
         private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MainMenu_Load(object sender, EventArgs e)
         {
 
         }

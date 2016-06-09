@@ -96,6 +96,7 @@
             this.cmbComPort.Name = "cmbComPort";
             this.cmbComPort.Size = new System.Drawing.Size(77, 21);
             this.cmbComPort.TabIndex = 20;
+            this.cmbComPort.Visible = false;
             // 
             // label1
             // 
@@ -105,6 +106,7 @@
             this.label1.Size = new System.Drawing.Size(58, 13);
             this.label1.TabIndex = 19;
             this.label1.Text = "Serial Port:";
+            this.label1.Visible = false;
             // 
             // MainMenu
             // 
@@ -123,6 +125,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Main Menu";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainMenu_FormClosed);
+            this.Load += new System.EventHandler(this.MainMenu_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

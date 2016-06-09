@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Data.SqlClient;
 using UHFDemo;
 using System.IO;
-using MySql.Data.MySqlClient;
+//using MySql.Data.MySqlClient;
 using RestSharp;
 using System.Net;
 using RestSharp.Deserializers;
@@ -30,13 +30,25 @@ namespace RFID_FEATHER_ASSETS
         string portname; //= "COM3";
         string baudrate = "115200";
         bool IsPortError = false;
+        
         string tokenvalue;
+        string roleValue;
 
-        public Verification(string tokenvaluesource, string portnamesource)
+        public Verification(string tokenvaluesource, string portnamesource, string roleSource)
         {
             InitializeComponent();
             portname = portnamesource;
             tokenvalue = tokenvaluesource;
+            roleValue = roleSource;
+
+            if (roleValue == "ROLE_ADMIN")
+            {
+                btnBack.Visible = true;
+            }
+            else if (roleValue == "ROLE_GUARD")
+            {
+                btnBack.Visible = false;
+            }
         }
 
         private void auto_connect()
@@ -130,43 +142,53 @@ namespace RFID_FEATHER_ASSETS
             verifyRequest.tagType = 1;
 
             //initialize web service
-            RestClient client = new RestClient("http://feather-assets.herokuapp.com/");
+            RestClient client = new RestClient("http://52.163.93.95:8080/FeatherAssets/");
             RestRequest verify = new RestRequest("/api/asset/verify", Method.POST);
             var authToken = tokenvalue;
 
+            //Input necessary headers
             verify.AddHeader("X-Auth-Token", authToken);
             verify.AddHeader("Content-Type", "application/json; charset=utf-8");
+            
+            //Define the format of object we are sending
             verify.RequestFormat = DataFormat.Json;
             verify.AddBody(verifyRequest);
 
-            //retrieve response
+            //send the object
             IRestResponse response = client.Execute(verify);
             var content = response.Content;
 
             btnVerifyAsset.Text = "Click to verify RFID Tag";
             
+            //check if successfuly entered service
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 
                 //deserialize JSON -> Object
                 JsonDeserializer deserial = new JsonDeserializer();
                 VerifyResult verifyResult = deserial.Deserialize<VerifyResult>(response);
+
+                //check if success
                 if (verifyResult.result == "OK")
                 {
 
                     txtAssetName.Text = verifyResult.name;
                     txtOwnerName.Text = verifyResult.description;
                     ////txtTakeOutAvailability.Text = (rd["take_out_allowed"].ToString());
-                    if (Boolean.Parse(verifyResult.takOutAllowed.ToString()))
+                    
+                    //check takeOutAvailability
+                    if (verifyResult.takOutAllowed)//Boolean.Parse(verifyResult.takOutAllowed.ToString()))
                     {
                         txtTakeOutAvailability.Text = "Allowed to take-out.";
                     }
                     else
                     {
-                        txtTakeOutAvailability.Text = "Not allowed to take-out.";
+                        txtTakeOutAvailability.Text = "Not allowed to take-out.";                    
                     }
+
                     txtTakeOutNote.Text = verifyResult.takeOutInfo;
 
+                    //check imageUrl
                     if (File.Exists(verifyResult.imageUrls))
                     {
                         picOwner.Image = Image.FromFile(verifyResult.imageUrls);
@@ -182,8 +204,8 @@ namespace RFID_FEATHER_ASSETS
                     VerifyTimer.Stop();
                     VerifyTimer.Start();
 
-                    ClearTimer.Stop();
-                    ClearTimer.Start();
+                    //ClearTimer.Stop();
+                    //ClearTimer.Start();
 
                     return;
                 }
@@ -495,7 +517,7 @@ namespace RFID_FEATHER_ASSETS
             {
                 this.Hide();
                 reader.CloseCom();
-                MainMenu MenuForm = new MainMenu(tokenvalue, portname);
+                MainMenu MenuForm = new MainMenu(tokenvalue, portname, roleValue);
                 MenuForm.Show();
             }
         }
@@ -508,18 +530,25 @@ namespace RFID_FEATHER_ASSETS
         }
 
         private void Verification_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            this.Hide();
-            reader.CloseCom();
-            MainMenu MenuForm = new MainMenu(tokenvalue, portname);
-            MenuForm.Show();
+        {            
+            if (roleValue == "ROLE_ADMIN")
+            {
+                this.Hide();
+                reader.CloseCom();
+                MainMenu MenuForm = new MainMenu(tokenvalue, portname, roleValue);
+                MenuForm.Show();
+            }
+            else
+            {
+                Environment.Exit(0);
+            }
         }
 
         private void btnBack_Click(object sender, EventArgs e)
         {
             this.Hide();
             reader.CloseCom();
-            MainMenu MenuForm = new MainMenu(tokenvalue, portname);
+            MainMenu MenuForm = new MainMenu(tokenvalue, portname, roleValue);
             MenuForm.Show();
         }
     }
