@@ -64,6 +64,8 @@ namespace RFID_FEATHER_ASSETS
 
                 JsonDeserializer deserial = new JsonDeserializer();
                 loginResult = deserial.Deserialize<LoginResult>(response);
+
+               
                       
                 //check authorities                       
                 if (loginResult.roles == "ROLE_ADMIN")

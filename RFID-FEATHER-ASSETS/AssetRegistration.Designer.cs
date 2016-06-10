@@ -25,6 +25,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.btnRegisterUser = new System.Windows.Forms.Button();
             this.btnBrowseImage = new System.Windows.Forms.Button();
             this.txtImagePath = new System.Windows.Forms.TextBox();
@@ -35,8 +36,12 @@
             this.lblNoCameraAvailable = new System.Windows.Forms.Label();
             this.cameraBox = new System.Windows.Forms.PictureBox();
             this.comVideoDeviceBox = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.radbtnYes = new System.Windows.Forms.RadioButton();
+            this.radbtnNo = new System.Windows.Forms.RadioButton();
             this.txtCapturedImagePath = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lblSubmittingInformation = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.comboOwner = new System.Windows.Forms.ComboBox();
             this.btnGetRFIDTag = new System.Windows.Forms.Button();
@@ -45,29 +50,30 @@
             this.txtDescription = new System.Windows.Forms.TextBox();
             this.txtTakeOutNote = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.radbtnNo = new System.Windows.Forms.RadioButton();
-            this.radbtnYes = new System.Windows.Forms.RadioButton();
-            this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.txtAssetName = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.txtRFIDTag = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.imgCapture1 = new System.Windows.Forms.PictureBox();
-            this.imgCapture2 = new System.Windows.Forms.PictureBox();
-            this.imgCapture3 = new System.Windows.Forms.PictureBox();
-            this.imgCapture4 = new System.Windows.Forms.PictureBox();
-            this.imgCapture5 = new System.Windows.Forms.PictureBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.imgCapture5 = new System.Windows.Forms.PictureBox();
+            this.imgCapture4 = new System.Windows.Forms.PictureBox();
+            this.imgCapture3 = new System.Windows.Forms.PictureBox();
+            this.imgCapture2 = new System.Windows.Forms.PictureBox();
+            this.imgCapture1 = new System.Windows.Forms.PictureBox();
+            this.CurrentTimer = new System.Windows.Forms.Timer(this.components);
+            this.lblCurrentDateTime = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.picOwner)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cameraBox)).BeginInit();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.imgCapture1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imgCapture2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imgCapture3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imgCapture4)).BeginInit();
+            this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgCapture5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imgCapture4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imgCapture3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imgCapture2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imgCapture1)).BeginInit();
             this.SuspendLayout();
             // 
             // btnRegisterUser
@@ -87,14 +93,13 @@
             this.btnBrowseImage.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.btnBrowseImage.BackColor = System.Drawing.Color.Orange;
             this.btnBrowseImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnBrowseImage.Location = new System.Drawing.Point(637, 870);
+            this.btnBrowseImage.Location = new System.Drawing.Point(704, 870);
             this.btnBrowseImage.Name = "btnBrowseImage";
             this.btnBrowseImage.Size = new System.Drawing.Size(43, 26);
             this.btnBrowseImage.TabIndex = 1;
             this.btnBrowseImage.Text = "Browse Image";
             this.btnBrowseImage.UseVisualStyleBackColor = false;
             this.btnBrowseImage.Visible = false;
-            this.btnBrowseImage.Click += new System.EventHandler(this.btnBrowseImage_Click);
             // 
             // txtImagePath
             // 
@@ -109,7 +114,7 @@
             // 
             this.picOwner.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.picOwner.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picOwner.Location = new System.Drawing.Point(598, 874);
+            this.picOwner.Location = new System.Drawing.Point(665, 874);
             this.picOwner.Name = "picOwner";
             this.picOwner.Size = new System.Drawing.Size(37, 22);
             this.picOwner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -128,13 +133,13 @@
             this.groupBox1.Controls.Add(this.lblNoCameraAvailable);
             this.groupBox1.Controls.Add(this.cameraBox);
             this.groupBox1.Controls.Add(this.comVideoDeviceBox);
-            this.groupBox1.Controls.Add(this.txtCapturedImagePath);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.radbtnYes);
             this.groupBox1.Controls.Add(this.radbtnNo);
+            this.groupBox1.Controls.Add(this.txtCapturedImagePath);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.groupBox1.Location = new System.Drawing.Point(31, 37);
+            this.groupBox1.Location = new System.Drawing.Point(100, 37);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(466, 495);
             this.groupBox1.TabIndex = 26;
@@ -168,6 +173,7 @@
             // cameraBox
             // 
             this.cameraBox.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.cameraBox.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cameraBox.Location = new System.Drawing.Point(30, 33);
             this.cameraBox.Name = "cameraBox";
             this.cameraBox.Size = new System.Drawing.Size(405, 401);
@@ -184,6 +190,46 @@
             this.comVideoDeviceBox.TabIndex = 26;
             this.comVideoDeviceBox.Visible = false;
             // 
+            // label4
+            // 
+            this.label4.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(239, 273);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(132, 18);
+            this.label4.TabIndex = 19;
+            this.label4.Text = "Take Out Allowed?";
+            this.label4.Visible = false;
+            // 
+            // radbtnYes
+            // 
+            this.radbtnYes.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.radbtnYes.AutoSize = true;
+            this.radbtnYes.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radbtnYes.Location = new System.Drawing.Point(258, 294);
+            this.radbtnYes.Name = "radbtnYes";
+            this.radbtnYes.Size = new System.Drawing.Size(45, 19);
+            this.radbtnYes.TabIndex = 17;
+            this.radbtnYes.Text = "Yes";
+            this.radbtnYes.UseVisualStyleBackColor = true;
+            this.radbtnYes.Visible = false;
+            // 
+            // radbtnNo
+            // 
+            this.radbtnNo.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.radbtnNo.AutoSize = true;
+            this.radbtnNo.Checked = true;
+            this.radbtnNo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radbtnNo.Location = new System.Drawing.Point(314, 294);
+            this.radbtnNo.Name = "radbtnNo";
+            this.radbtnNo.Size = new System.Drawing.Size(41, 19);
+            this.radbtnNo.TabIndex = 18;
+            this.radbtnNo.TabStop = true;
+            this.radbtnNo.Text = "No";
+            this.radbtnNo.UseVisualStyleBackColor = true;
+            this.radbtnNo.Visible = false;
+            // 
             // txtCapturedImagePath
             // 
             this.txtCapturedImagePath.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -198,6 +244,7 @@
             // groupBox2
             // 
             this.groupBox2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.groupBox2.Controls.Add(this.lblSubmittingInformation);
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.comboOwner);
             this.groupBox2.Controls.Add(this.btnGetRFIDTag);
@@ -212,12 +259,24 @@
             this.groupBox2.Controls.Add(this.txtRFIDTag);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(555, 37);
+            this.groupBox2.Location = new System.Drawing.Point(624, 37);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(321, 495);
             this.groupBox2.TabIndex = 27;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Asset Information";
+            // 
+            // lblSubmittingInformation
+            // 
+            this.lblSubmittingInformation.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblSubmittingInformation.AutoSize = true;
+            this.lblSubmittingInformation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSubmittingInformation.Location = new System.Drawing.Point(29, 405);
+            this.lblSubmittingInformation.Name = "lblSubmittingInformation";
+            this.lblSubmittingInformation.Size = new System.Drawing.Size(260, 16);
+            this.lblSubmittingInformation.TabIndex = 47;
+            this.lblSubmittingInformation.Text = "Submitting Information. Please wait...";
+            this.lblSubmittingInformation.Visible = false;
             // 
             // label7
             // 
@@ -246,9 +305,9 @@
             this.btnGetRFIDTag.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.btnGetRFIDTag.BackColor = System.Drawing.Color.Orange;
             this.btnGetRFIDTag.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnGetRFIDTag.Location = new System.Drawing.Point(216, 34);
+            this.btnGetRFIDTag.Location = new System.Drawing.Point(189, 34);
             this.btnGetRFIDTag.Name = "btnGetRFIDTag";
-            this.btnGetRFIDTag.Size = new System.Drawing.Size(72, 26);
+            this.btnGetRFIDTag.Size = new System.Drawing.Size(99, 26);
             this.btnGetRFIDTag.TabIndex = 2;
             this.btnGetRFIDTag.Text = "Get RFID Tag";
             this.btnGetRFIDTag.UseVisualStyleBackColor = false;
@@ -313,46 +372,6 @@
             this.label5.TabIndex = 23;
             this.label5.Text = "Take Out Note";
             // 
-            // radbtnNo
-            // 
-            this.radbtnNo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.radbtnNo.AutoSize = true;
-            this.radbtnNo.Checked = true;
-            this.radbtnNo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radbtnNo.Location = new System.Drawing.Point(314, 294);
-            this.radbtnNo.Name = "radbtnNo";
-            this.radbtnNo.Size = new System.Drawing.Size(41, 19);
-            this.radbtnNo.TabIndex = 18;
-            this.radbtnNo.TabStop = true;
-            this.radbtnNo.Text = "No";
-            this.radbtnNo.UseVisualStyleBackColor = true;
-            this.radbtnNo.Visible = false;
-            // 
-            // radbtnYes
-            // 
-            this.radbtnYes.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.radbtnYes.AutoSize = true;
-            this.radbtnYes.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radbtnYes.Location = new System.Drawing.Point(258, 294);
-            this.radbtnYes.Name = "radbtnYes";
-            this.radbtnYes.Size = new System.Drawing.Size(45, 19);
-            this.radbtnYes.TabIndex = 17;
-            this.radbtnYes.Text = "Yes";
-            this.radbtnYes.UseVisualStyleBackColor = true;
-            this.radbtnYes.Visible = false;
-            // 
-            // label4
-            // 
-            this.label4.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(239, 273);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(132, 18);
-            this.label4.TabIndex = 19;
-            this.label4.Text = "Take Out Allowed?";
-            this.label4.Visible = false;
-            // 
             // label3
             // 
             this.label3.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -410,90 +429,116 @@
             this.label1.Text = "RFID Tag";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // imgCapture1
+            // groupBox3
             // 
-            this.imgCapture1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.imgCapture1.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.imgCapture1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.imgCapture1.Location = new System.Drawing.Point(33, 538);
-            this.imgCapture1.Name = "imgCapture1";
-            this.imgCapture1.Size = new System.Drawing.Size(167, 160);
-            this.imgCapture1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.imgCapture1.TabIndex = 28;
-            this.imgCapture1.TabStop = false;
-            // 
-            // imgCapture2
-            // 
-            this.imgCapture2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.imgCapture2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.imgCapture2.Location = new System.Drawing.Point(202, 538);
-            this.imgCapture2.Name = "imgCapture2";
-            this.imgCapture2.Size = new System.Drawing.Size(167, 160);
-            this.imgCapture2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.imgCapture2.TabIndex = 29;
-            this.imgCapture2.TabStop = false;
-            // 
-            // imgCapture3
-            // 
-            this.imgCapture3.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.imgCapture3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.imgCapture3.Location = new System.Drawing.Point(371, 538);
-            this.imgCapture3.Name = "imgCapture3";
-            this.imgCapture3.Size = new System.Drawing.Size(167, 160);
-            this.imgCapture3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.imgCapture3.TabIndex = 30;
-            this.imgCapture3.TabStop = false;
-            // 
-            // imgCapture4
-            // 
-            this.imgCapture4.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.imgCapture4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.imgCapture4.Location = new System.Drawing.Point(540, 538);
-            this.imgCapture4.Name = "imgCapture4";
-            this.imgCapture4.Size = new System.Drawing.Size(167, 160);
-            this.imgCapture4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.imgCapture4.TabIndex = 31;
-            this.imgCapture4.TabStop = false;
-            // 
-            // imgCapture5
-            // 
-            this.imgCapture5.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.imgCapture5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.imgCapture5.Location = new System.Drawing.Point(709, 538);
-            this.imgCapture5.Name = "imgCapture5";
-            this.imgCapture5.Size = new System.Drawing.Size(167, 160);
-            this.imgCapture5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.imgCapture5.TabIndex = 32;
-            this.imgCapture5.TabStop = false;
+            this.groupBox3.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.groupBox3.Controls.Add(this.label6);
+            this.groupBox3.Controls.Add(this.imgCapture5);
+            this.groupBox3.Controls.Add(this.imgCapture4);
+            this.groupBox3.Controls.Add(this.imgCapture3);
+            this.groupBox3.Controls.Add(this.imgCapture2);
+            this.groupBox3.Controls.Add(this.imgCapture1);
+            this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox3.Location = new System.Drawing.Point(101, 542);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(843, 207);
+            this.groupBox3.TabIndex = 28;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Captured Images";
             // 
             // label6
             // 
             this.label6.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label6.BackColor = System.Drawing.Color.Orange;
             this.label6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label6.Location = new System.Drawing.Point(34, 700);
+            this.label6.Location = new System.Drawing.Point(1, 190);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(842, 10);
-            this.label6.TabIndex = 33;
+            this.label6.TabIndex = 39;
+            // 
+            // imgCapture5
+            // 
+            this.imgCapture5.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.imgCapture5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.imgCapture5.Location = new System.Drawing.Point(672, 28);
+            this.imgCapture5.Name = "imgCapture5";
+            this.imgCapture5.Size = new System.Drawing.Size(167, 160);
+            this.imgCapture5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.imgCapture5.TabIndex = 38;
+            this.imgCapture5.TabStop = false;
+            // 
+            // imgCapture4
+            // 
+            this.imgCapture4.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.imgCapture4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.imgCapture4.Location = new System.Drawing.Point(505, 28);
+            this.imgCapture4.Name = "imgCapture4";
+            this.imgCapture4.Size = new System.Drawing.Size(167, 160);
+            this.imgCapture4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.imgCapture4.TabIndex = 37;
+            this.imgCapture4.TabStop = false;
+            // 
+            // imgCapture3
+            // 
+            this.imgCapture3.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.imgCapture3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.imgCapture3.Location = new System.Drawing.Point(338, 28);
+            this.imgCapture3.Name = "imgCapture3";
+            this.imgCapture3.Size = new System.Drawing.Size(167, 160);
+            this.imgCapture3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.imgCapture3.TabIndex = 36;
+            this.imgCapture3.TabStop = false;
+            // 
+            // imgCapture2
+            // 
+            this.imgCapture2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.imgCapture2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.imgCapture2.Location = new System.Drawing.Point(171, 28);
+            this.imgCapture2.Name = "imgCapture2";
+            this.imgCapture2.Size = new System.Drawing.Size(167, 160);
+            this.imgCapture2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.imgCapture2.TabIndex = 35;
+            this.imgCapture2.TabStop = false;
+            // 
+            // imgCapture1
+            // 
+            this.imgCapture1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.imgCapture1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.imgCapture1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.imgCapture1.Location = new System.Drawing.Point(4, 28);
+            this.imgCapture1.Name = "imgCapture1";
+            this.imgCapture1.Size = new System.Drawing.Size(167, 160);
+            this.imgCapture1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.imgCapture1.TabIndex = 34;
+            this.imgCapture1.TabStop = false;
+            // 
+            // CurrentTimer
+            // 
+            this.CurrentTimer.Tick += new System.EventHandler(this.CurrentTimer_Tick);
+            // 
+            // lblCurrentDateTime
+            // 
+            this.lblCurrentDateTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblCurrentDateTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCurrentDateTime.Location = new System.Drawing.Point(786, 721);
+            this.lblCurrentDateTime.Name = "lblCurrentDateTime";
+            this.lblCurrentDateTime.Size = new System.Drawing.Size(254, 20);
+            this.lblCurrentDateTime.TabIndex = 31;
             // 
             // AssetRegistration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ClientSize = new System.Drawing.Size(909, 750);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.imgCapture5);
-            this.Controls.Add(this.imgCapture4);
-            this.Controls.Add(this.imgCapture3);
-            this.Controls.Add(this.imgCapture2);
-            this.Controls.Add(this.imgCapture1);
+            this.ClientSize = new System.Drawing.Size(1043, 750);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.picOwner);
             this.Controls.Add(this.btnBrowseImage);
             this.Controls.Add(this.txtImagePath);
             this.Controls.Add(this.btnRegisterUser);
+            this.Controls.Add(this.lblCurrentDateTime);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "AssetRegistration";
@@ -508,11 +553,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.cameraBox)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.imgCapture1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imgCapture2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imgCapture3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imgCapture4)).EndInit();
+            this.groupBox3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.imgCapture5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imgCapture4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imgCapture3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imgCapture2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imgCapture1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -546,14 +592,18 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtCapturedImagePath;
         private System.Windows.Forms.Label lblNoCameraAvailable;
-        private System.Windows.Forms.PictureBox imgCapture1;
-        private System.Windows.Forms.PictureBox imgCapture2;
-        private System.Windows.Forms.PictureBox imgCapture3;
-        private System.Windows.Forms.PictureBox imgCapture4;
-        private System.Windows.Forms.PictureBox imgCapture5;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox comboOwner;
+        private System.Windows.Forms.Label lblSubmittingInformation;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.PictureBox imgCapture5;
+        private System.Windows.Forms.PictureBox imgCapture4;
+        private System.Windows.Forms.PictureBox imgCapture3;
+        private System.Windows.Forms.PictureBox imgCapture2;
+        private System.Windows.Forms.PictureBox imgCapture1;
+        private System.Windows.Forms.Timer CurrentTimer;
+        private System.Windows.Forms.Label lblCurrentDateTime;
 
     }
 }

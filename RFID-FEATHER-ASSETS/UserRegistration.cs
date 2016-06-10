@@ -12,6 +12,7 @@ using RestSharp;
 using System.Net;
 using AForge.Video;
 using AForge.Video.DirectShow;
+using System.IO;
 
 namespace RFID_FEATHER_ASSETS
 {
@@ -25,20 +26,66 @@ namespace RFID_FEATHER_ASSETS
             InitializeComponent();
             tokenvalue = tokenvaluesource;
             //CCT.Completed += new EventHandler<PhotoResult>(capture_completed);
+
+            List<Role> roles = new List<Role>();
+            roles.Add(new Role() { roleName = "Administrator", value = "ROLE_ADMIN" });
+            roles.Add(new Role() { roleName = "Security", value = "ROLE_GUARD" });
+            roles.Add(new Role() { roleName = "User", value = "ROLE_USER" });
+
+            this.authorities.DataSource = roles;
+            this.authorities.DisplayMember = "roleName";
+            this.authorities.ValueMember = "value";
+            
         }
 
         private FilterInfoCollection webcam;
         private VideoCaptureDevice cam;
+        bool IsCameraConnected = false;
+        private void StartCamera()
+        {
+            cam = new VideoCaptureDevice(webcam[comVideoDeviceBox.SelectedIndex].MonikerString);
+            cam.NewFrame += new NewFrameEventHandler(cam_NewFrame);
+            cam.Start();
+        }
+        private void InitializeCamera()
+        {
+            comVideoDeviceBox.Items.Clear();
+            CaptureImg.Image = null;
 
-        private void button1_Click(object sender, EventArgs e)
+            webcam = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+            foreach (FilterInfo VideoCaptureDevice in webcam)
+            {
+                comVideoDeviceBox.Items.Add(VideoCaptureDevice.Name);
+            }
+
+            if (comVideoDeviceBox.Items.Count < 1)
+            {
+                if (cam != null) cam.Stop();
+                IsCameraConnected = false;
+                cameraBox.BackColor = Color.Black;
+                lblNoCameraAvailable.Visible = true;
+                CaptureImg.Text = "Refresh Camera";
+            }
+            else
+            {
+                comVideoDeviceBox.SelectedIndex = 0;
+                StartCamera();
+
+                IsCameraConnected = true;
+                cameraBox.BackColor = Color.White;
+                lblNoCameraAvailable.Visible = false;
+                CaptureImg.Text = "Capture Image";
+            }
+        }
+        private void btnSubmit_Click(object sender, EventArgs e)
         {
             //TODO: ERROR 400
             userInfo userinfo = new userInfo();
             userinfo.companyId = 1;
             userinfo.imageUrl = "wew";
-            userinfo.password = "aws123";
-            userinfo.confirmPassword = "aws123";
-            userinfo.authorities = "user";
+            userinfo.password = password.Text;
+            userinfo.confirmPassword = cpassword.Text;
+            userinfo.authorities =authorities.Text;
             userinfo.firstName = firstName.Text;
             userinfo.lastName = lastName.Text;
             userinfo.description = description.Text;
@@ -52,7 +99,7 @@ namespace RFID_FEATHER_ASSETS
                 return;
             }
 
-            RestClient client = new RestClient("http://feather-assets.herokuapp.com/");
+            RestClient client = new RestClient("http://52.163.93.95:8080/FeatherAssets/");
             RestRequest user = new RestRequest("/api/user/add", Method.POST);
             var authToken = tokenvalue;
             user.AddHeader("X-Auth-Token", authToken);
@@ -80,7 +127,7 @@ namespace RFID_FEATHER_ASSETS
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
         }
@@ -95,23 +142,38 @@ namespace RFID_FEATHER_ASSETS
 
         private void RegisterUser_Load(object sender, EventArgs e)
         {
-            webcam = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+            InitializeCamera();        
+            /*webcam = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             foreach (FilterInfo VideoCaptureDevice in webcam)
             {
-                comboBox1.Items.Add(VideoCaptureDevice.Name);
+                comVideoDeviceBox.Items.Add(VideoCaptureDevice.Name);
             }
-            comboBox1.SelectedIndex = 0;
-
+            comVideoDeviceBox.SelectedIndex = 0;
+            */
         }
 
-        private void CaptureImg_Click(object sender, EventArgs e)
+        private void CaptureImg_Click_1(object sender, EventArgs e)
         {
+            if (cam == null || CaptureImg.Text == "Refresh Camera")
+            {
+                InitializeCamera();
+            }
             cam.Stop();
             saveFileDialog1.InitialDirectory = @"C:\Users\USER\Pictures\";
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                pictureBox1.Image.Save(saveFileDialog1.FileName + ".jpg");
-            }
+            string dirPath = @"C:\Users\";
+            string fileName = "Image";
+            string[] files = Directory.GetFiles(dirPath);
+            int count = files.Count(file => { return file.Contains(fileName); });
+
+            string newFileName = (count == 0) ? "Image.jpg" : String.Format("{0}{1}.jpg", fileName, count + 1);
+
+            cameraBox.Image.Save(dirPath + newFileName);
+            //txtCapturedImagePath.Text = txtCapturedImagePath.Text + "," + dirPath + newFileName;
+            InitializeCamera();
+            //if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            //{
+            //    cameraBox.Image.Save(saveFileDialog1.FileName + ".jpg");
+            //}
 
             //string imageDir = saveFileDialog1.InitialDirectory + saveFileDialog1.FileName;
             
@@ -121,16 +183,17 @@ namespace RFID_FEATHER_ASSETS
         void cam_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             Bitmap bit = (Bitmap)eventArgs.Frame.Clone();
-            pictureBox1.Image = bit;
+            cameraBox.Image = bit;
         }
 
+        //private void btnStart_Click_1(object sender, EventArgs e)
+        //{
+        //    cam = new VideoCaptureDevice(webcam[comboBox1.SelectedIndex].MonikerString);
+        //    cam.NewFrame += new NewFrameEventHandler(cam_NewFrame);
+        //    cam.Start();
+        //}
 
-        private void btnStart_Click(object sender, EventArgs e)
-        {
-            cam = new VideoCaptureDevice(webcam[comboBox1.SelectedIndex].MonikerString);
-            cam.NewFrame += new NewFrameEventHandler(cam_NewFrame);
-            cam.Start();
-        }
+      
 
     }
 
@@ -189,25 +252,20 @@ namespace RFID_FEATHER_ASSETS
             get;
             set;
         }
-        //public string authenticationToken
-        //{
-        //    get;
-        //    set;
-        //}
+
         public string email
         {
             get;
             set;
         }
+        public string imageUrls { get; set; }
 
     }
 
-    //public class CameraCaptureTask {
-    //    private byte[] _imageBytes;      
-    //    CameraCaptureTask CCT = new CameraCaptureTask();
-    //    private static string imgFileName = "CharlesGay";
-    //    string imageFolder = @"\CharlesHandsome\Not";
-    //    string imageFileName = imgFileName+".jpg";
-
+    public class Role
+    {
+        public string roleName { get; set; }
+        public string value { get; set; }
+    }
     }
 

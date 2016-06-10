@@ -1,18 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using System.Data.SqlClient;
 using UHFDemo;
 using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using Newtonsoft.Json;
-using System.Threading.Tasks;
 using RestSharp;
 using System.Net;
 using RestSharp.Deserializers;
@@ -42,50 +34,63 @@ namespace RFID_FEATHER_ASSETS
         public AssetRegistration(string tokenvaluesource, string portnamesource)
         {
             InitializeComponent();
-            InitializeCamera();
 
             portname = portnamesource;
             tokenvalue = tokenvaluesource;
+            InitializeCamera();
             InitializeOwner();
         }
 
         private void InitializeOwner()
         {
-            var company = 1;
+            try
+            { 
+                var company = 1;
 
-            RestClient client = new RestClient("http://feather-assets.herokuapp.com/"/*"52.163.93.95:8080/FeatherAssets/"*/);
-            RestRequest ownerName = new RestRequest("/api/user/list/" + company, Method.GET);
+                RestClient client = new RestClient("http://feather-assets.herokuapp.com/");//"http://52.163.93.95:8080/FeatherAssets/");
+               RestRequest ownerName = new RestRequest("/api/user/list/"+company, Method.GET);
 
-            var authToken = tokenvalue;
+               var authToken = tokenvalue;
 
-            ownerName.RequestFormat = DataFormat.Json;
-            ownerName.AddHeader("Content-Type", "application/json; charset=utf-8");
-            ownerName.AddHeader("X-Auth-Token", authToken);
+               ownerName.RequestFormat = DataFormat.Json;
+               ownerName.AddHeader("Content-Type", "application/json; charset=utf-8");
+               ownerName.AddHeader("X-Auth-Token", authToken);
 
-            var response = client.Execute<List<Owner>>(ownerName);
-            var content = response.Content;
+               var response = client.Execute<List<Owner>>(ownerName);
+               var content = response.Content;
 
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                JsonDeserializer deserial = new JsonDeserializer();
-                List<Owner> owner = deserial.Deserialize<List<Owner>>(response);
+               if (response.StatusCode == HttpStatusCode.OK)
+               {
+                   JsonDeserializer deserial = new JsonDeserializer();
+                   List<Owner> owner = deserial.Deserialize<List<Owner>>(response);
 
-
-                this.comboOwner.DataSource = owner;
-                this.comboOwner.ValueMember = "userId";
-                this.comboOwner.DisplayMember = "fullName";
+                   this.comboOwner.DataSource = owner;
+                   this.comboOwner.ValueMember = "userId";
+                   this.comboOwner.DisplayMember = "fullName";
+               }
+               else
+               {
+                   MessageBox.Show("Unable to reach server.. please try again later", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+               }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Unable to reach server.. please try again later", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message);
             }
         }
 
         private void StartCamera()
         {
-            cam = new VideoCaptureDevice(webcam[comVideoDeviceBox.SelectedIndex].MonikerString);
-            cam.NewFrame += new NewFrameEventHandler(cam_NewFrame);
-            cam.Start();
+            try
+            { 
+                cam = new VideoCaptureDevice(webcam[comVideoDeviceBox.SelectedIndex].MonikerString);
+                cam.NewFrame += new NewFrameEventHandler(cam_NewFrame);
+                cam.Start();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void auto_connect()
@@ -93,7 +98,7 @@ namespace RFID_FEATHER_ASSETS
             try // Await the task in a try block
             {
                 string strException = string.Empty; // 
-                string strComPort = portname;
+                string strComPort =  portname;
                 int nBaudrate = Convert.ToInt32(baudrate);////Convert.ToInt32(BaudBox.Text);
 
                 int nRet = reader.OpenCom(strComPort, nBaudrate, out strException);
@@ -113,7 +118,7 @@ namespace RFID_FEATHER_ASSETS
             //MainMenu MenuForm = new MainMenu(tokenvalue, portname);
             //MenuForm.Show();
             CallMainMenu();
-        }
+        }  
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
@@ -123,8 +128,8 @@ namespace RFID_FEATHER_ASSETS
                 {
                     MessageBox.Show("Complete information is required.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
                     //btnBrowseImage.Focus();
-                    btnCaptureImg.Focus();
-                    return;
+                    btnGetRFIDTag.Focus();
+                    return; 
                 }
                 /*if (!CheckDuplicateRFID())
                 {
@@ -162,12 +167,6 @@ namespace RFID_FEATHER_ASSETS
                 //ClearFields();
 
                 //For Web Service
-                //HttpClient client = new HttpClient();
-                //client.BaseAddress = new Uri("http://feather-assets.herokuapp.com/");
-                //client.DefaultRequestHeaders.Accept.Clear();
-                //client.DefaultRequestHeaders.Accept.Add(
-                //   new MediaTypeWithQualityHeaderValue("application/json"));
-
                 Asset asset = new Asset();
 
                 int oId;
@@ -190,21 +189,21 @@ namespace RFID_FEATHER_ASSETS
                 asset.takeOutInfo = txtTakeOutNote.Text;
                 asset.imageUrls = txtCapturedImagePath.Text;//txtImagePath.Text;
 
-                //var response = client.PostAsJsonAsync("api/asset", AssetDet).Result;
-
-                RestClient client = new RestClient("http://52.163.93.95:8080/FeatherAssets/");
+                RestClient client = new RestClient("http://feather-assets.herokuapp.com/");//"http://52.163.93.95:8080/FeatherAssets/");
                 RestRequest register = new RestRequest("/api/asset/add", Method.POST);
-                var authToken = tokenvalue;
 
+                var authToken = tokenvalue;
                 register.AddHeader("X-Auth-Token", authToken);
                 register.AddHeader("Content-Type", "application/json; charset=utf-8");
                 register.RequestFormat = DataFormat.Json;
                 register.AddBody(asset);
 
-                btnSubmit.Text = "Submitting...";
+                lblSubmittingInformation.Visible = true;
                 this.Refresh();
+
+
                 IRestResponse response = client.Execute(register);
-                btnSubmit.Text = "Submit";
+                lblSubmittingInformation.Visible = false;
 
                 var content = response.Content;
 
@@ -222,7 +221,7 @@ namespace RFID_FEATHER_ASSETS
                     {
                         MessageBox.Show(restResult.result + " " + restResult.message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
-
+                        
                 }
                 else
                 {
@@ -235,7 +234,7 @@ namespace RFID_FEATHER_ASSETS
             catch (System.Exception ex)
             {
                 MessageBox.Show(ex.Message);
-            }
+            }  
         }
 
         private void ClearFields()
@@ -249,127 +248,148 @@ namespace RFID_FEATHER_ASSETS
             picOwner.Image = null;
             //btnBrowseImage.Focus();
             txtCapturedImagePath.Text = string.Empty;
-            btnCaptureImg.Focus();
+            //cameraBox.Image = null;
+            imgCapture1.Image = null;
+            imgCapture2.Image = null;
+            imgCapture3.Image = null;
+            imgCapture4.Image = null;
+            imgCapture5.Image = null;
+
+            btnGetRFIDTag.Focus();
         }
 
         //private bool CheckDuplicateRFID()
         //{
-        ////SqlConnection con = new SqlConnection(connectionString);
-        ////con.Open();
-        ////SqlCommand cmd = new SqlCommand("select * from asset where rfid_tag='" + txtRFIDTag.Text + "'", con);
-        ////SqlDataReader rd = cmd.ExecuteReader();
-        //MySqlConnection con = new MySqlConnection(connectionString);
-        //con.Open();
-        //MySqlCommand cmd = new MySqlCommand("select * from asset where rfid_tag='" + txtRFIDTag.Text + "'", con);
-        //MySqlDataReader rd = cmd.ExecuteReader();
-        //if (rd.HasRows)
-        //{
-        //    rd.Close();
-        //    return false;
-        //}
-        //else
-        //{
-        //    rd.Close();
-        //    return true;
-        //}
+            ////SqlConnection con = new SqlConnection(connectionString);
+            ////con.Open();
+            ////SqlCommand cmd = new SqlCommand("select * from asset where rfid_tag='" + txtRFIDTag.Text + "'", con);
+            ////SqlDataReader rd = cmd.ExecuteReader();
+            //MySqlConnection con = new MySqlConnection(connectionString);
+            //con.Open();
+            //MySqlCommand cmd = new MySqlCommand("select * from asset where rfid_tag='" + txtRFIDTag.Text + "'", con);
+            //MySqlDataReader rd = cmd.ExecuteReader();
+            //if (rd.HasRows)
+            //{
+            //    rd.Close();
+            //    return false;
+            //}
+            //else
+            //{
+            //    rd.Close();
+            //    return true;
+            //}
         //} 
 
         private void RegisterAsset_FormClosed(object sender, FormClosedEventArgs e)
         {
-            //this.Hide();
-            //reader.CloseCom();
-            //MainMenu MenuForm = new MainMenu(tokenvalue, portname);
-            //MenuForm.Show();
             CallMainMenu();
         }
 
-        private void comboOwner_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //SqlConnection con = new SqlConnection(connectionString);
-            //con.Open();
-            //SqlCommand cmd = new SqlCommand("select * from User_Master where first_name ='" + comboOwner.Text.Trim() + "'", con);
-            //SqlDataReader rd = cmd.ExecuteReader();
+        //private void comboOwner_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    //SqlConnection con = new SqlConnection(connectionString);
+        //    //con.Open();
+        //    //SqlCommand cmd = new SqlCommand("select * from User_Master where first_name ='" + comboOwner.Text.Trim() + "'", con);
+        //    //SqlDataReader rd = cmd.ExecuteReader();
 
-            //while (rd.Read())
-            //{
-            //    ownerid = rd["user_id"].ToString();
-            //}
-            //rd.Close();
-        }
+        //    //while (rd.Read())
+        //    //{
+        //    //    ownerid = rd["user_id"].ToString();
+        //    //}
+        //    //rd.Close();
+        //}
 
-        private void comboOwner_DropDown(object sender, EventArgs e)
-        {
-            //comboOwner.Items.Clear();
+        //private void comboOwner_DropDown(object sender, EventArgs e)
+        //{
+        //    //comboOwner.Items.Clear();
 
-            //SqlConnection con = new SqlConnection(connectionString);
-            //con.Open();
-            //SqlCommand cmd = new SqlCommand("select * from User_Master", con);
-            //SqlDataReader rd = cmd.ExecuteReader();
+        //    //SqlConnection con = new SqlConnection(connectionString);
+        //    //con.Open();
+        //    //SqlCommand cmd = new SqlCommand("select * from User_Master", con);
+        //    //SqlDataReader rd = cmd.ExecuteReader();
 
-            //while (rd.Read())
-            //{
-            //    comboOwner.Items.Add(rd["first_name"].ToString());
-            //}
-            //rd.Close(); 
-        }
+        //    //while (rd.Read())
+        //    //{
+        //    //    comboOwner.Items.Add(rd["first_name"].ToString());
+        //    //}
+        //    //rd.Close(); 
+        //}
 
         private void btnGetRFIDTag_Click(object sender, EventArgs e)
         {
-            int nReturnValue = 0;
-            string tagInfo = "";
-            //listBox1.Items.Clear();
+            try
+            { 
+                int nReturnValue = 0;
+                string tagInfo = "";
+                //listBox1.Items.Clear();
 
-            nReturnValue = realTimeInventory(255, 255, 1);  //Public address reader , fast inventory mode , 5 seconds timeout control
+                nReturnValue = realTimeInventory(255, 255, 1);  //Public address reader , fast inventory mode , 5 seconds timeout control
 
-            if (nReturnValue == 1)
-            {
-                for (int i = 0; i < RealTimeTagDataList.Count; i++)
+                if (nReturnValue == 1)
                 {
-                    tagInfo = RealTimeTagDataList[i].strEpc;//tagInfo = RealTimeTagDataList[i].btAntId.ToString() + "    " + RealTimeTagDataList[i].strEpc + "    ";// tagInfo = "antenna" + RealTimeTagDataList[i].btAntId.ToString() + "    " + RealTimeTagDataList[i].strEpc + "    " + RealTimeTagDataList[i].strCarrierFrequency + "    " + RealTimeTagDataList[i].strRssi;
-                    //listBox1.Items.Add(tagInfo);
-                    txtRFIDTag.Text = tagInfo.ToString();
-                    txtAssetName.Focus();
+                    for (int i = 0; i < RealTimeTagDataList.Count; i++)
+                    {
+                        tagInfo = RealTimeTagDataList[i].strEpc;//tagInfo = RealTimeTagDataList[i].btAntId.ToString() + "    " + RealTimeTagDataList[i].strEpc + "    ";// tagInfo = "antenna" + RealTimeTagDataList[i].btAntId.ToString() + "    " + RealTimeTagDataList[i].strEpc + "    " + RealTimeTagDataList[i].strCarrierFrequency + "    " + RealTimeTagDataList[i].strRssi;
+                        //listBox1.Items.Add(tagInfo);
+                        txtRFIDTag.Text = tagInfo.ToString();
+                        txtAssetName.Focus();
+                    }
                 }
-            }
-            //else if (nReturnValue == 0)
-            //{
-            //    MessageBox.Show("Successful execution of the command but no inventory to tag");
-            //}
-            else if (nReturnValue == -1)
+                //else if (nReturnValue == 0)
+                //{
+                //    MessageBox.Show("Successful execution of the command but no inventory to tag");
+                //}
+                else if (nReturnValue == -1)
+                {
+                    MessageBox.Show("Reader Com Port Error", "Asset Registration", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    cam.Stop();
+                    CallMainMenu();
+                    //MessageBox.Show("Reader Com Port Error");
+                }
+                else if (nReturnValue == -2)
+                {
+                    //MessageBox.Show("Reader Com Port Error");
+                    MessageBox.Show("Reader Com Port Error", "Asset Registration", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    cam.Stop();
+                    CallMainMenu();
+                }
+                else
+                {
+                    return;
+                }
+                }
+            catch (Exception ex)
             {
-                MessageBox.Show("Com Port Error", "Asset Registration", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                cam.Stop();
-                CallMainMenu();
-                //MessageBox.Show("Com port Error");
-            }
-            else if (nReturnValue == -2)
-            {
-                //MessageBox.Show("Com Port Error");
-                MessageBox.Show("Com Port Error", "Asset Registration", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                cam.Stop();
-                CallMainMenu();
-            }
-            else
-            {
-                return;
+                MessageBox.Show(ex.Message);
             }
         }
 
         private void CallMainMenu()
         {
-            if (IsCameraConnected)
+            try
+            { 
+                //Back to Main Menu 
+                if (IsCameraConnected)
                 cam.Stop();
 
-            this.Hide();
-            reader.CloseCom();
-            MainMenu MenuForm = new MainMenu(tokenvalue, portname, string.Empty);
-            MenuForm.Show();
+                this.Hide();
+                reader.CloseCom();
+                MainMenu MenuForm = new MainMenu(tokenvalue, portname, string.Empty);
+                MenuForm.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void RegisterAsset_Load(object sender, EventArgs e)
         {
             try
             {
+                CurrentTimer.Enabled = true;
+                CurrentTimer.Interval = 1000;
+
                 reader = new Reader.ReaderMethod();
                 //Callback
                 reader.AnalyCallback = AnalyData;
@@ -387,32 +407,40 @@ namespace RFID_FEATHER_ASSETS
 
         private void InitializeCamera()
         {
-            comVideoDeviceBox.Items.Clear();
-            cameraBox.Image = null;
+            try
+            { 
+                //Checking the camera status
+                comVideoDeviceBox.Items.Clear();
+                cameraBox.Image = null;
 
-            webcam = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            foreach (FilterInfo VideoCaptureDevice in webcam)
-            {
-                comVideoDeviceBox.Items.Add(VideoCaptureDevice.Name);
+                webcam = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+                foreach (FilterInfo VideoCaptureDevice in webcam)
+                {
+                    comVideoDeviceBox.Items.Add(VideoCaptureDevice.Name);
+                }
+
+                if (comVideoDeviceBox.Items.Count < 1)
+                {
+                    if (cam != null) cam.Stop();
+                    IsCameraConnected = false;
+                    cameraBox.BackColor = Color.Black;
+                    lblNoCameraAvailable.Visible = true;
+                    btnCaptureImg.Text = "Refresh Camera";
+                }
+                else
+                {
+                    comVideoDeviceBox.SelectedIndex = 0;
+                    StartCamera();
+
+                    IsCameraConnected = true;
+                    cameraBox.BackColor = Color.White;
+                    lblNoCameraAvailable.Visible = false;
+                    btnCaptureImg.Text = "Capture Image";
+                }
             }
-
-            if (comVideoDeviceBox.Items.Count < 1)
+            catch (Exception ex)
             {
-                if (cam != null) cam.Stop();
-                IsCameraConnected = false;
-                cameraBox.BackColor = Color.Black;
-                lblNoCameraAvailable.Visible = true;
-                btnCaptureImg.Text = "Refresh Camera";
-            }
-            else
-            {
-                comVideoDeviceBox.SelectedIndex = 0;
-                StartCamera();
-
-                IsCameraConnected = true;
-                cameraBox.BackColor = Color.White;
-                lblNoCameraAvailable.Visible = false;
-                btnCaptureImg.Text = "Capture Image";
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -497,7 +525,6 @@ namespace RFID_FEATHER_ASSETS
 
                 byte byTemp = msgTran.AryData[nLen - 2];
                 byte byAntId = (byte)((byTemp & 0x03) + 1);
-
 
                 tagData.strEpc = strEPC;
                 tagData.strPc = strPC;
@@ -602,31 +629,31 @@ namespace RFID_FEATHER_ASSETS
 
         OpenFileDialog fd1 = new OpenFileDialog();
 
-        private void btnBrowseImage_Click(object sender, EventArgs e)
-        {
-            fd1.Filter = "image files|*.jpg;*.png;*.gif;*.icon;.*;";
+        //private void btnBrowseImage_Click(object sender, EventArgs e)
+        //{
+        //    fd1.Filter = "image files|*.jpg;*.png;*.gif;*.icon;.*;";
 
-            DialogResult dres1 = fd1.ShowDialog();
-            if (dres1 == DialogResult.Abort)
-                return;
-            if (dres1 == DialogResult.Cancel)
-                return;
+        //    DialogResult dres1 = fd1.ShowDialog();
+        //    if (dres1 == DialogResult.Abort)
+        //        return;
+        //    if (dres1 == DialogResult.Cancel)
+        //        return;
+      
+        //    //if (!CheckDuplicatePicture())
+        //    //{
+        //    //    MessageBox.Show("Picture is already assigned.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //    //    btnBrowseImage.Focus();
+        //    //    return;
+        //    //}
+        //    //else
+        //    //{
+        //        txtImagePath.Text = fd1.FileName;
 
-            //if (!CheckDuplicatePicture())
-            //{
-            //    MessageBox.Show("Picture is already assigned.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //    btnBrowseImage.Focus();
-            //    return;
-            //}
-            //else
-            //{
-            txtImagePath.Text = fd1.FileName;
-
-            picOwner.Image = Image.FromFile(fd1.FileName);
-            MemoryStream ms1 = new MemoryStream();
-            picOwner.Image.Save(ms1, System.Drawing.Imaging.ImageFormat.Jpeg);
-            //}
-        }
+        //        picOwner.Image = Image.FromFile(fd1.FileName);
+        //        MemoryStream ms1 = new MemoryStream();
+        //        picOwner.Image.Save(ms1, System.Drawing.Imaging.ImageFormat.Jpeg);
+        //    //}
+        //}
 
         private void cam_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
@@ -636,55 +663,70 @@ namespace RFID_FEATHER_ASSETS
 
         private void btnCaptureImg_Click(object sender, EventArgs e)
         {
-            if (cam == null || btnCaptureImg.Text == "Refresh Camera")
-            {
-                InitializeCamera();
-            }
-            else if (IsCameraConnected)
-            {
-                if (imgCapture1.Image == null) imgCapture1.Image = cameraBox.Image;
-                else if (imgCapture2.Image == null) imgCapture2.Image = cameraBox.Image;
-                else if (imgCapture3.Image == null) imgCapture3.Image = cameraBox.Image;
-                else if (imgCapture4.Image == null) imgCapture4.Image = cameraBox.Image;
-                else if (imgCapture5.Image == null) imgCapture5.Image = cameraBox.Image;
-                else
+            try
+            { 
+                //btnGetRFIDTag.PerformClick();
+                //reader.CloseCom();
+                if (cam == null || btnCaptureImg.Text == "Refresh Camera")
                 {
-                    MessageBox.Show("Captured Images exceeds the maximum limit.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
+                    InitializeCamera();
                 }
+                else if (IsCameraConnected)
+                {
+                    //Assigned captured image in each picture box
+                    if (imgCapture1.Image == null) imgCapture1.Image = cameraBox.Image;
+                    else if (imgCapture2.Image == null) imgCapture2.Image = cameraBox.Image;
+                    else if (imgCapture3.Image == null) imgCapture3.Image = cameraBox.Image;
+                    else if (imgCapture4.Image == null) imgCapture4.Image = cameraBox.Image;
+                    else if (imgCapture5.Image == null) imgCapture5.Image = cameraBox.Image;
+                    else
+                    {
+                        MessageBox.Show("Captured Images exceeds the maximum limit.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
 
-                cam.Stop();
-                //saveFileDialog1.InitialDirectory = @"C:\Users\USER\Pictures\";
-                //if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                    cam.Stop();
+                    //saveFileDialog1.InitialDirectory = @"C:\Users\USER\Pictures\";
+                    //if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                    //{
+                    //    cameraBox.Image.Save(saveFileDialog1.FileName + ".jpg");
+                    //}
+                    //btnCaptureImg.Text = "Capturing Image. Please wait ...";
+                    //btnCaptureImg.Refresh();
+
+                    //Saving for captured images
+                    string dirPath = @"C:\Users\USER\Pictures\";
+                    string fileName = "Image";
+                    string[] files = Directory.GetFiles(dirPath);
+                    int count = files.Count(file => { return file.Contains(fileName); });
+
+                    string newFileName = (count == 0) ? "Image.jpg" : String.Format("{0}{1}.jpg", fileName, count + 1);
+
+                    cameraBox.Image.Save(dirPath + newFileName);
+                    txtCapturedImagePath.Text = txtCapturedImagePath.Text + "," + dirPath + newFileName;
+
+                    //MessageBox.Show("Image successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                
+                    //StartCamera();
+                    InitializeCamera();
+                }
+                //else
                 //{
-                //    cameraBox.Image.Save(saveFileDialog1.FileName + ".jpg");
+                //    cam.Stop();
+                //    return;
                 //}
-                //btnCaptureImg.Text = "Capturing Image. Please wait ...";
-                //btnCaptureImg.Refresh();
-
-                string dirPath = @"C:\Users\USER\Pictures\";//"C:\Users\";
-                string fileName = "Image";
-                string[] files = Directory.GetFiles(dirPath);
-                int count = files.Count(file => { return file.Contains(fileName); });
-
-                string newFileName = (count == 0) ? "Image.jpg" : String.Format("{0}{1}.jpg", fileName, count + 1);
-
-                cameraBox.Image.Save(dirPath + newFileName);
-                txtCapturedImagePath.Text = txtCapturedImagePath.Text + "," + dirPath + newFileName;
-
-                //MessageBox.Show("Image successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                //StartCamera();
-                InitializeCamera();
             }
-            //else
-            //{
-            //    cam.Stop();
-            //    return;
-            //}
-
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            
         }
 
+        private void CurrentTimer_Tick(object sender, EventArgs e)
+        {
+            lblCurrentDateTime.Text = DateTime.Now.ToString("dddd, MMMM dd, yyyy h:mm:ss tt");
+        }
 
         //private bool CheckDuplicatePicture()
         //{

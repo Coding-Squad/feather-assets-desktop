@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using System.Data.SqlClient;
 using UHFDemo;
 using System.IO;
-//using MySql.Data.MySqlClient;
 using RestSharp;
 using System.Net;
 using RestSharp.Deserializers;
-//using System.Threading;
+using System.Threading;
 
 namespace RFID_FEATHER_ASSETS
 {
@@ -30,25 +24,17 @@ namespace RFID_FEATHER_ASSETS
         string portname; //= "COM3";
         string baudrate = "115200";
         bool IsPortError = false;
-        
         string tokenvalue;
+        bool IsCallingMainMenu = false;
         string roleValue;
 
         public Verification(string tokenvaluesource, string portnamesource, string roleSource)
         {
             InitializeComponent();
+
             portname = portnamesource;
             tokenvalue = tokenvaluesource;
             roleValue = roleSource;
-
-            if (roleValue == "ROLE_ADMIN")
-            {
-                btnBack.Visible = true;
-            }
-            else if (roleValue == "ROLE_GUARD")
-            {
-                btnBack.Visible = false;
-            }
         }
 
         private void auto_connect()
@@ -71,11 +57,15 @@ namespace RFID_FEATHER_ASSETS
 
         private void Verification_Load(object sender, EventArgs e)
         {
-            ClearTimer.Interval = 7000;
-            VerifyTimer.Interval = 7000;
-
             try
             {
+                //ClearTimer.Interval = 7000;
+                //VerifyTimer.Interval = 7000;
+                BackgroundTimer.Interval = 250;
+
+                CurrentDateTimer.Enabled = true;
+                CurrentDateTimer.Interval = 1000;
+
                 reader = new Reader.ReaderMethod();
                 //Callback
                 reader.AnalyCallback = AnalyData;
@@ -87,211 +77,236 @@ namespace RFID_FEATHER_ASSETS
             {
                 MessageBox.Show(ex.Message);
             }
+
+            
             
         }
 
         private void btnVerifyAsset_Click(object sender, EventArgs e)
         {
-            int nReturnValue = 0;
-            string tagInfo = "";
+            //try
+            //{ 
+            //    int nReturnValue = 0;
+            //    string tagInfo = "";
 
-            nReturnValue = realTimeInventory(255, 255, 1);  //Public address reader , fast inventory mode , 5 seconds timeout control
+            //    nReturnValue = realTimeInventory(255, 255, 1);  //Public address reader , fast inventory mode , 5 seconds timeout control
 
-            if (nReturnValue == 1)
-            {
-                for (int i = 0; i < RealTimeTagDataList.Count; i++)
-                {
-                    tagInfo = RealTimeTagDataList[i].strEpc;//tagInfo = RealTimeTagDataList[i].btAntId.ToString() + "    " + RealTimeTagDataList[i].strEpc + "    ";// tagInfo = "antenna" + RealTimeTagDataList[i].btAntId.ToString() + "    " + RealTimeTagDataList[i].strEpc + "    " + RealTimeTagDataList[i].strCarrierFrequency + "    " + RealTimeTagDataList[i].strRssi;
-                    //listBox1.Items.Add(tagInfo);
-                    txtRFIDTag.Text = tagInfo.ToString();
-                }
+            //    if (nReturnValue == 1)
+            //    {
+            //        for (int i = 0; i < RealTimeTagDataList.Count; i++)
+            //        {
+            //            tagInfo = RealTimeTagDataList[i].strEpc;//tagInfo = RealTimeTagDataList[i].btAntId.ToString() + "    " + RealTimeTagDataList[i].strEpc + "    ";// tagInfo = "antenna" + RealTimeTagDataList[i].btAntId.ToString() + "    " + RealTimeTagDataList[i].strEpc + "    " + RealTimeTagDataList[i].strCarrierFrequency + "    " + RealTimeTagDataList[i].strRssi;
+            //            //listBox1.Items.Add(tagInfo);
+            //            txtRFIDTag.Text = tagInfo.ToString();
+            //        }
 
-                CheckRFIDTag();
-            }
-            //else if (nReturnValue == 0)
-            //{
-            //    MessageBox.Show("Successful execution of the command but no inventory to tag");
+            //        CheckRFIDTag();
+            //    }
+            //    //else if (nReturnValue == 0)
+            //    //{
+            //    //    MessageBox.Show("Successful execution of the command but no inventory to tag");
+            //    //}
+            //    else if (nReturnValue == -1)
+            //    {
+            //        MessageBox.Show("Reader Com Port Error.", "Asset Verification", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //        IsPortError = true;
+            //        return;
+
+            //        //LoopVerification();
+            //        //MessageBox.Show("Reader Com Port Error");
+            //    }
+            //    else if (nReturnValue == -2)
+            //    {
+            //        //MessageBox.Show("Reader Com Port Error");
+            //        MessageBox.Show("Reader Com Port Error.", "Asset Verification", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //        IsPortError = true;
+            //        return;
+
+            //        //LoopVerification();
+            //    }
+            //    else
+            //    {
+            //        return;
+            //    }
             //}
-            else if (nReturnValue == -1)
-            {
-                MessageBox.Show("Com Port Error", "Asset Verification", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                IsPortError = true;
-                LoopVerification();
-                //MessageBox.Show("Com port Error");
-            }
-            else if (nReturnValue == -2)
-            {
-                //MessageBox.Show("Com Port Error");
-                MessageBox.Show("Com Port Error", "Asset Verification", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                IsPortError = true;
-                LoopVerification();
-            }
-            else
-            {
-                return;
-            }
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message);
+            //}
         }
 
         private void CheckRFIDTag()
         {
-            btnVerifyAsset.Text = "Verifying Tag. Please wait ...";
+            try
+            { 
+                //btnVerifyAsset.Text = "Verifying Tag. Please wait ...";
+                //btnVerifyAsset.BackColor = Color.GreenYellow;
+                //btnVerifyAsset.Refresh();
+                lblLoadingInformation.Visible = true;
+                lblLoadingInformation.Refresh();
 
-            VerifyRequest verifyRequest = new VerifyRequest();
-            verifyRequest.tag = txtRFIDTag.Text;
-            verifyRequest.companyId = 1;
-            verifyRequest.tagType = 1;
+                VerifyRequest verifyRequest = new VerifyRequest();
+                verifyRequest.tag = txtRFIDTag.Text;
+                verifyRequest.companyId = 1;
+                verifyRequest.tagType = 1;
 
-            //initialize web service
-            RestClient client = new RestClient("http://52.163.93.95:8080/FeatherAssets/");
-            RestRequest verify = new RestRequest("/api/asset/verify", Method.POST);
-            var authToken = tokenvalue;
+                //initialize web service
+                RestClient client = new RestClient("http://52.163.93.95:8080/FeatherAssets/");
+                RestRequest verify = new RestRequest("/api/asset/verify", Method.POST);
+                var authToken = tokenvalue;
 
-            //Input necessary headers
-            verify.AddHeader("X-Auth-Token", authToken);
-            verify.AddHeader("Content-Type", "application/json; charset=utf-8");
-            
-            //Define the format of object we are sending
-            verify.RequestFormat = DataFormat.Json;
-            verify.AddBody(verifyRequest);
+                verify.AddHeader("X-Auth-Token", authToken);
+                verify.AddHeader("Content-Type", "application/json; charset=utf-8");
+                verify.RequestFormat = DataFormat.Json;
+                verify.AddBody(verifyRequest);
 
-            //send the object
-            IRestResponse response = client.Execute(verify);
-            var content = response.Content;
+                //retrieve response
+                IRestResponse response = client.Execute(verify);
+                var content = response.Content;
 
-            btnVerifyAsset.Text = "Click to verify RFID Tag";
-            
-            //check if successfuly entered service
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                
-                //deserialize JSON -> Object
-                JsonDeserializer deserial = new JsonDeserializer();
-                VerifyResult verifyResult = deserial.Deserialize<VerifyResult>(response);
+                //btnVerifyAsset.Text = "Click to verify RFID Tag";
+                //btnVerifyAsset.BackColor = Color.Orange;
+                lblLoadingInformation.Visible = false;
 
-                //check if success
-                if (verifyResult.result == "OK")
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
+                    //deserialize JSON -> Object
+                    JsonDeserializer deserial = new JsonDeserializer();
+                    VerifyResult verifyResult = deserial.Deserialize<VerifyResult>(response);
 
-                    txtAssetName.Text = verifyResult.name;
-                    txtOwnerName.Text = verifyResult.description;
+                    if (verifyResult.result == "OK")
+                    {
+                        txtAssetName.Text = verifyResult.name;
+                        txtDescription.Text = verifyResult.description;
+                        //if (Boolean.Parse(verifyResult.takOutAllowed.ToString()))
+                        //{
+                        //    txtTakeOutAvailability.Text = "Allowed to take-out.";
+                        //}
+                        //else
+                        //{
+                        //    txtTakeOutAvailability.Text = "Not allowed to take-out.";
+                        //}
+                        txtTakeOutNote.Text = verifyResult.takeOutInfo;
+                        //if (File.Exists(verifyResult.imageUrls))
+                        //{
+                            //picOwner.Image = Image.FromFile(verifyResult.imageUrls);
+
+                            string Urls = verifyResult.imageUrls;
+                            string[] ReadUrls = Urls.Split(',');
+                            foreach (string GetUrls in ReadUrls)
+                            {
+                                if (ReadUrls.Length > 1 && File.Exists(ReadUrls[1])) imgCapture1.Image = Image.FromFile(ReadUrls[1]);
+                                if (ReadUrls.Length > 2 && File.Exists(ReadUrls[2])) imgCapture2.Image = Image.FromFile(ReadUrls[2]);
+                                if (ReadUrls.Length > 3 && File.Exists(ReadUrls[3])) imgCapture3.Image = Image.FromFile(ReadUrls[3]);
+                                if (ReadUrls.Length > 4 && File.Exists(ReadUrls[4])) imgCapture4.Image = Image.FromFile(ReadUrls[4]);
+                                if (ReadUrls.Length > 5 && File.Exists(ReadUrls[5])) imgCapture5.Image = Image.FromFile(ReadUrls[5]);
+                            }
+                        //}
+                        //else
+                        //{
+                        //    MessageBox.Show("Image not found for this path: " + verifyResult.imageUrls, "Asset Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        //    //btnVerifyAsset.Focus();
+                        //    //return;
+                        //}
+                        //this.Refresh();
+
+                        //VerifyTimer.Stop();
+                        //VerifyTimer.Start();
+
+                        //ClearTimer.Stop();
+                        //ClearTimer.Start();
+
+                        return;
+                    }
+                    else
+                    {
+                        MessageBox.Show(verifyResult.result + " " + verifyResult.message);
+                        //MessageBox.Show("RFID Tag: " + txtRFIDTag.Text + " " + verifyResult.message);
+                    }
+
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    MessageBox.Show("Error connecting to server.. please try again later");
+                }
+                else
+                {
+                    HttpStatusCode statusCode = response.StatusCode;
+                    int numericStatusCode = (int)statusCode;
+                    //show error code
+                    MessageBox.Show("Error" + numericStatusCode);
+                }
+
+                ClearFields();
+
+                #region old connection
+                /*MySqlConnection con = new MySqlConnection(connectionString);
+                con.Open();
+                MySqlCommand cmd = new MySqlCommand("select * from asset where rfid_tag='" + txtRFIDTag.Text + "'", con);
+                MySqlDataReader rd = cmd.ExecuteReader();
+                */
+            
+
+                /*if (rd.Read())
+                {
+                    txtAssetName.Text = (rd["name"].ToString());
+                    txtOwnerName.Text = (rd["description"].ToString());
                     ////txtTakeOutAvailability.Text = (rd["take_out_allowed"].ToString());
-                    
-                    //check takeOutAvailability
-                    if (verifyResult.takOutAllowed)//Boolean.Parse(verifyResult.takOutAllowed.ToString()))
+                    if (Boolean.Parse(rd["take_out_allowed"].ToString()))
                     {
                         txtTakeOutAvailability.Text = "Allowed to take-out.";
                     }
                     else
                     {
-                        txtTakeOutAvailability.Text = "Not allowed to take-out.";                    
+                        txtTakeOutAvailability.Text = "Not allowed to take-out.";
                     }
+                    txtTakeOutNote.Text = (rd["take_out_info"].ToString());
 
-                    txtTakeOutNote.Text = verifyResult.takeOutInfo;
-
-                    //check imageUrl
-                    if (File.Exists(verifyResult.imageUrls))
+                    if (File.Exists(rd["images"].ToString()))
                     {
-                        picOwner.Image = Image.FromFile(verifyResult.imageUrls);
+                        picOwner.Image = Image.FromFile(rd["images"].ToString());
                     }
-                    else
+                    else 
                     {
-                        MessageBox.Show("Image not found for this path: " + verifyResult.imageUrls, "Asset Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Image not found for this path: " + rd["images"].ToString(), "Asset Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         btnVerifyAsset.Focus();
-                        //rd.Close();
+                        rd.Close();
                         return;
                     }
 
                     VerifyTimer.Stop();
                     VerifyTimer.Start();
 
-                    //ClearTimer.Stop();
-                    //ClearTimer.Start();
+                    ClearTimer.Stop();
+                    ClearTimer.Start();
 
-                    return;
-                }
-                else
-                {
-                    MessageBox.Show(verifyResult.result + " " + verifyResult.message);
-                }
-                //test if response results are stored in object
-
-                
-            }
-            else if (response.StatusCode == HttpStatusCode.NotFound)
-            {
-                MessageBox.Show("Error connecting to server.. please try again later");
-            }
-            else
-            {
-                HttpStatusCode statusCode = response.StatusCode;
-                int numericStatusCode = (int)statusCode;
-                //show error code
-                MessageBox.Show("Error" + numericStatusCode);
-            }
-
-            
-
-            /*MySqlConnection con = new MySqlConnection(connectionString);
-            con.Open();
-            MySqlCommand cmd = new MySqlCommand("select * from asset where rfid_tag='" + txtRFIDTag.Text + "'", con);
-            MySqlDataReader rd = cmd.ExecuteReader();
-            */
-            
-
-            /*if (rd.Read())
-            {
-                txtAssetName.Text = (rd["name"].ToString());
-                txtOwnerName.Text = (rd["description"].ToString());
-                ////txtTakeOutAvailability.Text = (rd["take_out_allowed"].ToString());
-                if (Boolean.Parse(rd["take_out_allowed"].ToString()))
-                {
-                    txtTakeOutAvailability.Text = "Allowed to take-out.";
-                }
-                else
-                {
-                    txtTakeOutAvailability.Text = "Not allowed to take-out.";
-                }
-                txtTakeOutNote.Text = (rd["take_out_info"].ToString());
-
-                if (File.Exists(rd["images"].ToString()))
-                {
-                    picOwner.Image = Image.FromFile(rd["images"].ToString());
-                }
-                else 
-                {
-                    MessageBox.Show("Image not found for this path: " + rd["images"].ToString(), "Asset Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    btnVerifyAsset.Focus();
                     rd.Close();
                     return;
-                }
-
-                VerifyTimer.Stop();
-                VerifyTimer.Start();
-
-                ClearTimer.Stop();
-                ClearTimer.Start();
-
-                rd.Close();
-                return;
-            }*/
-            /*else
-            {
-                rd.Close();
-                DialogResult result = MessageBox.Show("RFID Tag not found. Do you want to register the asset?", "Asset Verification", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2);
-                if (result == DialogResult.Yes)
+                }*/
+                /*else
                 {
-                    this.Hide();
-                    reader.CloseCom();
-                    AssetRegistration AssetForm = new AssetRegistration(portname);
-                    AssetForm.Show();
-                }
-                else
-                {
-                    btnVerifyAsset.Focus();
-                    return;
-                }
+                    rd.Close();
+                    DialogResult result = MessageBox.Show("RFID Tag not found. Do you want to register the asset?", "Asset Verification", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2);
+                    if (result == DialogResult.Yes)
+                    {
+                        this.Hide();
+                        reader.CloseCom();
+                        AssetRegistration AssetForm = new AssetRegistration(portname);
+                        AssetForm.Show();
+                    }
+                    else
+                    {
+                        btnVerifyAsset.Focus();
+                        return;
+                    }
                 
-            }*/
+                }*/
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         //start of the Reader's default codes//
@@ -375,7 +390,6 @@ namespace RFID_FEATHER_ASSETS
 
                 byte byTemp = msgTran.AryData[nLen - 2];
                 byte byAntId = (byte)((byTemp & 0x03) + 1);
-
 
                 tagData.strEpc = strEPC;
                 tagData.strPc = strPC;
@@ -480,25 +494,27 @@ namespace RFID_FEATHER_ASSETS
 
         private void ClearTimer_Tick(object sender, EventArgs e)
         {
-            ClearFields();
-            ClearTimer.Stop();
+            //ClearFields();
+            //ClearTimer.Stop();
         }
 
         private void ClearFields()
         {
+            imgCapture1.Image = null;
+            imgCapture2.Image = null;
+            imgCapture3.Image = null;
+            imgCapture4.Image = null;
+            imgCapture5.Image = null;
             txtRFIDTag.Text = string.Empty;
             txtAssetName.Text = string.Empty;
+            txtDescription.Text = string.Empty;
             txtOwnerName.Text = string.Empty;
-            txtTakeOutAvailability.Text = string.Empty;
+            //txtTakeOutAvailability.Text = string.Empty;
             txtTakeOutNote.Text = string.Empty;
-            picOwner.Image = null;
+            //picOwner.Image = null;
             //btnVerifyAsset.Focus();
+            this.Refresh();
         }
-
-        //private void VerifyTimer_Tick(object sender, EventArgs e)
-        //{
-        //    VerifyTimer.Start();
-        //}
 
         private void Verification_Shown(object sender, EventArgs e)
         {
@@ -508,115 +524,160 @@ namespace RFID_FEATHER_ASSETS
 
         private void LoopVerification()
         {
-            ////while (string.IsNullOrEmpty(txtRFIDTag.Text) && IsPortError == false)
-            ////{
-            ////    btnVerifyAsset.PerformClick();
-            ////}
+            //while (IsPortError == false)
+            //{
+            //    //btnVerifyAsset.PerformClick();
+            //    VerifyAssetProc();
+            //}
 
-            if (IsPortError)
+            //RFID Reader Loop
+            if (IsPortError == false)
             {
-                this.Hide();
-                reader.CloseCom();
-                MainMenu MenuForm = new MainMenu(tokenvalue, portname, roleValue);
-                MenuForm.Show();
+                BackgroundTimer.Stop();
+                BackgroundTimer.Start();
+            }
+            else //(IsPortError)
+            {
+                CallMainMenu();
+            }
+        }
+
+        private void VerifyAssetProc()
+        {
+            try
+            { 
+                int nReturnValue = 0;
+                string tagInfo = "";
+
+                nReturnValue = realTimeInventory(255, 255, 1);  //Public address reader , fast inventory mode , 5 seconds timeout control
+
+                if (nReturnValue == 1)
+                {
+                    ClearFields();
+
+                    for (int i = 0; i < RealTimeTagDataList.Count; i++)
+                    {
+                        tagInfo = RealTimeTagDataList[i].strEpc;//tagInfo = RealTimeTagDataList[i].btAntId.ToString() + "    " + RealTimeTagDataList[i].strEpc + "    ";// tagInfo = "antenna" + RealTimeTagDataList[i].btAntId.ToString() + "    " + RealTimeTagDataList[i].strEpc + "    " + RealTimeTagDataList[i].strCarrierFrequency + "    " + RealTimeTagDataList[i].strRssi;
+                        //listBox1.Items.Add(tagInfo);
+                        txtRFIDTag.Text = tagInfo.ToString();
+                    }
+                    CheckRFIDTag();
+                }
+                //else if (nReturnValue == 0)
+                //{
+                //    MessageBox.Show("Successful execution of the command but no inventory to tag");
+                //}
+                else if (nReturnValue == -1)
+                {
+                    MessageBox.Show("Reader Com Port Error.", "Asset Verification", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    IsPortError = true;
+                    //return;
+
+                    //LoopVerification();
+                }
+                else if (nReturnValue == -2)
+                {
+                    MessageBox.Show("Reader Com Port Error.", "Asset Verification", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    IsPortError = true;
+                    //return;
+
+                    //LoopVerification();
+                }
+                else
+                {
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
         private void VerifyTimer_Tick(object sender, EventArgs e)
         {
-            ClearFields();
-            VerifyTimer.Stop();
-            LoopVerification();
+            ////ClearFields();
+            //VerifyTimer.Stop();
+            //LoopVerification();
         }
 
         private void Verification_FormClosed(object sender, FormClosedEventArgs e)
-        {            
+        {
             if (roleValue == "ROLE_ADMIN")
             {
-                this.Hide();
-                reader.CloseCom();
-                MainMenu MenuForm = new MainMenu(tokenvalue, portname, roleValue);
-                MenuForm.Show();
+                CallMainMenu();
             }
-            else
+            else if (roleValue == "ROLE_GUARD")
             {
                 Environment.Exit(0);
             }
         }
 
-        private void btnBack_Click(object sender, EventArgs e)
+        private void CallMainMenu()
         {
+            //Return to Main Menu Form
+            IsCallingMainMenu = true;
+
             this.Hide();
             reader.CloseCom();
             MainMenu MenuForm = new MainMenu(tokenvalue, portname, roleValue);
             MenuForm.Show();
         }
+
+        private void btnBack_Click(object sender, EventArgs e)
+        {
+            if (roleValue == "ROLE_ADMIN")
+            {
+                CallMainMenu();
+            }
+            else if (roleValue == "ROLE_GUARD")
+            {
+                Environment.Exit(0);
+            }
+        }
+
+        private void BackgroundTimer_Tick(object sender, EventArgs e)
+        {
+            //Always read the RFID Tag if not calling the Main Menu
+            if (!IsCallingMainMenu)
+            {
+                BackgroundTimer.Stop();
+                VerifyAssetProc();
+                LoopVerification();
+            }
+        }
+
+        private void CurrentTimer_Tick(object sender, EventArgs e)
+        {
+            //Display the current date and time
+            lblCurrentDateTime.Text = DateTime.Now.ToString("dddd, MMMM dd, yyyy h:mm:ss tt");
+        }
     }
 
     public class VerifyRequest
     {
-        public int companyId
-        {
-            get;
-            set;
-        }
+        public int companyId {get; set;}
 
-        public string tag
-        {
-            get;
-            set;
-        }
+        public string tag {get; set;}
 
-        public int tagType
-        {
-            get;
-            set;
-        }
+        public int tagType{get; set;}
     }
 
     public class VerifyResult
     {
-        public string name
-        {
-            get;
-            set;
-        }
+        public string name {get; set;}
 
-        public string description
-        {
-            get;
-            set;
-        }
+        public string description {get;set;}
 
-        public string imageUrls
-        {
-            get;
-            set;
-        }
+        public string imageUrls {get;set;}
 
-        public bool takOutAllowed
-        {
-            get;
-            set;
-        }
+        public bool takOutAllowed {get;set;}
 
-        public string takeOutInfo
-        {
-            get;
-            set;
-        }
+        public string takeOutInfo {get;set;}
 
-        public string result
-        {
-            get;
-            set;
-        }
+        public string result {get;set;}
 
-        public string message
-        {
-            get;
-            set;
-        }
+        public string message {get;set;}
 
     }
 }
