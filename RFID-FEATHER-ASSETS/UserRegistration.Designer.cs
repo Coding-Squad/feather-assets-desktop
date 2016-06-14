@@ -34,8 +34,8 @@
             this.comVideoDeviceBox = new System.Windows.Forms.ComboBox();
             this.CaptureImg = new System.Windows.Forms.Button();
             this.cameraBox = new System.Windows.Forms.PictureBox();
-            this.btnStart = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.imgCapture = new System.Windows.Forms.PictureBox();
             this.authorities = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.cpassword = new System.Windows.Forms.TextBox();
@@ -57,6 +57,7 @@
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cameraBox)).BeginInit();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.imgCapture)).BeginInit();
             this.SuspendLayout();
             // 
             // saveFileDialog1
@@ -70,7 +71,7 @@
             this.groupBox1.Controls.Add(this.comVideoDeviceBox);
             this.groupBox1.Controls.Add(this.CaptureImg);
             this.groupBox1.Controls.Add(this.cameraBox);
-            this.groupBox1.Location = new System.Drawing.Point(12, 12);
+            this.groupBox1.Location = new System.Drawing.Point(59, 61);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(683, 538);
             this.groupBox1.TabIndex = 8;
@@ -99,7 +100,7 @@
             // CaptureImg
             // 
             this.CaptureImg.BackColor = System.Drawing.Color.Orange;
-            this.CaptureImg.Font = new System.Drawing.Font("Segoe Print", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CaptureImg.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CaptureImg.Location = new System.Drawing.Point(44, 483);
             this.CaptureImg.Name = "CaptureImg";
             this.CaptureImg.Size = new System.Drawing.Size(594, 41);
@@ -116,21 +117,10 @@
             this.cameraBox.TabIndex = 13;
             this.cameraBox.TabStop = false;
             // 
-            // btnStart
-            // 
-            this.btnStart.BackColor = System.Drawing.Color.Orange;
-            this.btnStart.Font = new System.Drawing.Font("Segoe Print", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnStart.Location = new System.Drawing.Point(913, 590);
-            this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(238, 41);
-            this.btnStart.TabIndex = 15;
-            this.btnStart.Text = "Start";
-            this.btnStart.UseVisualStyleBackColor = false;
-            this.btnStart.Visible = false;
-            // 
             // groupBox2
             // 
             this.groupBox2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.groupBox2.Controls.Add(this.imgCapture);
             this.groupBox2.Controls.Add(this.authorities);
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.cpassword);
@@ -149,74 +139,84 @@
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Location = new System.Drawing.Point(708, 12);
+            this.groupBox2.Location = new System.Drawing.Point(764, 61);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(457, 538);
+            this.groupBox2.Size = new System.Drawing.Size(481, 771);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Owner Information";
+            // 
+            // imgCapture
+            // 
+            this.imgCapture.Location = new System.Drawing.Point(103, 19);
+            this.imgCapture.Name = "imgCapture";
+            this.imgCapture.Size = new System.Drawing.Size(282, 229);
+            this.imgCapture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.imgCapture.TabIndex = 26;
+            this.imgCapture.TabStop = false;
             // 
             // authorities
             // 
             this.authorities.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.authorities.FormattingEnabled = true;
-            this.authorities.Location = new System.Drawing.Point(212, 418);
+            this.authorities.Location = new System.Drawing.Point(225, 655);
             this.authorities.Name = "authorities";
             this.authorities.Size = new System.Drawing.Size(212, 21);
-            this.authorities.TabIndex = 25;
+            this.authorities.TabIndex = 8;
+            this.authorities.Tag = "";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Segoe Print", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(82, 412);
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(95, 649);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(102, 28);
+            this.label8.Size = new System.Drawing.Size(115, 24);
             this.label8.TabIndex = 24;
-            this.label8.Text = "Authorities";
+            this.label8.Text = "Authorities:";
             // 
             // cpassword
             // 
-            this.cpassword.Location = new System.Drawing.Point(212, 365);
+            this.cpassword.Location = new System.Drawing.Point(225, 602);
             this.cpassword.Name = "cpassword";
             this.cpassword.Size = new System.Drawing.Size(212, 20);
-            this.cpassword.TabIndex = 23;
+            this.cpassword.TabIndex = 7;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Segoe Print", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(26, 357);
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(26, 597);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(165, 28);
+            this.label7.Size = new System.Drawing.Size(184, 24);
             this.label7.TabIndex = 22;
             this.label7.Text = "Confirm Password:";
             // 
             // password
             // 
-            this.password.Location = new System.Drawing.Point(212, 308);
+            this.password.Location = new System.Drawing.Point(225, 545);
             this.password.Name = "password";
             this.password.Size = new System.Drawing.Size(212, 20);
-            this.password.TabIndex = 21;
+            this.password.TabIndex = 6;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Segoe Print", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(92, 300);
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(105, 537);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(99, 28);
+            this.label6.Size = new System.Drawing.Size(112, 24);
             this.label6.TabIndex = 20;
             this.label6.Text = "Password: ";
             // 
             // btnCancel
             // 
             this.btnCancel.BackColor = System.Drawing.Color.Orange;
-            this.btnCancel.Font = new System.Drawing.Font("Segoe Print", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancel.Location = new System.Drawing.Point(325, 469);
+            this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCancel.Location = new System.Drawing.Point(338, 706);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(99, 41);
-            this.btnCancel.TabIndex = 19;
+            this.btnCancel.TabIndex = 10;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = false;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -224,98 +224,98 @@
             // btnSubmit
             // 
             this.btnSubmit.BackColor = System.Drawing.Color.Orange;
-            this.btnSubmit.Font = new System.Drawing.Font("Segoe Print", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSubmit.Location = new System.Drawing.Point(212, 469);
+            this.btnSubmit.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSubmit.Location = new System.Drawing.Point(225, 706);
             this.btnSubmit.Name = "btnSubmit";
             this.btnSubmit.Size = new System.Drawing.Size(107, 41);
-            this.btnSubmit.TabIndex = 18;
+            this.btnSubmit.TabIndex = 9;
             this.btnSubmit.Text = "Submit";
             this.btnSubmit.UseVisualStyleBackColor = false;
             this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
             // 
             // email
             // 
-            this.email.Location = new System.Drawing.Point(212, 252);
+            this.email.Location = new System.Drawing.Point(225, 489);
             this.email.Name = "email";
             this.email.Size = new System.Drawing.Size(212, 20);
-            this.email.TabIndex = 17;
+            this.email.TabIndex = 5;
             // 
             // lastName
             // 
-            this.lastName.Location = new System.Drawing.Point(212, 86);
+            this.lastName.Location = new System.Drawing.Point(225, 323);
             this.lastName.Name = "lastName";
             this.lastName.Size = new System.Drawing.Size(212, 20);
-            this.lastName.TabIndex = 11;
+            this.lastName.TabIndex = 2;
             // 
             // position
             // 
-            this.position.Location = new System.Drawing.Point(212, 134);
+            this.position.Location = new System.Drawing.Point(225, 371);
             this.position.Name = "position";
             this.position.Size = new System.Drawing.Size(212, 20);
-            this.position.TabIndex = 13;
+            this.position.TabIndex = 3;
             // 
             // description
             // 
-            this.description.Location = new System.Drawing.Point(212, 186);
+            this.description.Location = new System.Drawing.Point(225, 423);
             this.description.Multiline = true;
             this.description.Name = "description";
             this.description.Size = new System.Drawing.Size(212, 39);
-            this.description.TabIndex = 15;
+            this.description.TabIndex = 4;
             // 
             // firstName
             // 
-            this.firstName.Location = new System.Drawing.Point(212, 39);
+            this.firstName.Location = new System.Drawing.Point(225, 276);
             this.firstName.Name = "firstName";
             this.firstName.Size = new System.Drawing.Size(212, 20);
-            this.firstName.TabIndex = 9;
+            this.firstName.TabIndex = 1;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Segoe Print", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(85, 80);
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(96, 318);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(109, 28);
+            this.label5.Size = new System.Drawing.Size(120, 24);
             this.label5.TabIndex = 16;
             this.label5.Text = "Last Name: ";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Segoe Print", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(102, 128);
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(120, 366);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(82, 28);
+            this.label4.Size = new System.Drawing.Size(90, 24);
             this.label4.TabIndex = 14;
             this.label4.Text = "Position:";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe Print", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(82, 186);
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(95, 423);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(109, 28);
+            this.label3.Size = new System.Drawing.Size(121, 24);
             this.label3.TabIndex = 12;
             this.label3.Text = "Description:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe Print", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(112, 246);
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(135, 485);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(72, 28);
+            this.label2.Size = new System.Drawing.Size(75, 24);
             this.label2.TabIndex = 10;
             this.label2.Text = "E-Mail:";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe Print", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(82, 33);
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(95, 270);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(112, 28);
+            this.label1.Size = new System.Drawing.Size(123, 24);
             this.label1.TabIndex = 8;
             this.label1.Text = "First Name: ";
             // 
@@ -324,9 +324,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ClientSize = new System.Drawing.Size(1240, 660);
+            this.ClientSize = new System.Drawing.Size(1372, 844);
             this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.btnStart);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "RegisterUser";
@@ -339,6 +338,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.cameraBox)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.imgCapture)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -348,7 +348,6 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ComboBox comVideoDeviceBox;
-        private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.Button CaptureImg;
         private System.Windows.Forms.PictureBox cameraBox;
         private System.Windows.Forms.GroupBox groupBox2;
@@ -371,5 +370,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblNoCameraAvailable;
+        private System.Windows.Forms.PictureBox imgCapture;
     }
 }

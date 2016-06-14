@@ -13,49 +13,50 @@ namespace RFID_FEATHER_ASSETS
     {
         string tokenvalue;
         string roleValue;
-        public MainMenu(string tokenvaluesource, string portnamesource, string roleSource)
+        public MainMenu(string tokenvaluesource, /*string portnamesource,*/ string roleSource)
         {
             InitializeComponent();
-            cmbComPort.Text = portnamesource;
+            //cmbComPort.Text = portnamesource;
             tokenvalue = tokenvaluesource;
             roleValue = roleSource;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(cmbComPort.Text))
+            /*if (string.IsNullOrEmpty(cmbComPort.Text))
             {
                 MessageBox.Show("Please select Port number.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 cmbComPort.Focus();
                 return;
             }
             else
-            {
+            {*/
                 //TODO RFID SCAN CODE MISSING
                 this.Hide();
-                Verification m = new Verification(tokenvalue, cmbComPort.Text, roleValue);
+                Verification m = new Verification(tokenvalue, roleValue);
                 m.Show();
-            }
+            //}
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(cmbComPort.Text))
+            /*if (string.IsNullOrEmpty(cmbComPort.Text))
             {
                 MessageBox.Show("Please select Port number.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 cmbComPort.Focus();
                 return;
             }
             else
-            {
+            {*/
                 this.Hide();
-                AssetRegistration registerAsset = new AssetRegistration(tokenvalue, cmbComPort.Text);
+                AssetRegistration registerAsset = new AssetRegistration(tokenvalue);
                 registerAsset.Show();
-            } 
+            //} 
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
+            this.Hide();
             RegisterUser registerUser = new RegisterUser(tokenvalue);
             registerUser.Show();
         }
@@ -73,6 +74,13 @@ namespace RFID_FEATHER_ASSETS
         private void MainMenu_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnMyAssets_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            Assets assets = new Assets(tokenvalue, roleValue);
+            assets.Show();
         }
     }
 }

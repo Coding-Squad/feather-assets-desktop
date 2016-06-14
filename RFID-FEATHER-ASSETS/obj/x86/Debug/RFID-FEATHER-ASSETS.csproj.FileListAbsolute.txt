@@ -134,3 +134,4 @@ C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID-FEATHER-ASSETS.pdb
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID-FEATHER-ASSETS.csprojResolveAssemblyReference.cache
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.Assets.resources
+C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.SerialPortSelection.resources

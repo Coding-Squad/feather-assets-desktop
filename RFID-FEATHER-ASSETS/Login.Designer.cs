@@ -110,6 +110,7 @@
             this.cmbComPort.Name = "cmbComPort";
             this.cmbComPort.Size = new System.Drawing.Size(65, 21);
             this.cmbComPort.TabIndex = 5;
+            this.cmbComPort.Visible = false;
             // 
             // label3
             // 
@@ -120,6 +121,7 @@
             this.label3.Size = new System.Drawing.Size(79, 21);
             this.label3.TabIndex = 6;
             this.label3.Text = "Serial Port:";
+            this.label3.Visible = false;
             this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // LoginActivity

@@ -21,10 +21,10 @@ namespace RFID_FEATHER_ASSETS
     {
         //string connectionString = "server=128.199.83.107;port=3306;uid=root;pwd=aws123;database=feather_assets;";
 
-        public LoginActivity(string portnamesource)
+        public LoginActivity()//string portnamesource)
         {
             InitializeComponent();
-            cmbComPort.Text = portnamesource;
+            //cmbComPort.Text = portnamesource;
         }
 
         private void ClearFields()
@@ -70,38 +70,40 @@ namespace RFID_FEATHER_ASSETS
                 //check authorities                       
                 if (loginResult.roles == "ROLE_ADMIN")
                 {
-                    if (string.IsNullOrEmpty(cmbComPort.Text))
+                    /*if (string.IsNullOrEmpty(cmbComPort.Text))
                     {
                         MessageBox.Show("Please select Port number.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         cmbComPort.Focus();
                         return;
                     }
                     else
-                    {
+                    {*/
                         this.Hide();
-                        MainMenu MenuForm = new MainMenu(loginResult.authenticationToken, cmbComPort.Text, loginResult.roles);
+                        MainMenu MenuForm = new MainMenu(loginResult.authenticationToken, /*cmbComPort.Text,*/ loginResult.roles);
                         MenuForm.ShowDialog();
-                    }
+                    //}
                 }
                 else if (loginResult.roles == "ROLE_GUARD")
                 {
-                    if (string.IsNullOrEmpty(cmbComPort.Text))
+                    /*if (string.IsNullOrEmpty(cmbComPort.Text))
                     {
                         MessageBox.Show("Please select Port number.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         cmbComPort.Focus();
                         return;
-                    }
-                    else
-                    {
+                    }*/
+                    /*else
+                    {*/
                         //TODO RFID SCAN CODE MISSING
                         this.Hide();
-                        Verification m = new Verification(loginResult.authenticationToken, cmbComPort.Text, loginResult.roles);
+                        Verification m = new Verification(loginResult.authenticationToken, loginResult.roles);
                         m.Show();
-                    }
+                    //}
                 }
                 else if (loginResult.roles == "ROLE_USER")
                 {
-                    MessageBox.Show("Useless");
+                    this.Hide();
+                    Assets asset = new Assets(loginResult.authenticationToken, loginResult.roles);
+                    asset.Show();
                 }
                 
             }

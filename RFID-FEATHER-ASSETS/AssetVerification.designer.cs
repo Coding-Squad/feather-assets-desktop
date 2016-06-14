@@ -52,8 +52,8 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.btnBack = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtOwnerDescription = new System.Windows.Forms.TextBox();
+            this.txtOwnerPosition = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.picOwner = new System.Windows.Forms.PictureBox();
             this.txtOwnerName = new System.Windows.Forms.TextBox();
@@ -105,7 +105,7 @@
             this.groupBox2.Controls.Add(this.txtRFIDTag);
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(69, 465);
+            this.groupBox2.Location = new System.Drawing.Point(69, 482);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(307, 277);
             this.groupBox2.TabIndex = 33;
@@ -117,7 +117,7 @@
             this.label7.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(21, 113);
+            this.label7.Location = new System.Drawing.Point(21, 117);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(83, 18);
             this.label7.TabIndex = 25;
@@ -128,7 +128,7 @@
             this.txtDescription.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtDescription.BackColor = System.Drawing.Color.White;
             this.txtDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDescription.Location = new System.Drawing.Point(24, 134);
+            this.txtDescription.Location = new System.Drawing.Point(24, 137);
             this.txtDescription.MaxLength = 45;
             this.txtDescription.Multiline = true;
             this.txtDescription.Name = "txtDescription";
@@ -142,7 +142,7 @@
             this.txtTakeOutNote.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtTakeOutNote.BackColor = System.Drawing.Color.White;
             this.txtTakeOutNote.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtTakeOutNote.Location = new System.Drawing.Point(22, 203);
+            this.txtTakeOutNote.Location = new System.Drawing.Point(22, 206);
             this.txtTakeOutNote.MaxLength = 100;
             this.txtTakeOutNote.Multiline = true;
             this.txtTakeOutNote.Name = "txtTakeOutNote";
@@ -156,7 +156,7 @@
             this.label4.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(21, 182);
+            this.label4.Location = new System.Drawing.Point(21, 186);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(105, 18);
             this.label4.TabIndex = 23;
@@ -167,7 +167,7 @@
             this.txtAssetName.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtAssetName.BackColor = System.Drawing.Color.White;
             this.txtAssetName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtAssetName.Location = new System.Drawing.Point(24, 90);
+            this.txtAssetName.Location = new System.Drawing.Point(24, 92);
             this.txtAssetName.MaxLength = 45;
             this.txtAssetName.Name = "txtAssetName";
             this.txtAssetName.ReadOnly = true;
@@ -180,7 +180,7 @@
             this.label8.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(21, 69);
+            this.label8.Location = new System.Drawing.Point(21, 72);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(89, 18);
             this.label8.TabIndex = 13;
@@ -205,7 +205,7 @@
             this.label9.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(21, 25);
+            this.label9.Location = new System.Drawing.Point(21, 26);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(71, 18);
             this.label9.TabIndex = 10;
@@ -223,9 +223,9 @@
             this.groupBox1.Controls.Add(this.imgCapture2);
             this.groupBox1.Controls.Add(this.imgCapture1);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(69, 12);
+            this.groupBox1.Location = new System.Drawing.Point(69, 4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(895, 441);
+            this.groupBox1.Size = new System.Drawing.Size(895, 464);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Asset Pictures";
@@ -235,7 +235,7 @@
             this.lblLoadingInformation.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblLoadingInformation.AutoSize = true;
             this.lblLoadingInformation.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblLoadingInformation.Location = new System.Drawing.Point(181, 236);
+            this.lblLoadingInformation.Location = new System.Drawing.Point(181, 247);
             this.lblLoadingInformation.Name = "lblLoadingInformation";
             this.lblLoadingInformation.Size = new System.Drawing.Size(532, 37);
             this.lblLoadingInformation.TabIndex = 46;
@@ -247,18 +247,18 @@
             this.label6.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label6.BackColor = System.Drawing.Color.Orange;
             this.label6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label6.Location = new System.Drawing.Point(146, 423);
+            this.label6.Location = new System.Drawing.Point(127, 445);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(604, 13);
+            this.label6.Size = new System.Drawing.Size(644, 11);
             this.label6.TabIndex = 46;
             // 
             // imgCapture5
             // 
             this.imgCapture5.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.imgCapture5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.imgCapture5.Location = new System.Drawing.Point(599, 273);
+            this.imgCapture5.Location = new System.Drawing.Point(610, 284);
             this.imgCapture5.Name = "imgCapture5";
-            this.imgCapture5.Size = new System.Drawing.Size(150, 150);
+            this.imgCapture5.Size = new System.Drawing.Size(160, 160);
             this.imgCapture5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.imgCapture5.TabIndex = 44;
             this.imgCapture5.TabStop = false;
@@ -267,9 +267,9 @@
             // 
             this.imgCapture4.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.imgCapture4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.imgCapture4.Location = new System.Drawing.Point(448, 273);
+            this.imgCapture4.Location = new System.Drawing.Point(449, 284);
             this.imgCapture4.Name = "imgCapture4";
-            this.imgCapture4.Size = new System.Drawing.Size(150, 150);
+            this.imgCapture4.Size = new System.Drawing.Size(160, 160);
             this.imgCapture4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.imgCapture4.TabIndex = 43;
             this.imgCapture4.TabStop = false;
@@ -278,9 +278,9 @@
             // 
             this.imgCapture3.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.imgCapture3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.imgCapture3.Location = new System.Drawing.Point(297, 273);
+            this.imgCapture3.Location = new System.Drawing.Point(288, 284);
             this.imgCapture3.Name = "imgCapture3";
-            this.imgCapture3.Size = new System.Drawing.Size(150, 150);
+            this.imgCapture3.Size = new System.Drawing.Size(160, 160);
             this.imgCapture3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.imgCapture3.TabIndex = 42;
             this.imgCapture3.TabStop = false;
@@ -289,9 +289,9 @@
             // 
             this.imgCapture2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.imgCapture2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.imgCapture2.Location = new System.Drawing.Point(146, 273);
+            this.imgCapture2.Location = new System.Drawing.Point(127, 284);
             this.imgCapture2.Name = "imgCapture2";
-            this.imgCapture2.Size = new System.Drawing.Size(150, 150);
+            this.imgCapture2.Size = new System.Drawing.Size(160, 160);
             this.imgCapture2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.imgCapture2.TabIndex = 41;
             this.imgCapture2.TabStop = false;
@@ -301,9 +301,9 @@
             this.imgCapture1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.imgCapture1.BackColor = System.Drawing.SystemColors.Control;
             this.imgCapture1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.imgCapture1.Location = new System.Drawing.Point(316, 12);
+            this.imgCapture1.Location = new System.Drawing.Point(312, 14);
             this.imgCapture1.Name = "imgCapture1";
-            this.imgCapture1.Size = new System.Drawing.Size(260, 260);
+            this.imgCapture1.Size = new System.Drawing.Size(270, 270);
             this.imgCapture1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.imgCapture1.TabIndex = 40;
             this.imgCapture1.TabStop = false;
@@ -313,15 +313,15 @@
             this.groupBox3.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.groupBox3.Controls.Add(this.btnBack);
             this.groupBox3.Controls.Add(this.label5);
-            this.groupBox3.Controls.Add(this.textBox2);
+            this.groupBox3.Controls.Add(this.txtOwnerDescription);
             this.groupBox3.Controls.Add(this.btnVerifyAsset);
-            this.groupBox3.Controls.Add(this.textBox1);
+            this.groupBox3.Controls.Add(this.txtOwnerPosition);
             this.groupBox3.Controls.Add(this.label2);
             this.groupBox3.Controls.Add(this.picOwner);
             this.groupBox3.Controls.Add(this.txtOwnerName);
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox3.Location = new System.Drawing.Point(396, 465);
+            this.groupBox3.Location = new System.Drawing.Point(396, 482);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(568, 277);
             this.groupBox3.TabIndex = 40;
@@ -344,43 +344,43 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(287, 119);
+            this.label5.Location = new System.Drawing.Point(287, 124);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(83, 18);
             this.label5.TabIndex = 46;
             this.label5.Text = "Description";
             // 
-            // textBox2
+            // txtOwnerDescription
             // 
-            this.textBox2.BackColor = System.Drawing.Color.White;
-            this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.Location = new System.Drawing.Point(290, 140);
-            this.textBox2.MaxLength = 45;
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(253, 66);
-            this.textBox2.TabIndex = 45;
-            this.textBox2.TabStop = false;
+            this.txtOwnerDescription.BackColor = System.Drawing.Color.White;
+            this.txtOwnerDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtOwnerDescription.Location = new System.Drawing.Point(290, 144);
+            this.txtOwnerDescription.MaxLength = 45;
+            this.txtOwnerDescription.Multiline = true;
+            this.txtOwnerDescription.Name = "txtOwnerDescription";
+            this.txtOwnerDescription.ReadOnly = true;
+            this.txtOwnerDescription.Size = new System.Drawing.Size(253, 66);
+            this.txtOwnerDescription.TabIndex = 45;
+            this.txtOwnerDescription.TabStop = false;
             // 
-            // textBox1
+            // txtOwnerPosition
             // 
-            this.textBox1.BackColor = System.Drawing.Color.White;
-            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(290, 94);
-            this.textBox1.MaxLength = 45;
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(253, 22);
-            this.textBox1.TabIndex = 43;
-            this.textBox1.TabStop = false;
+            this.txtOwnerPosition.BackColor = System.Drawing.Color.White;
+            this.txtOwnerPosition.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtOwnerPosition.Location = new System.Drawing.Point(290, 96);
+            this.txtOwnerPosition.MaxLength = 45;
+            this.txtOwnerPosition.Multiline = true;
+            this.txtOwnerPosition.Name = "txtOwnerPosition";
+            this.txtOwnerPosition.ReadOnly = true;
+            this.txtOwnerPosition.Size = new System.Drawing.Size(253, 22);
+            this.txtOwnerPosition.TabIndex = 43;
+            this.txtOwnerPosition.TabStop = false;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(287, 74);
+            this.label2.Location = new System.Drawing.Point(287, 77);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(62, 18);
             this.label2.TabIndex = 44;
@@ -413,7 +413,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(287, 28);
+            this.label1.Location = new System.Drawing.Point(287, 29);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(48, 18);
             this.label1.TabIndex = 41;
@@ -493,8 +493,8 @@
         private System.Windows.Forms.PictureBox imgCapture1;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtOwnerDescription;
+        private System.Windows.Forms.TextBox txtOwnerPosition;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.PictureBox picOwner;
         private System.Windows.Forms.TextBox txtOwnerName;

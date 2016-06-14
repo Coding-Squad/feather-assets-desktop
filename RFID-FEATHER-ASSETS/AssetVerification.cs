@@ -8,6 +8,7 @@ using RestSharp;
 using System.Net;
 using RestSharp.Deserializers;
 using System.Threading;
+using Microsoft.Win32;
 
 namespace RFID_FEATHER_ASSETS
 {
@@ -23,31 +24,34 @@ namespace RFID_FEATHER_ASSETS
         private int m_nTotal = 0;
         string portname; //= "COM3";
         string baudrate = "115200";
-        bool IsPortError = false;
+        //bool IsPortError = false;
         string tokenvalue;
         bool IsCallingMainMenu = false;
         string roleValue;
 
-        public Verification(string tokenvaluesource, string portnamesource, string roleSource)
+        public Verification(string tokenvaluesource, string roleSource) //(string tokenvaluesource, string portnamesource, string roleSource)
         {
             InitializeComponent();
 
-            portname = portnamesource;
+            //portname = portnamesource;
+            GetRegDefaultPortName();
             tokenvalue = tokenvaluesource;
             roleValue = roleSource;
         }
 
-        private void auto_connect()
+        private void GetRegDefaultPortName()
         {
-            try // Await the task in a try block
+            try
             {
-                string strException = string.Empty; // 
-                string strComPort = portname;
-                int nBaudrate = Convert.ToInt32(baudrate);////Convert.ToInt32(BaudBox.Text);
+                //opening the subkey  
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\SavedPortName");
 
-                int nRet = reader.OpenCom(strComPort, nBaudrate, out strException);
-
-                ////string strLog = "Connection readers" + strComPort + "@" + nBaudrate.ToString();
+                //if it does exist, retrieve the stored values  
+                if (key != null)
+                {
+                    portname = (string)(key.GetValue("DefaultPortName"));
+                    key.Close();
+                }
             }
             catch (Exception ex)
             {
@@ -67,21 +71,20 @@ namespace RFID_FEATHER_ASSETS
                 CurrentDateTimer.Interval = 1000;
 
                 reader = new Reader.ReaderMethod();
-                //Callback
-                reader.AnalyCallback = AnalyData;
-                reader.ReceiveCallback = ReceiveData;
-                reader.SendCallback = SendData;
-                auto_connect();
+                ////Callback
+                //reader.AnalyCallback = AnalyData;
+                //reader.ReceiveCallback = ReceiveData;
+                //reader.SendCallback = SendData;
+                //auto_connect();
+                ReaderMethodProc();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
-            
-            
         }
 
+        #region btnVerifyAsset
         private void btnVerifyAsset_Click(object sender, EventArgs e)
         {
             //try
@@ -134,7 +137,7 @@ namespace RFID_FEATHER_ASSETS
             //    MessageBox.Show(ex.Message);
             //}
         }
-
+        #endregion
         private void CheckRFIDTag()
         {
             try
@@ -208,7 +211,12 @@ namespace RFID_FEATHER_ASSETS
                         //    //btnVerifyAsset.Focus();
                         //    //return;
                         //}
-                        //this.Refresh();
+
+                        //Display User's Information
+                        if (File.Exists(verifyResult.owner.imageUrl)) picOwner.Image =  Image.FromFile(verifyResult.owner.imageUrl);
+                        txtOwnerName.Text = verifyResult.owner.lastName + " " + verifyResult.owner.firstName;
+                        txtOwnerPosition.Text = verifyResult.owner.position;
+                        txtOwnerDescription.Text = verifyResult.owner.description;
 
                         //VerifyTimer.Stop();
                         //VerifyTimer.Start();
@@ -223,7 +231,6 @@ namespace RFID_FEATHER_ASSETS
                         MessageBox.Show(verifyResult.result + " " + verifyResult.message);
                         //MessageBox.Show("RFID Tag: " + txtRFIDTag.Text + " " + verifyResult.message);
                     }
-
                 }
                 else if (response.StatusCode == HttpStatusCode.NotFound)
                 {
@@ -309,6 +316,7 @@ namespace RFID_FEATHER_ASSETS
             }
         }
 
+        #region Reader Procedure
         //start of the Reader's default codes//
         private void ReceiveData(byte[] btAryReceiveData)
         {
@@ -492,11 +500,24 @@ namespace RFID_FEATHER_ASSETS
             return 0;
         }
 
-        private void ClearTimer_Tick(object sender, EventArgs e)
+        private void auto_connect()
         {
-            //ClearFields();
-            //ClearTimer.Stop();
+            try // Await the task in a try block
+            {
+                string strException = string.Empty; // 
+                string strComPort = portname;
+                int nBaudrate = Convert.ToInt32(baudrate);////Convert.ToInt32(BaudBox.Text);
+
+                int nRet = reader.OpenCom(strComPort, nBaudrate, out strException);
+
+                ////string strLog = "Connection readers" + strComPort + "@" + nBaudrate.ToString();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
+        #endregion
 
         private void ClearFields()
         {
@@ -531,15 +552,15 @@ namespace RFID_FEATHER_ASSETS
             //}
 
             //RFID Reader Loop
-            if (IsPortError == false)
-            {
+            //if (IsPortError == false)
+            //{
                 BackgroundTimer.Stop();
                 BackgroundTimer.Start();
-            }
-            else //(IsPortError)
-            {
-                CallMainMenu();
-            }
+            //}
+            //else //(IsPortError)
+            //{
+            //    CallMainMenu();
+            //}
         }
 
         private void VerifyAssetProc()
@@ -569,16 +590,18 @@ namespace RFID_FEATHER_ASSETS
                 //}
                 else if (nReturnValue == -1)
                 {
-                    MessageBox.Show("Reader Com Port Error.", "Asset Verification", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    IsPortError = true;
+                    //MessageBox.Show("Reader Com Port Error.", "Asset Verification", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    CallSerialPortSelection();
+                    //IsPortError = true;
                     //return;
 
                     //LoopVerification();
                 }
                 else if (nReturnValue == -2)
                 {
-                    MessageBox.Show("Reader Com Port Error.", "Asset Verification", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    IsPortError = true;
+                    //MessageBox.Show("Reader Com Port Error.", "Asset Verification", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    CallSerialPortSelection();
+                    //IsPortError = true;
                     //return;
 
                     //LoopVerification();
@@ -587,6 +610,38 @@ namespace RFID_FEATHER_ASSETS
                 {
                     return;
                 }
+                ReaderMethodProc();
+                VerifyAssetProc();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\n" + "Reader is not connected.");
+            }
+        }
+
+        private void ReaderMethodProc()
+        {
+            //reader = new Reader.ReaderMethod();
+            //Callback
+            reader.AnalyCallback = AnalyData;
+            reader.ReceiveCallback = ReceiveData;
+            reader.SendCallback = SendData;
+            auto_connect();
+        }
+
+        private void CallSerialPortSelection()
+        {
+            try
+            {
+                SerialPortSelection PortSelectionForm = new SerialPortSelection();
+
+                // Show PortSelectionForm as a modal dialog and determine if DialogResult = OK.
+                if (PortSelectionForm.ShowDialog(this) == DialogResult.OK)
+                {
+                    // Read the contents of PortSelectionForm's cmbComPortList.
+                    portname = PortSelectionForm.cmbComPortList.Text;
+                }
+                PortSelectionForm.Dispose();
             }
             catch (Exception ex)
             {
@@ -594,14 +649,12 @@ namespace RFID_FEATHER_ASSETS
             }
         }
 
-        private void VerifyTimer_Tick(object sender, EventArgs e)
+        private void Verification_FormClosed(object sender, FormClosedEventArgs e)
         {
-            ////ClearFields();
-            //VerifyTimer.Stop();
-            //LoopVerification();
+            ValidateRule();
         }
 
-        private void Verification_FormClosed(object sender, FormClosedEventArgs e)
+        private void ValidateRule()
         {
             if (roleValue == "ROLE_ADMIN")
             {
@@ -620,22 +673,16 @@ namespace RFID_FEATHER_ASSETS
 
             this.Hide();
             reader.CloseCom();
-            MainMenu MenuForm = new MainMenu(tokenvalue, portname, roleValue);
+            MainMenu MenuForm = new MainMenu(tokenvalue, roleValue);
             MenuForm.Show();
         }
 
         private void btnBack_Click(object sender, EventArgs e)
         {
-            if (roleValue == "ROLE_ADMIN")
-            {
-                CallMainMenu();
-            }
-            else if (roleValue == "ROLE_GUARD")
-            {
-                Environment.Exit(0);
-            }
+            ValidateRule();
         }
 
+        #region Timer Procedure
         private void BackgroundTimer_Tick(object sender, EventArgs e)
         {
             //Always read the RFID Tag if not calling the Main Menu
@@ -652,33 +699,53 @@ namespace RFID_FEATHER_ASSETS
             //Display the current date and time
             lblCurrentDateTime.Text = DateTime.Now.ToString("dddd, MMMM dd, yyyy h:mm:ss tt");
         }
+
+        private void VerifyTimer_Tick(object sender, EventArgs e)
+        {
+            ////ClearFields();
+            //VerifyTimer.Stop();
+            //LoopVerification();
+        }
+
+        private void ClearTimer_Tick(object sender, EventArgs e)
+        {
+            //ClearFields();
+            //ClearTimer.Stop();
+        }
+        #endregion
+
     }
 
     public class VerifyRequest
     {
         public int companyId {get; set;}
-
         public string tag {get; set;}
-
         public int tagType{get; set;}
     }
 
     public class VerifyResult
     {
         public string name {get; set;}
-
         public string description {get;set;}
-
         public string imageUrls {get;set;}
-
         public bool takOutAllowed {get;set;}
-
         public string takeOutInfo {get;set;}
-
         public string result {get;set;}
-
         public string message {get;set;}
+        public OwnerList owner { get; set; }
+    }
 
+    public class OwnerList
+    {
+        public int userId { get; set; }
+        public int companyId { get; set; }
+        public string firstName { get; set; }
+        public string lastName { get; set; }
+        public string position { get; set; }
+        public string description { get; set; }
+        public string imageUrl { get; set; }
+        public string email { get; set; }
+        public string authorities { get; set; }
     }
 }
 

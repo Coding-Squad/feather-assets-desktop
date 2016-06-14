@@ -33,6 +33,7 @@
             this.button4 = new System.Windows.Forms.Button();
             this.cmbComPort = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.btnMyAssets = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -108,12 +109,25 @@
             this.label1.Text = "Serial Port:";
             this.label1.Visible = false;
             // 
+            // btnMyAssets
+            // 
+            this.btnMyAssets.BackColor = System.Drawing.Color.Orange;
+            this.btnMyAssets.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnMyAssets.Location = new System.Drawing.Point(70, 93);
+            this.btnMyAssets.Name = "btnMyAssets";
+            this.btnMyAssets.Size = new System.Drawing.Size(138, 32);
+            this.btnMyAssets.TabIndex = 21;
+            this.btnMyAssets.Text = "MY ASSETS";
+            this.btnMyAssets.UseVisualStyleBackColor = false;
+            this.btnMyAssets.Click += new System.EventHandler(this.btnMyAssets_Click);
+            // 
             // MainMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(284, 261);
+            this.Controls.Add(this.btnMyAssets);
             this.Controls.Add(this.cmbComPort);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button4);
@@ -138,5 +152,6 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Label label1;
         public System.Windows.Forms.ComboBox cmbComPort;
+        private System.Windows.Forms.Button btnMyAssets;
     }
 }

@@ -15,7 +15,7 @@ namespace RFID_FEATHER_ASSETS
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-           Application.Run(new LoginActivity(string.Empty));
+           Application.Run(new LoginActivity());
         }
     }
 }

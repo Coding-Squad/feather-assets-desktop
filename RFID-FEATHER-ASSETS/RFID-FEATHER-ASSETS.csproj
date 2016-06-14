@@ -133,6 +133,12 @@
     <Compile Include="MainMenu.Designer.cs">
       <DependentUpon>MainMenu.cs</DependentUpon>
     </Compile>
+    <Compile Include="SerialPortSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SerialPortSelection.Designer.cs">
+      <DependentUpon>SerialPortSelection.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserRegistration.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -156,6 +162,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainMenu.resx">
       <DependentUpon>MainMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SerialPortSelection.resx">
+      <DependentUpon>SerialPortSelection.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserRegistration.resx">
       <DependentUpon>UserRegistration.cs</DependentUpon>
