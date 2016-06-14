@@ -33,7 +33,7 @@ namespace RFID_FEATHER_ASSETS
             {*/
                 //TODO RFID SCAN CODE MISSING
                 this.Hide();
-                Verification m = new Verification(tokenvalue, roleValue);
+                Verification m = new Verification();//tokenvalue, roleValue);
                 m.Show();
             //}
         }
@@ -49,7 +49,7 @@ namespace RFID_FEATHER_ASSETS
             else
             {*/
                 this.Hide();
-                AssetRegistration registerAsset = new AssetRegistration(tokenvalue);
+                AssetRegistration registerAsset = new AssetRegistration();
                 registerAsset.Show();
             //} 
         }
@@ -79,7 +79,7 @@ namespace RFID_FEATHER_ASSETS
         private void btnMyAssets_Click(object sender, EventArgs e)
         {
             this.Hide();
-            Assets assets = new Assets(tokenvalue, roleValue);
+            Assets assets = new Assets(/*tokenvalue, roleValue*/);
             assets.Show();
         }
     }

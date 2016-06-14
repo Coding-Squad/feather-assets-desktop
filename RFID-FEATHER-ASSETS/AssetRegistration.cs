@@ -28,20 +28,44 @@ namespace RFID_FEATHER_ASSETS
         string portname;// = "COM3";
         string baudrate = "115200";
         string tokenvalue;
+        string roleValue;
         private FilterInfoCollection webcam;
         private VideoCaptureDevice cam;
         bool IsCameraConnected = false;
 
-        public AssetRegistration(string tokenvaluesource)//(string tokenvaluesource, string portnamesource)
+        public AssetRegistration()//(string tokenvaluesource, string portnamesource)
         {
             InitializeComponent();
 
             //portname = portnamesource;
-            tokenvalue = tokenvaluesource;
+            //tokenvalue = tokenvaluesource;
+            //roleValue = roleSource;
+            getKey();
             InitializeOwner();
             InitializeCamera();
             GetRegDefaultImagePath();
             GetRegDefaultPortName();
+        }
+
+        private void getKey()
+        {
+            try
+            {
+                //opening the subkey  
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\SavedUserInfo");
+
+                //if it does exist, retrieve the stored values  
+                if (key != null)
+                {
+                    tokenvalue = (string)(key.GetValue("authenticationToken"));
+                    roleValue = (string)(key.GetValue("roles"));
+                    key.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         #region Get Registry Saved Value
@@ -389,7 +413,7 @@ namespace RFID_FEATHER_ASSETS
                 //    cam.Stop();
                 //reader.CloseCom();
 
-                SerialPortSelection PortSelectionForm = new SerialPortSelection();
+                SerialPortSelection PortSelectionForm = new SerialPortSelection(tokenvalue, roleValue);
 
                 // Show PortSelectionForm as a modal dialog and determine if DialogResult = OK.
                 if (PortSelectionForm.ShowDialog(this) == DialogResult.OK)
@@ -397,6 +421,8 @@ namespace RFID_FEATHER_ASSETS
                     // Read the contents of PortSelectionForm's cmbComPortList.
                     portname = PortSelectionForm.cmbComPortList.Text;
                 }
+                else CallMainMenu();
+
                 PortSelectionForm.Dispose();
                 //ReaderMethodProc();
             }
@@ -421,7 +447,7 @@ namespace RFID_FEATHER_ASSETS
 
                 this.Hide();
                 reader.CloseCom();
-                MainMenu MenuForm = new MainMenu(tokenvalue, string.Empty);
+                MainMenu MenuForm = new MainMenu(tokenvalue, roleValue);
                 MenuForm.Show();
             }
             catch (Exception ex)
@@ -850,7 +876,7 @@ namespace RFID_FEATHER_ASSETS
         private void btnBrowseImagePath_Click(object sender, EventArgs e)
         {
             try
-            { 
+            {
                 if (imagePathDialog.ShowDialog() == DialogResult.OK)
                 {
                     txtSaveImageDir.Text = imagePathDialog.SelectedPath;
@@ -861,8 +887,9 @@ namespace RFID_FEATHER_ASSETS
 
                     //storing the values  
                     key.SetValue("DefaultImagePath", txtSaveImageDir.Text);
-                    key.Close();  
+                    key.Close();
                 }
+                else CallMainMenu();
             }
             catch (Exception ex)
             {

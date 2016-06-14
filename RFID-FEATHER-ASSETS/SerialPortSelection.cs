@@ -13,10 +13,16 @@ namespace RFID_FEATHER_ASSETS
 {
     public partial class SerialPortSelection : Form
     {
-        public SerialPortSelection()
+        string roleValue;
+        string tokenvalue;
+
+        public SerialPortSelection(string tokenvaluesource, string roleSource)
         {
             InitializeComponent();
+
             GetSavedSerialPort();
+            tokenvalue = tokenvaluesource;
+            roleValue = roleSource;
         }
 
         private void GetSavedSerialPort()
@@ -67,6 +73,24 @@ namespace RFID_FEATHER_ASSETS
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            ValidateRule();
+        }
+
+        private void ValidateRule()
+        {
+            if (roleValue == "ROLE_ADMIN")
+            {
+                DialogResult = DialogResult.Cancel;
+                //this.Dispose();//CallMainMenu();
+            }
+            else if (roleValue == "ROLE_GUARD")
+            {
+                Environment.Exit(0);
             }
         }
     }

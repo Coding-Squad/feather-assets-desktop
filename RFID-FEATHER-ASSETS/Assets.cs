@@ -1,4 +1,5 @@
-﻿using RestSharp;
+﻿using Microsoft.Win32;
+using RestSharp;
 using RestSharp.Deserializers;
 using System;
 using System.Collections.Generic;
@@ -20,14 +21,15 @@ namespace RFID_FEATHER_ASSETS
         string roleValue;
         List<AssetInformation> assetInformation = new List<AssetInformation>(); 
 
-        public Assets(string tokenValueSource, string roleSource)
+        public Assets(/*string tokenValueSource, *//*string roleSource*/)
         {
             InitializeComponent();
 
             //comboAsset.SelectedIndex = 1;
-
-            tokenValue = tokenValueSource;
-            roleValue = roleSource;
+            getKey();
+            
+            
+            //roleValue = roleSource;
             InitializeAsset();
 
             if (roleValue == "ROLE_ADMIN" || roleValue == "ROLE_GUARD")
@@ -41,12 +43,33 @@ namespace RFID_FEATHER_ASSETS
             
         }
 
+        private void getKey()
+        {
+             try
+            {
+                //opening the subkey  
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\SavedUserInfo");
+
+                //if it does exist, retrieve the stored values  
+                if (key != null)
+                {
+                    tokenValue = (string)(key.GetValue("authenticationToken"));
+                    roleValue = (string)(key.GetValue("roles"));
+                    key.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
         private void InitializeAsset()
         {
             try
             {
                 //var company = 1;
-                var id = 6;
+                var id = 26;
 
                 //initialize Rest Client
                 RestClient client = new RestClient(/*"http://feather-assets.herokuapp.com/");*/"http://52.163.93.95:8080/FeatherAssets/");
@@ -114,7 +137,7 @@ namespace RFID_FEATHER_ASSETS
             {
                 //display necessary text information
                 assetName.Text = assetInformation[i].name;
-                descriptionTxt.Text = assetInformation[i].description;
+                descriptionTxt1.Text = assetInformation[i].description;
                 tagTxt.Text = assetInformation[i].tag;
                 informationTxt.Text = assetInformation[i].takeOutInfo;
                 
@@ -131,10 +154,15 @@ namespace RFID_FEATHER_ASSETS
                     else
                     {
                         if (readUrls.Length > 1 && File.Exists(readUrls[1])) assetImage.Image = Image.FromFile(readUrls[1]);
+                        else assetImage.Image = null;
                         if (readUrls.Length > 2 && File.Exists(readUrls[2])) assetImage1.Image = Image.FromFile(readUrls[2]);
+                        else assetImage1.Image = null;
                         if (readUrls.Length > 3 && File.Exists(readUrls[3])) assetImage2.Image = Image.FromFile(readUrls[3]);
+                        else assetImage2.Image = null;
                         if (readUrls.Length > 4 && File.Exists(readUrls[4])) assetImage3.Image = Image.FromFile(readUrls[4]);
+                        else assetImage3.Image = null;
                         if (readUrls.Length > 5 && File.Exists(readUrls[5])) assetImage4.Image = Image.FromFile(readUrls[5]);
+                        else assetImage4.Image = null;
                     }
                 }
 
@@ -159,7 +187,7 @@ namespace RFID_FEATHER_ASSETS
             if (roleValue == "ROLE_ADMIN" || roleValue == "ROLE_GUARD")
             {
                 this.Hide();
-                MainMenu menuForm = new MainMenu(tokenValue, /*string.Empty,*/ roleValue);
+                MainMenu menuForm = new MainMenu(tokenValue, roleValue);
                 menuForm.Show();
             }
             else if (roleValue == "ROLE_USER")

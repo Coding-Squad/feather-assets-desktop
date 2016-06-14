@@ -39,14 +39,14 @@
             // 
             // userName
             // 
-            this.userName.Location = new System.Drawing.Point(117, 71);
+            this.userName.Location = new System.Drawing.Point(126, 76);
             this.userName.Name = "userName";
             this.userName.Size = new System.Drawing.Size(144, 20);
             this.userName.TabIndex = 0;
             // 
             // passWord
             // 
-            this.passWord.Location = new System.Drawing.Point(117, 115);
+            this.passWord.Location = new System.Drawing.Point(126, 104);
             this.passWord.Name = "passWord";
             this.passWord.PasswordChar = '*';
             this.passWord.Size = new System.Drawing.Size(144, 20);
@@ -56,29 +56,29 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe Print", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Black;
             this.label1.Location = new System.Drawing.Point(9, 71);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(96, 28);
+            this.label1.Size = new System.Drawing.Size(111, 24);
             this.label1.TabIndex = 2;
             this.label1.Text = "Username:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe Print", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(12, 113);
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(12, 99);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(93, 28);
+            this.label2.Size = new System.Drawing.Size(106, 24);
             this.label2.TabIndex = 3;
             this.label2.Text = "Password:";
             // 
             // button1
             // 
             this.button1.BackColor = System.Drawing.Color.Orange;
-            this.button1.Font = new System.Drawing.Font("Segoe Print", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(117, 190);
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(126, 151);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(144, 30);
             this.button1.TabIndex = 4;
@@ -106,9 +106,9 @@
             "COM14",
             "COM15",
             "COM16"});
-            this.cmbComPort.Location = new System.Drawing.Point(117, 151);
+            this.cmbComPort.Location = new System.Drawing.Point(103, 231);
             this.cmbComPort.Name = "cmbComPort";
-            this.cmbComPort.Size = new System.Drawing.Size(65, 21);
+            this.cmbComPort.Size = new System.Drawing.Size(46, 21);
             this.cmbComPort.TabIndex = 5;
             this.cmbComPort.Visible = false;
             // 
@@ -116,7 +116,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe Print", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(26, 151);
+            this.label3.Location = new System.Drawing.Point(12, 231);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(79, 21);
             this.label3.TabIndex = 6;

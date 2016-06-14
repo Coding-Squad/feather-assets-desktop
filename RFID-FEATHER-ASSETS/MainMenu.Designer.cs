@@ -39,10 +39,10 @@
             // button1
             // 
             this.button1.BackColor = System.Drawing.Color.Orange;
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(70, 55);
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(54, 55);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(138, 32);
+            this.button1.Size = new System.Drawing.Size(174, 32);
             this.button1.TabIndex = 0;
             this.button1.Text = "SCAN";
             this.button1.UseVisualStyleBackColor = false;
@@ -51,10 +51,10 @@
             // button2
             // 
             this.button2.BackColor = System.Drawing.Color.Orange;
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(70, 130);
+            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.Location = new System.Drawing.Point(54, 131);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(138, 35);
+            this.button2.Size = new System.Drawing.Size(174, 35);
             this.button2.TabIndex = 1;
             this.button2.Text = "REGISTER ASSET";
             this.button2.UseVisualStyleBackColor = false;
@@ -63,10 +63,10 @@
             // button4
             // 
             this.button4.BackColor = System.Drawing.Color.Orange;
-            this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button4.Location = new System.Drawing.Point(70, 171);
+            this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button4.Location = new System.Drawing.Point(54, 172);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(138, 37);
+            this.button4.Size = new System.Drawing.Size(174, 37);
             this.button4.TabIndex = 18;
             this.button4.Text = "REGISTER USER";
             this.button4.UseVisualStyleBackColor = false;
@@ -112,10 +112,10 @@
             // btnMyAssets
             // 
             this.btnMyAssets.BackColor = System.Drawing.Color.Orange;
-            this.btnMyAssets.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnMyAssets.Location = new System.Drawing.Point(70, 93);
+            this.btnMyAssets.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnMyAssets.Location = new System.Drawing.Point(54, 93);
             this.btnMyAssets.Name = "btnMyAssets";
-            this.btnMyAssets.Size = new System.Drawing.Size(138, 32);
+            this.btnMyAssets.Size = new System.Drawing.Size(174, 32);
             this.btnMyAssets.TabIndex = 21;
             this.btnMyAssets.Text = "MY ASSETS";
             this.btnMyAssets.UseVisualStyleBackColor = false;

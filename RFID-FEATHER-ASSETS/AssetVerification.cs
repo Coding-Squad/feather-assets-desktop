@@ -29,14 +29,36 @@ namespace RFID_FEATHER_ASSETS
         bool IsCallingMainMenu = false;
         string roleValue;
 
-        public Verification(string tokenvaluesource, string roleSource) //(string tokenvaluesource, string portnamesource, string roleSource)
+        public Verification()//string tokenvaluesource, string roleSource) //(string tokenvaluesource, string portnamesource, string roleSource)
         {
             InitializeComponent();
 
             //portname = portnamesource;
             GetRegDefaultPortName();
-            tokenvalue = tokenvaluesource;
-            roleValue = roleSource;
+            getKey();
+            //tokenvalue = tokenvaluesource;
+            //roleValue = roleSource;
+        }
+
+        private void getKey()
+        {
+            try
+            {
+                //opening the subkey  
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\SavedUserInfo");
+
+                //if it does exist, retrieve the stored values  
+                if (key != null)
+                {
+                    tokenvalue = (string)(key.GetValue("authenticationToken"));
+                    roleValue = (string)(key.GetValue("roles"));
+                    key.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void GetRegDefaultPortName()
@@ -65,7 +87,7 @@ namespace RFID_FEATHER_ASSETS
             {
                 //ClearTimer.Interval = 7000;
                 //VerifyTimer.Interval = 7000;
-                BackgroundTimer.Interval = 250;
+                BackgroundTimer.Interval = 1000;
 
                 CurrentDateTimer.Enabled = true;
                 CurrentDateTimer.Interval = 1000;
@@ -530,6 +552,9 @@ namespace RFID_FEATHER_ASSETS
             txtAssetName.Text = string.Empty;
             txtDescription.Text = string.Empty;
             txtOwnerName.Text = string.Empty;
+            txtOwnerPosition.Text = string.Empty;
+            txtOwnerDescription.Text = string.Empty;
+            picOwner.Image = null;
             //txtTakeOutAvailability.Text = string.Empty;
             txtTakeOutNote.Text = string.Empty;
             //picOwner.Image = null;
@@ -550,68 +575,73 @@ namespace RFID_FEATHER_ASSETS
             //    //btnVerifyAsset.PerformClick();
             //    VerifyAssetProc();
             //}
-
-            //RFID Reader Loop
-            //if (IsPortError == false)
-            //{
+            if (!IsCallingMainMenu)
+            {
+                //RFID Reader Loop
+                //if (IsPortError == false)
+                //{
                 BackgroundTimer.Stop();
                 BackgroundTimer.Start();
-            //}
-            //else //(IsPortError)
-            //{
-            //    CallMainMenu();
-            //}
+                //}
+                //else //(IsPortError)
+                //{
+                //    CallMainMenu();
+                //}
+            }
         }
 
         private void VerifyAssetProc()
         {
             try
-            { 
-                int nReturnValue = 0;
-                string tagInfo = "";
-
-                nReturnValue = realTimeInventory(255, 255, 1);  //Public address reader , fast inventory mode , 5 seconds timeout control
-
-                if (nReturnValue == 1)
+            {
+                if (!IsCallingMainMenu)
                 {
-                    ClearFields();
+                    int nReturnValue = 0;
+                    string tagInfo = "";
 
-                    for (int i = 0; i < RealTimeTagDataList.Count; i++)
+                    nReturnValue = realTimeInventory(255, 255, 1);  //Public address reader , fast inventory mode , 5 seconds timeout control
+
+                    if (nReturnValue == 1)
                     {
-                        tagInfo = RealTimeTagDataList[i].strEpc;//tagInfo = RealTimeTagDataList[i].btAntId.ToString() + "    " + RealTimeTagDataList[i].strEpc + "    ";// tagInfo = "antenna" + RealTimeTagDataList[i].btAntId.ToString() + "    " + RealTimeTagDataList[i].strEpc + "    " + RealTimeTagDataList[i].strCarrierFrequency + "    " + RealTimeTagDataList[i].strRssi;
-                        //listBox1.Items.Add(tagInfo);
-                        txtRFIDTag.Text = tagInfo.ToString();
+                        ClearFields();
+
+                        for (int i = 0; i < RealTimeTagDataList.Count; i++)
+                        {
+                            tagInfo = RealTimeTagDataList[i].strEpc;//tagInfo = RealTimeTagDataList[i].btAntId.ToString() + "    " + RealTimeTagDataList[i].strEpc + "    ";// tagInfo = "antenna" + RealTimeTagDataList[i].btAntId.ToString() + "    " + RealTimeTagDataList[i].strEpc + "    " + RealTimeTagDataList[i].strCarrierFrequency + "    " + RealTimeTagDataList[i].strRssi;
+                            //listBox1.Items.Add(tagInfo);
+                            txtRFIDTag.Text = tagInfo.ToString();
+                        }
+                        CheckRFIDTag();
                     }
-                    CheckRFIDTag();
-                }
-                //else if (nReturnValue == 0)
-                //{
-                //    MessageBox.Show("Successful execution of the command but no inventory to tag");
-                //}
-                else if (nReturnValue == -1)
-                {
-                    //MessageBox.Show("Reader Com Port Error.", "Asset Verification", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    CallSerialPortSelection();
-                    //IsPortError = true;
-                    //return;
+                    //else if (nReturnValue == 0)
+                    //{
+                    //    MessageBox.Show("Successful execution of the command but no inventory to tag");
+                    //}
+                    else if (nReturnValue == -1)
+                    {
+                        //MessageBox.Show("Reader Com Port Error.", "Asset Verification", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        CallSerialPortSelection();
+                        //IsPortError = true;
+                        //return;
 
-                    //LoopVerification();
-                }
-                else if (nReturnValue == -2)
-                {
-                    //MessageBox.Show("Reader Com Port Error.", "Asset Verification", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    CallSerialPortSelection();
-                    //IsPortError = true;
-                    //return;
+                        //LoopVerification();
+                    }
+                    else if (nReturnValue == -2)
+                    {
+                        //MessageBox.Show("Reader Com Port Error.", "Asset Verification", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        CallSerialPortSelection();
+                        //IsPortError = true;
+                        //return;
 
-                    //LoopVerification();
+                        //LoopVerification();
+                    }
+                    else
+                    {
+                        return;
+                    }
+                    ReaderMethodProc();
+                    VerifyAssetProc();
                 }
-                else
-                {
-                    return;
-                }
-                ReaderMethodProc();
-                VerifyAssetProc();
             }
             catch (Exception ex)
             {
@@ -633,7 +663,7 @@ namespace RFID_FEATHER_ASSETS
         {
             try
             {
-                SerialPortSelection PortSelectionForm = new SerialPortSelection();
+                SerialPortSelection PortSelectionForm = new SerialPortSelection(tokenvalue, roleValue);
 
                 // Show PortSelectionForm as a modal dialog and determine if DialogResult = OK.
                 if (PortSelectionForm.ShowDialog(this) == DialogResult.OK)
@@ -641,6 +671,8 @@ namespace RFID_FEATHER_ASSETS
                     // Read the contents of PortSelectionForm's cmbComPortList.
                     portname = PortSelectionForm.cmbComPortList.Text;
                 }
+                else CallMainMenu();
+
                 PortSelectionForm.Dispose();
             }
             catch (Exception ex)

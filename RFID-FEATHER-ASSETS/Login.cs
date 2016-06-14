@@ -35,6 +35,9 @@ namespace RFID_FEATHER_ASSETS
 
         private void button1_Click(object sender, EventArgs e)
         {
+
+            button1.Text = "Logging in...";
+
             LoginInfo loginInfo = new LoginInfo();
             //store information to object
             loginInfo.email = userName.Text;
@@ -64,6 +67,13 @@ namespace RFID_FEATHER_ASSETS
 
                 JsonDeserializer deserial = new JsonDeserializer();
                 loginResult = deserial.Deserialize<LoginResult>(response);
+
+                //RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\SavedPortName");
+                RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\SavedUserInfo");
+
+                key.SetValue("authenticationToken", loginResult.authenticationToken);
+                key.SetValue("roles", loginResult.roles);
+                key.Close();
 
                
                       
@@ -95,14 +105,14 @@ namespace RFID_FEATHER_ASSETS
                     {*/
                         //TODO RFID SCAN CODE MISSING
                         this.Hide();
-                        Verification m = new Verification(loginResult.authenticationToken, loginResult.roles);
+                        Verification m = new Verification();//loginResult.authenticationToken, loginResult.roles);
                         m.Show();
                     //}
                 }
                 else if (loginResult.roles == "ROLE_USER")
                 {
                     this.Hide();
-                    Assets asset = new Assets(loginResult.authenticationToken, loginResult.roles);
+                    Assets asset = new Assets(/*loginResult.authenticationToken, loginResult.roles*/);
                     asset.Show();
                 }
                 
@@ -118,6 +128,8 @@ namespace RFID_FEATHER_ASSETS
                 //show error code
                 MessageBox.Show("Error: " + numericStatusCode + response.ErrorMessage);
             }
+
+            button1.Text = "Login";
             
              
         }
