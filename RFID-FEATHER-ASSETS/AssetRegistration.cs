@@ -40,124 +40,97 @@ namespace RFID_FEATHER_ASSETS
             //portname = portnamesource;
             //tokenvalue = tokenvaluesource;
             //roleValue = roleSource;
-            getKey();
+            GetAssetSystemInfo();
+
             InitializeOwner();
             InitializeCamera();
-            GetRegDefaultImagePath();
-            GetRegDefaultPortName();
         }
 
-        private void getKey()
+        private void GetAssetSystemInfo()
         {
             try
             {
                 //opening the subkey  
-                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\SavedUserInfo");
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\AssetSystemInfo");
 
                 //if it does exist, retrieve the stored values  
                 if (key != null)
                 {
                     tokenvalue = (string)(key.GetValue("authenticationToken"));
                     roleValue = (string)(key.GetValue("roles"));
-                    key.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        #region Get Registry Saved Value
-        private void GetRegDefaultPortName()
-        {
-            try
-            {
-                //opening the subkey  
-                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\SavedPortName");
-
-                //if it does exist, retrieve the stored values  
-                if (key != null)
-                {
                     portname = (string)(key.GetValue("DefaultPortName"));
+                    txtSaveImageDir.Text = (string)(key.GetValue("AssetsImagePath"));
+                    lblLoginID.Text = "Login ID: " + (string)(key.GetValue("LoginId")).ToString().ToUpper();
                     key.Close();
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-            }
+            }  
         }
-
-        private void GetRegDefaultImagePath()
-        {
-            try 
-            { 
-                //opening the subkey  
-                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\SavedImagePath");
-
-                //if it does exist, retrieve the stored values  
-                if (key != null)
-                {
-                    txtSaveImageDir.Text = (string)(key.GetValue("DefaultImagePath"));
-                    key.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-        #endregion
 
         private void InitializeOwner()
         {
-            try
-            { 
-               var company = 1;
+            //try
+            //{ 
+            //   var company = 1;
 
-               RestClient client = new RestClient("http://52.163.93.95:8080/FeatherAssets/"); //("http://feather-assets.herokuapp.com/");
-               RestRequest ownerName = new RestRequest("/api/user/list/"+company, Method.GET);
+            //   RestClient client = new RestClient("http://52.163.93.95:8080/FeatherAssets/"); //("http://feather-assets.herokuapp.com/");
+            //   RestRequest ownerName = new RestRequest("/api/user/list/"+company, Method.GET);
 
-               var authToken = tokenvalue;
+            //   var authToken = tokenvalue;
 
-               ownerName.RequestFormat = DataFormat.Json;
-               ownerName.AddHeader("Content-Type", "application/json; charset=utf-8");
-               ownerName.AddHeader("X-Auth-Token", authToken);
+            //   ownerName.RequestFormat = DataFormat.Json;
+            //   ownerName.AddHeader("Content-Type", "application/json; charset=utf-8");
+            //   ownerName.AddHeader("X-Auth-Token", authToken);
 
-               var response = client.Execute<List<Owner>>(ownerName);
-               var content = response.Content;
+            //   var response = client.Execute<List<Owner>>(ownerName);
+            //   var content = response.Content;
 
-               if (response.StatusCode == HttpStatusCode.OK)
-               {
-                   JsonDeserializer deserial = new JsonDeserializer();
-                   List<Owner> owner = deserial.Deserialize<List<Owner>>(response);
+            //   if (response.StatusCode == HttpStatusCode.OK)
+            //   {
+            //       JsonDeserializer deserial = new JsonDeserializer();
+            //       List<Owner> owner = deserial.Deserialize<List<Owner>>(response);
 
-                   this.comboOwner.DataSource = owner;
-                   this.comboOwner.ValueMember = "userId";
-                   this.comboOwner.DisplayMember = "fullName";
-               }
-               else
-               {
-                   MessageBox.Show("Unable to reach server. please try again later.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-               }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            //       this.comboOwner.DataSource = owner;
+            //       this.comboOwner.ValueMember = "userId";
+            //       this.comboOwner.DisplayMember = "fullName";
+            //   }
+            //   else
+            //   {
+            //       MessageBox.Show("Unable to reach server. please try again later.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //   }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message);
+            //}
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            CallMainMenu();
+            if (txtRFIDTag.Text.Length != 0 || imgCapture1.Image != null)
+            {
+                DialogResult result = MessageBox.Show("Are you sure you want to cancel the registration?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                if (result == DialogResult.Yes)
+                {
+                    CallMainMenu();
+                }
+                else
+                {
+                    btnGetRFIDTag.Focus();
+                    return;
+                }
+            }
+            else CallMainMenu();
         }  
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
             try
             {
-                if (txtRFIDTag.Text.Length == 0 || txtAssetName.Text.Length == 0 || txtDescription.Text.Length == 0 || txtTakeOutNote.Text.Length == 0|| imgCapture1.Image == null)
+                if (txtRFIDTag.Text.Length == 0 ||/* txtAssetName.Text.Length == 0 ||*/ txtDescription.Text.Length == 0 || txtTakeOutNote.Text.Length == 0 || imgCapture1.Image == null)
                 {
                     MessageBox.Show("Complete information is required.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
                     //btnBrowseImage.Focus();
@@ -207,13 +180,13 @@ namespace RFID_FEATHER_ASSETS
                 //int oId;
                 //bool parseOK = Int32.TryParse(comboOwner.SelectedValue.ToString(), out oId);
 
-                int currentOwnerId =  Convert.ToInt32(((Owner)comboOwner.SelectedItem).userId);
+                //int currentOwnerId =  Convert.ToInt32(((Owner)comboOwner.SelectedItem).userId);
 
                 asset.tag = txtRFIDTag.Text;
                 asset.tagType = 1;
                 asset.companyId = 1;
-                asset.ownerId = currentOwnerId;//oId;
-                asset.name = txtAssetName.Text;
+                //asset.ownerId = currentOwnerId;//oId;
+                //asset.name = txtAssetName.Text;
                 asset.description = txtDescription.Text;
                 //if (radbtnYes.Checked)
                 //{
@@ -372,7 +345,7 @@ namespace RFID_FEATHER_ASSETS
                         tagInfo = RealTimeTagDataList[i].strEpc;//tagInfo = RealTimeTagDataList[i].btAntId.ToString() + "    " + RealTimeTagDataList[i].strEpc + "    ";// tagInfo = "antenna" + RealTimeTagDataList[i].btAntId.ToString() + "    " + RealTimeTagDataList[i].strEpc + "    " + RealTimeTagDataList[i].strCarrierFrequency + "    " + RealTimeTagDataList[i].strRssi;
                         //listBox1.Items.Add(tagInfo);
                         txtRFIDTag.Text = tagInfo.ToString();
-                        txtAssetName.Focus();
+                        txtDescription.Focus();//txtAssetName.Focus();
                     }
                 }
                 //else if (nReturnValue == 0)
@@ -460,6 +433,8 @@ namespace RFID_FEATHER_ASSETS
         {
             try
             {
+                AssetValidUntilDateTime();
+
                 CurrentTimer.Enabled = true;
                 CurrentTimer.Interval = 1000;
 
@@ -475,6 +450,36 @@ namespace RFID_FEATHER_ASSETS
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void AssetValidUntilDateTime()
+        {
+            //For Valid Until Date
+            if (!dtDatePicker.Checked)
+            {
+                dtDatePicker.CustomFormat = "'Date'";
+                dtDatePicker.Format = DateTimePickerFormat.Custom;
+            }
+            else
+            {
+                //dtDatePicker.CustomFormat = "hh:mm tt";
+                dtDatePicker.CustomFormat = "MM/dd/yyyy";
+                dtDatePicker.Format = DateTimePickerFormat.Custom;
+            }
+
+            //For Valid Until Time
+            if (!dtTimePicker.Checked)
+            {
+                dtTimePicker.CustomFormat = "'Time'";
+                dtTimePicker.Format = DateTimePickerFormat.Custom;
+            }
+            else
+            {
+                //dtTimePicker.CustomFormat = "hh:mm tt";
+                dtTimePicker.CustomFormat = "h:mm tt";
+                dtTimePicker.Format = DateTimePickerFormat.Custom;
+            }
+
         }
 
         private void ReaderMethodProc()
@@ -554,7 +559,7 @@ namespace RFID_FEATHER_ASSETS
                 if (string.IsNullOrEmpty(txtSaveImageDir.Text))
                 {
                     MessageBox.Show("Please select Image Path.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    btnBrowseImageDir.Focus();
+                    btnBrowseImagePath.Focus();
                     return;
                 }
                 else
@@ -870,7 +875,10 @@ namespace RFID_FEATHER_ASSETS
 
         private void CurrentTimer_Tick(object sender, EventArgs e)
         {
-            lblCurrentDateTime.Text = DateTime.Now.ToString("dddd, MMMM dd, yyyy h:mm:ss tt");
+            lblCurrentDateTime.Text = DateTime.Now.ToString("h:mm:ss tt") + "\n" + DateTime.Now.ToString("dddd, MMMM dd, yyyy"); //DateTime.Now.ToString("dddd, MMMM dd, yyyy h:mm:ss tt");
+
+            //if (dtDatePicker.Checked) dtDatePicker.Value = DateTime.Now;
+            //if (dtTimePicker.Checked) dtTimePicker.Value = DateTime.Now;
         }
 
         private void btnBrowseImagePath_Click(object sender, EventArgs e)
@@ -882,19 +890,29 @@ namespace RFID_FEATHER_ASSETS
                     txtSaveImageDir.Text = imagePathDialog.SelectedPath;
 
                     //accessing the CurrentUser root element  
-                    //and adding "DefaultImagePath" subkey to the "SOFTWARE" subkey  
-                    RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\SavedImagePath");
+                    //and adding "AssetsImagePath" subkey to the "SOFTWARE" subkey  
+                    RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\AssetSystemInfo");
 
                     //storing the values  
-                    key.SetValue("DefaultImagePath", txtSaveImageDir.Text);
+                    key.SetValue("AssetsImagePath", txtSaveImageDir.Text);
                     key.Close();
                 }
-                else CallMainMenu();
+                //else CallMainMenu();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void dtDatePicker_ValueChanged(object sender, EventArgs e)
+        {
+            AssetValidUntilDateTime();
+        }
+
+        private void dtTimePicker_ValueChanged(object sender, EventArgs e)
+        {
+            AssetValidUntilDateTime();
         }
 
     }

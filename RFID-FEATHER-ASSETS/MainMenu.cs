@@ -21,7 +21,7 @@ namespace RFID_FEATHER_ASSETS
             roleValue = roleSource;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnScan_Click(object sender, EventArgs e)
         {
             /*if (string.IsNullOrEmpty(cmbComPort.Text))
             {
@@ -38,7 +38,7 @@ namespace RFID_FEATHER_ASSETS
             //}
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void btnRegisterAsset_Click(object sender, EventArgs e)
         {
             /*if (string.IsNullOrEmpty(cmbComPort.Text))
             {
@@ -54,7 +54,7 @@ namespace RFID_FEATHER_ASSETS
             //} 
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void btnRegisterUser_Click(object sender, EventArgs e)
         {
             this.Hide();
             RegisterUser registerUser = new RegisterUser(tokenvalue);
@@ -66,21 +66,18 @@ namespace RFID_FEATHER_ASSETS
             Environment.Exit(0);
         }
 
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void MainMenu_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void btnMyAssets_Click(object sender, EventArgs e)
         {
             this.Hide();
             Assets assets = new Assets(/*tokenvalue, roleValue*/);
             assets.Show();
+        }
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            LoginActivity LoginForm = new LoginActivity();
+            LoginForm.Show();
         }
     }
 }

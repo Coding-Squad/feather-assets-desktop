@@ -30,7 +30,7 @@ namespace RFID_FEATHER_ASSETS
             try
             {
                 //opening the subkey  
-                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\SavedPortName");
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\AssetSystemInfo");
 
                 //if it does exist, retrieve the stored values  
                 if (key != null)
@@ -53,7 +53,7 @@ namespace RFID_FEATHER_ASSETS
                 {
                     //accessing the CurrentUser root element  
                     //and adding "PortName" subkey to the "SOFTWARE" subkey  
-                    RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\SavedPortName");
+                    RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\AssetSystemInfo");
 
                     //storing the values  
                     key.SetValue("DefaultPortName", cmbComPortList.Text);
@@ -78,20 +78,22 @@ namespace RFID_FEATHER_ASSETS
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            ValidateRule();
+            //ValidateRule();
+            this.Dispose();
+            DialogResult = DialogResult.Cancel;
         }
 
         private void ValidateRule()
         {
-            if (roleValue == "ROLE_ADMIN")
-            {
-                DialogResult = DialogResult.Cancel;
-                //this.Dispose();//CallMainMenu();
-            }
-            else if (roleValue == "ROLE_GUARD")
-            {
-                Environment.Exit(0);
-            }
+            //if (roleValue == "ROLE_ADMIN")
+            //{
+            //    DialogResult = DialogResult.Cancel;
+            //    //this.Dispose();//CallMainMenu();
+            //}
+            //else if (roleValue == "ROLE_GUARD")
+            //{
+            //    Environment.Exit(0);
+            //}
         }
     }
 }

@@ -38,7 +38,7 @@ namespace RFID_FEATHER_ASSETS
             }
             else if (roleValue == "ROLE_USER")
             {
-                btnBack2.Text = "Close";
+                btnBack2.Text = "Log-out";
             }
             
         }
@@ -123,6 +123,7 @@ namespace RFID_FEATHER_ASSETS
 
         private void Assets_FormClosed(object sender, FormClosedEventArgs e)
         {
+            //Application.Restart();
             Environment.Exit(0);
         }
 
@@ -189,10 +190,12 @@ namespace RFID_FEATHER_ASSETS
                 this.Hide();
                 MainMenu menuForm = new MainMenu(tokenValue, roleValue);
                 menuForm.Show();
+                //Application.Restart();
             }
             else if (roleValue == "ROLE_USER")
             {
-                Environment.Exit(0);
+                Application.Restart();
+                //Environment.Exit(0);
             }
         }
 

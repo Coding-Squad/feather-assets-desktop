@@ -34,45 +34,33 @@ namespace RFID_FEATHER_ASSETS
             InitializeComponent();
 
             //portname = portnamesource;
-            GetRegDefaultPortName();
-            getKey();
+            GetAssetSystemInfo();
             //tokenvalue = tokenvaluesource;
             //roleValue = roleSource;
         }
 
-        private void getKey()
+        private void GetAssetSystemInfo()
         {
             try
             {
                 //opening the subkey  
-                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\SavedUserInfo");
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\AssetSystemInfo");
 
                 //if it does exist, retrieve the stored values  
                 if (key != null)
                 {
                     tokenvalue = (string)(key.GetValue("authenticationToken"));
                     roleValue = (string)(key.GetValue("roles"));
-                    key.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void GetRegDefaultPortName()
-        {
-            try
-            {
-                //opening the subkey  
-                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\SavedPortName");
-
-                //if it does exist, retrieve the stored values  
-                if (key != null)
-                {
                     portname = (string)(key.GetValue("DefaultPortName"));
+                    lblLoginID.Text = "Login ID: " + (string)(key.GetValue("LoginId")).ToString().ToUpper();
                     key.Close();
+
+                    if (roleValue == "ROLE_GUARD")
+                    {
+                        btnBack.Text = "Log Out";
+                        btnBack.BackColor = Color.Red;
+                        btnBack.ForeColor = Color.White;
+                    }
                 }
             }
             catch (Exception ex)
@@ -87,6 +75,8 @@ namespace RFID_FEATHER_ASSETS
             {
                 //ClearTimer.Interval = 7000;
                 //VerifyTimer.Interval = 7000;
+                btnBack.Focus();
+
                 BackgroundTimer.Interval = 1000;
 
                 CurrentDateTimer.Enabled = true;
@@ -671,7 +661,7 @@ namespace RFID_FEATHER_ASSETS
                     // Read the contents of PortSelectionForm's cmbComPortList.
                     portname = PortSelectionForm.cmbComPortList.Text;
                 }
-                else CallMainMenu();
+                else ValidateRule();//CallMainMenu();
 
                 PortSelectionForm.Dispose();
             }
@@ -694,7 +684,13 @@ namespace RFID_FEATHER_ASSETS
             }
             else if (roleValue == "ROLE_GUARD")
             {
-                Environment.Exit(0);
+                //Environment.Exit(0);
+                IsCallingMainMenu = true;
+
+                this.Hide();
+                reader.CloseCom();
+                LoginActivity LoginForm = new LoginActivity();
+                LoginForm.Show();
             }
         }
 
@@ -729,7 +725,7 @@ namespace RFID_FEATHER_ASSETS
         private void CurrentTimer_Tick(object sender, EventArgs e)
         {
             //Display the current date and time
-            lblCurrentDateTime.Text = DateTime.Now.ToString("dddd, MMMM dd, yyyy h:mm:ss tt");
+            lblCurrentDateTime.Text = DateTime.Now.ToString("h:mm:ss tt") + "\n" + DateTime.Now.ToString("dddd, MMMM dd, yyyy"); //DateTime.Now.ToString("dddd, MMMM dd, yyyy h:mm:ss tt");
         }
 
         private void VerifyTimer_Tick(object sender, EventArgs e)

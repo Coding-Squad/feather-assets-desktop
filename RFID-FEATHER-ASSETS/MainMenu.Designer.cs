@@ -28,49 +28,50 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.btnScan = new System.Windows.Forms.Button();
+            this.btnRegisterAsset = new System.Windows.Forms.Button();
+            this.btnRegisterUser = new System.Windows.Forms.Button();
             this.cmbComPort = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnMyAssets = new System.Windows.Forms.Button();
+            this.btnLogout = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // button1
+            // btnScan
             // 
-            this.button1.BackColor = System.Drawing.Color.Orange;
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(54, 55);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(174, 32);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "SCAN";
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnScan.BackColor = System.Drawing.Color.Orange;
+            this.btnScan.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnScan.Location = new System.Drawing.Point(53, 31);
+            this.btnScan.Name = "btnScan";
+            this.btnScan.Size = new System.Drawing.Size(162, 32);
+            this.btnScan.TabIndex = 0;
+            this.btnScan.Text = "SCAN";
+            this.btnScan.UseVisualStyleBackColor = false;
+            this.btnScan.Click += new System.EventHandler(this.btnScan_Click);
             // 
-            // button2
+            // btnRegisterAsset
             // 
-            this.button2.BackColor = System.Drawing.Color.Orange;
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(54, 131);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(174, 35);
-            this.button2.TabIndex = 1;
-            this.button2.Text = "REGISTER ASSET";
-            this.button2.UseVisualStyleBackColor = false;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.btnRegisterAsset.BackColor = System.Drawing.Color.Orange;
+            this.btnRegisterAsset.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRegisterAsset.Location = new System.Drawing.Point(53, 110);
+            this.btnRegisterAsset.Name = "btnRegisterAsset";
+            this.btnRegisterAsset.Size = new System.Drawing.Size(162, 35);
+            this.btnRegisterAsset.TabIndex = 1;
+            this.btnRegisterAsset.Text = "REGISTER ASSET";
+            this.btnRegisterAsset.UseVisualStyleBackColor = false;
+            this.btnRegisterAsset.Click += new System.EventHandler(this.btnRegisterAsset_Click);
             // 
-            // button4
+            // btnRegisterUser
             // 
-            this.button4.BackColor = System.Drawing.Color.Orange;
-            this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button4.Location = new System.Drawing.Point(54, 172);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(174, 37);
-            this.button4.TabIndex = 18;
-            this.button4.Text = "REGISTER USER";
-            this.button4.UseVisualStyleBackColor = false;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.btnRegisterUser.BackColor = System.Drawing.Color.Orange;
+            this.btnRegisterUser.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRegisterUser.Location = new System.Drawing.Point(53, 148);
+            this.btnRegisterUser.Name = "btnRegisterUser";
+            this.btnRegisterUser.Size = new System.Drawing.Size(162, 37);
+            this.btnRegisterUser.TabIndex = 18;
+            this.btnRegisterUser.Text = "REGISTER USER";
+            this.btnRegisterUser.UseVisualStyleBackColor = false;
+            this.btnRegisterUser.Click += new System.EventHandler(this.btnRegisterUser_Click);
             // 
             // cmbComPort
             // 
@@ -93,7 +94,7 @@
             "COM14",
             "COM15",
             "COM16"});
-            this.cmbComPort.Location = new System.Drawing.Point(131, 228);
+            this.cmbComPort.Location = new System.Drawing.Point(113, 204);
             this.cmbComPort.Name = "cmbComPort";
             this.cmbComPort.Size = new System.Drawing.Size(77, 21);
             this.cmbComPort.TabIndex = 20;
@@ -102,7 +103,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(67, 231);
+            this.label1.Location = new System.Drawing.Point(49, 207);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(58, 13);
             this.label1.TabIndex = 19;
@@ -113,33 +114,47 @@
             // 
             this.btnMyAssets.BackColor = System.Drawing.Color.Orange;
             this.btnMyAssets.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnMyAssets.Location = new System.Drawing.Point(54, 93);
+            this.btnMyAssets.Location = new System.Drawing.Point(53, 66);
             this.btnMyAssets.Name = "btnMyAssets";
-            this.btnMyAssets.Size = new System.Drawing.Size(174, 32);
+            this.btnMyAssets.Size = new System.Drawing.Size(162, 32);
             this.btnMyAssets.TabIndex = 21;
             this.btnMyAssets.Text = "MY ASSETS";
             this.btnMyAssets.UseVisualStyleBackColor = false;
+            this.btnMyAssets.Visible = false;
             this.btnMyAssets.Click += new System.EventHandler(this.btnMyAssets_Click);
+            // 
+            // btnLogout
+            // 
+            this.btnLogout.BackColor = System.Drawing.Color.Red;
+            this.btnLogout.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLogout.ForeColor = System.Drawing.SystemColors.Window;
+            this.btnLogout.Location = new System.Drawing.Point(53, 203);
+            this.btnLogout.Name = "btnLogout";
+            this.btnLogout.Size = new System.Drawing.Size(162, 32);
+            this.btnLogout.TabIndex = 22;
+            this.btnLogout.Text = "Log Out";
+            this.btnLogout.UseVisualStyleBackColor = false;
+            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
             // 
             // MainMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.ClientSize = new System.Drawing.Size(266, 256);
+            this.Controls.Add(this.btnLogout);
             this.Controls.Add(this.btnMyAssets);
             this.Controls.Add(this.cmbComPort);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnRegisterUser);
+            this.Controls.Add(this.btnRegisterAsset);
+            this.Controls.Add(this.btnScan);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "MainMenu";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Main Menu";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainMenu_FormClosed);
-            this.Load += new System.EventHandler(this.MainMenu_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -147,11 +162,12 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button btnScan;
+        private System.Windows.Forms.Button btnRegisterAsset;
+        private System.Windows.Forms.Button btnRegisterUser;
         private System.Windows.Forms.Label label1;
         public System.Windows.Forms.ComboBox cmbComPort;
         private System.Windows.Forms.Button btnMyAssets;
+        private System.Windows.Forms.Button btnLogout;
     }
 }
