@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -11,6 +11,7 @@ using RestSharp.Deserializers;
 using AForge.Video.DirectShow;
 using AForge.Video;
 using Microsoft.Win32;
+using System.Drawing.Imaging;
 
 namespace RFID_FEATHER_ASSETS
 {
@@ -29,9 +30,13 @@ namespace RFID_FEATHER_ASSETS
         string baudrate = "115200";
         string tokenvalue;
         string roleValue;
+        int userId;
         private FilterInfoCollection webcam;
         private VideoCaptureDevice cam;
         bool IsCameraConnected = false;
+        string newImgFileNames;
+        string ImgFileName;
+        string validUntilValue;
 
         public AssetRegistration()//(string tokenvaluesource, string portnamesource)
         {
@@ -44,6 +49,16 @@ namespace RFID_FEATHER_ASSETS
 
             InitializeOwner();
             InitializeCamera();
+            InitializePhotoLabel();
+        }
+
+        private void InitializePhotoLabel()
+        {
+            lblOwnerPhoto.Text = "Step 1" + "\n" + lblOwnerPhoto.Text;
+            lblValidIDPhoto.Text = "Step 2" + "\n"  + lblValidIDPhoto.Text;
+            lblAssetPhoto1.Text = "Step 3" + "\n" + lblAssetPhoto1.Text;
+            lblAssetPhoto2.Text = "Step 4" + "\n" + lblAssetPhoto2.Text;
+            lblAssetPhoto3.Text = "Step 5" + "\n" + lblAssetPhoto3.Text;
         }
 
         private void GetAssetSystemInfo()
@@ -60,7 +75,8 @@ namespace RFID_FEATHER_ASSETS
                     roleValue = (string)(key.GetValue("roles"));
                     portname = (string)(key.GetValue("DefaultPortName"));
                     txtSaveImageDir.Text = (string)(key.GetValue("AssetsImagePath"));
-                    lblLoginID.Text = "Login ID: " + (string)(key.GetValue("LoginId")).ToString().ToUpper();
+                    userId = (int)(key.GetValue("UserId"));
+                    lblLoginUserName.Text = "Username: " + (string)(key.GetValue("UserName")).ToString();//.ToUpper();
                     key.Close();
                 }
             }
@@ -186,18 +202,35 @@ namespace RFID_FEATHER_ASSETS
                 asset.tagType = 1;
                 asset.companyId = 1;
                 //asset.ownerId = currentOwnerId;//oId;
-                //asset.name = txtAssetName.Text;
-                asset.description = txtDescription.Text;
+                asset.name = txtDescription.Text.Trim();//txtAssetName.Text;
+                asset.description = txtDescription.Text.Trim();
                 //if (radbtnYes.Checked)
                 //{
                 //    asset.takeOutAllowed = true;
                 //}
                 //else
                 //{
-                //    asset.takeOutAllowed = false;
+                //asset.takeOutAllowed = false;
                 //}
-                asset.takeOutInfo = txtTakeOutNote.Text;
-                asset.imageUrls = txtCapturedImagePath.Text;//txtImagePath.Text;
+                asset.takeOutInfo = txtTakeOutNote.Text.Trim();
+                asset.imageUrls = newImgFileNames; //txtCapturedImagePath.Text;//txtImagePath.Text;
+                asset.registerUserId = userId;//lblLoginUserName.Text.Substring(lblLoginUserName.Text.IndexOf(":") + 2);
+
+                //For Validity Expiration
+                if (rbtnValidToday.Checked)
+                {
+                    validUntilValue = DateTime.UtcNow.ToString("yyyy-MM-dd T") + "17:00";
+                }
+                else if (rbtnValidUntil.Checked)
+                {
+                    if (dtTimePicker.Checked) validUntilValue = dtDatePicker.Value.ToString("yyyy-MM-dd") + dtTimePicker.Value.ToString("THH:mm");
+                    else validUntilValue = dtDatePicker.Value.ToString("yyyy-MM-dd T") + "17:00";
+                }
+                else validUntilValue = null;
+
+                DateTime? dt = null;
+                asset.validUntil = validUntilValue != null ? Convert.ToDateTime(validUntilValue) : dt;
+
 
                 RestClient client = new RestClient("http://52.163.93.95:8080/FeatherAssets/");//("http://feather-assets.herokuapp.com/");
                 RestRequest register = new RestRequest("/api/asset/add", Method.POST);
@@ -224,7 +257,7 @@ namespace RFID_FEATHER_ASSETS
 
                     if (restResult.result == "OK")
                     {
-                        MessageBox.Show("Asset successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Record successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                         ClearFields();
                     }
                     else
@@ -247,6 +280,41 @@ namespace RFID_FEATHER_ASSETS
             }  
         }
 
+        private void SubmitImage()
+        {
+            Bitmap Image = (Bitmap)cameraBox.Image;
+            Image.Save("img.jpg", ImageFormat.Jpeg);
+
+            RestClient client = new RestClient("http://52.163.93.95:8080/FeatherAssets/");
+            RestRequest upload = new RestRequest("/api/upload/image", Method.POST);
+
+            upload.AddHeader("X-Auth-Token", tokenvalue);
+            upload.AddHeader("Content-Type", "multipart/form-data");
+            upload.AlwaysMultipartFormData = true;
+            upload.AddFile("file", "img.jpg", "image/jpg");
+            upload.AddParameter("companyId", 1);
+            upload.AddParameter("type", "asset");
+
+
+            IRestResponse response = client.Execute(upload);
+
+            var content = response.Content;
+
+            if (response.StatusCode == HttpStatusCode.OK)//if (response.IsSuccessStatusCode)
+            {
+                JsonDeserializer deserial = new JsonDeserializer();
+                ImageResult imageResult = deserial.Deserialize<ImageResult>(response);
+
+                ImgFileName = imageResult.message;
+            }
+            else
+            {
+                MessageBox.Show("Error Code " +
+                response.StatusCode /*+ " : Message - " + response.ErrorMessage*/);
+                return;
+            }
+        }
+
         private void ClearFields()
         {
             txtRFIDTag.Text = string.Empty;
@@ -258,12 +326,21 @@ namespace RFID_FEATHER_ASSETS
             picOwner.Image = null;
             //btnBrowseImage.Focus();
             txtCapturedImagePath.Text = string.Empty;
+
             //cameraBox.Image = null;
             imgCapture1.Image = null;
             imgCapture2.Image = null;
             imgCapture3.Image = null;
             imgCapture4.Image = null;
             imgCapture5.Image = null;
+
+            lblOwnerPhoto.Visible = true;
+            lblValidIDPhoto.Visible = true;
+            lblAssetPhoto1.Visible = true;
+            lblAssetPhoto2.Visible = true;
+            lblAssetPhoto3.Visible = true;
+
+            rbtnValidToday.Checked = true;
 
             btnGetRFIDTag.Focus();
         }
@@ -455,30 +532,48 @@ namespace RFID_FEATHER_ASSETS
         private void AssetValidUntilDateTime()
         {
             //For Valid Until Date
-            if (!dtDatePicker.Checked)
+            if (!rbtnValidUntil.Checked)
             {
                 dtDatePicker.CustomFormat = "'Date'";
                 dtDatePicker.Format = DateTimePickerFormat.Custom;
-            }
-            else
-            {
-                //dtDatePicker.CustomFormat = "hh:mm tt";
-                dtDatePicker.CustomFormat = "MM/dd/yyyy";
-                dtDatePicker.Format = DateTimePickerFormat.Custom;
-            }
 
-            //For Valid Until Time
-            if (!dtTimePicker.Checked)
-            {
                 dtTimePicker.CustomFormat = "'Time'";
                 dtTimePicker.Format = DateTimePickerFormat.Custom;
+                dtTimePicker.Checked = false;
             }
             else
             {
-                //dtTimePicker.CustomFormat = "hh:mm tt";
-                dtTimePicker.CustomFormat = "h:mm tt";
-                dtTimePicker.Format = DateTimePickerFormat.Custom;
+                //For Valid Until Date
+                dtDatePicker.CustomFormat = "MM/dd/yyyy";
+                dtDatePicker.Format = DateTimePickerFormat.Custom;
+                dtDatePicker.Value = DateTime.Now;
             }
+
+            ////For Valid Until Date
+            //if (!dtDatePicker.Checked)
+            //{
+            //    dtDatePicker.CustomFormat = "'Date'";
+            //    dtDatePicker.Format = DateTimePickerFormat.Custom;
+            //}
+            //else
+            //{
+            //    //dtDatePicker.CustomFormat = "hh:mm tt";
+            //    dtDatePicker.CustomFormat = "MM/dd/yyyy";
+            //    dtDatePicker.Format = DateTimePickerFormat.Custom;
+            //}
+
+            ////For Valid Until Time
+            //if (!dtTimePicker.Checked)
+            //{
+            //    dtTimePicker.CustomFormat = "'Time'";
+            //    dtTimePicker.Format = DateTimePickerFormat.Custom;
+            //}
+            //else
+            //{
+            //    //dtTimePicker.CustomFormat = "hh:mm tt";
+            //    dtTimePicker.CustomFormat = "h:mm tt";
+            //    dtTimePicker.Format = DateTimePickerFormat.Custom;
+            //}
 
         }
 
@@ -533,7 +628,7 @@ namespace RFID_FEATHER_ASSETS
                     IsCameraConnected = false;
                     cameraBox.BackColor = Color.Black;
                     lblNoCameraAvailable.Visible = true;
-                    btnCaptureImg.Text = "Refresh Camera";
+                    btnCapturePhoto.Text = "Refresh Camera";
                 }
                 else
                 {
@@ -543,7 +638,7 @@ namespace RFID_FEATHER_ASSETS
                     IsCameraConnected = true;
                     cameraBox.BackColor = Color.White;
                     lblNoCameraAvailable.Visible = false;
-                    btnCaptureImg.Text = "Capture Image";
+                    //btnCapturePhoto.Text = "Capture Image";
                 }
             }
             catch (Exception ex)
@@ -552,48 +647,79 @@ namespace RFID_FEATHER_ASSETS
             }
         }
 
-        private void btnCaptureImg_Click(object sender, EventArgs e)
+        private void btnCapturePhoto_Click(object sender, EventArgs e)
         {
             try
             {
-                if (string.IsNullOrEmpty(txtSaveImageDir.Text))
+                /*if (string.IsNullOrEmpty(txtSaveImageDir.Text))
                 {
                     MessageBox.Show("Please select Image Path.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     btnBrowseImagePath.Focus();
                     return;
                 }
                 else
-                {
+                {*/
                     //btnGetRFIDTag.PerformClick();
                     //reader.CloseCom();
-                    if (cam == null || btnCaptureImg.Text == "Refresh Camera")
+                    if (cam == null || btnCapturePhoto.Text == "Refresh Camera")
                     {
                         InitializeCamera();
                     }
                     else if (IsCameraConnected)
                     {
+                        btnCapturePhoto.Text = "Processing. Please wait...";
+                        btnCapturePhoto.Refresh();
+
                         //Assigned captured image in each picture box
-                        if (imgCapture1.Image == null) imgCapture1.Image = cameraBox.Image;
-                        else if (imgCapture2.Image == null) imgCapture2.Image = cameraBox.Image;
-                        else if (imgCapture3.Image == null) imgCapture3.Image = cameraBox.Image;
-                        else if (imgCapture4.Image == null) imgCapture4.Image = cameraBox.Image;
-                        else if (imgCapture5.Image == null) imgCapture5.Image = cameraBox.Image;
+                        if (imgCapture1.Image == null)
+                        {
+                            imgCapture1.Image = cameraBox.Image;
+                            lblOwnerPhoto.Visible = false;
+                            btnCapturePhoto.Text = "Capture Valid ID Photo";
+                        }
+                        else if (imgCapture2.Image == null) 
+                        { 
+                            imgCapture2.Image = cameraBox.Image;
+                            lblValidIDPhoto.Visible = false;
+                            btnCapturePhoto.Text = "Capture Asset Photo 1";
+                        }
+                        else if (imgCapture3.Image == null)
+                        {
+                            imgCapture3.Image = cameraBox.Image;
+                            lblAssetPhoto1.Visible = false;
+                            btnCapturePhoto.Text = "Capture Asset Photo 2";
+                        }
+                        else if (imgCapture4.Image == null)
+                        {
+                            imgCapture4.Image = cameraBox.Image;
+                            lblAssetPhoto2.Visible = false;
+                            btnCapturePhoto.Text = "Capture Asset Photo 3";
+                        }
+                        else if (imgCapture5.Image == null)
+                        {
+                            imgCapture5.Image = cameraBox.Image;
+                            lblAssetPhoto3.Visible = false;
+                            btnCapturePhoto.Text = "Captured Completed";
+                        }
                         else
                         {
                             MessageBox.Show("Captured Images exceeds the maximum limit.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
 
-                        //Saving for captured images
-                        string dirPath = txtSaveImageDir.Text.Trim() + @"\";//@"C:\Users\USER\Pictures\";
-                        string fileName = "Image";
-                        string[] files = Directory.GetFiles(dirPath);
-                        int count = files.Count(file => { return file.Contains(fileName); });
+                        SubmitImage();
+                        newImgFileNames = newImgFileNames + "," + ImgFileName;
 
-                        string newFileName = (count == 0) ? "Image.jpg" : String.Format("{0}{1}.jpg", fileName, count + 1);
+                        ////Saving for captured images
+                        //string dirPath = txtSaveImageDir.Text.Trim() + @"\";//@"C:\Users\USER\Pictures\";
+                        //string fileName = "Image";
+                        //string[] files = Directory.GetFiles(dirPath);
+                        //int count = files.Count(file => { return file.Contains(fileName); });
 
-                        cameraBox.Image.Save(dirPath + newFileName);
-                        txtCapturedImagePath.Text = txtCapturedImagePath.Text + "," + dirPath + newFileName;
+                        //string newFileName = (count == 0) ? "Image.jpg" : String.Format("{0}{1}.jpg", fileName, count + 1);
+
+                        //cameraBox.Image.Save(dirPath + newFileName);
+                        //txtCapturedImagePath.Text = txtCapturedImagePath.Text + "," + dirPath + newFileName;
 
                         cam.Stop();
                         //saveFileDialog1.InitialDirectory = @"C:\Users\USER\Pictures\";
@@ -613,7 +739,7 @@ namespace RFID_FEATHER_ASSETS
                 //    cam.Stop();
                 //    return;
                 //}
-            }
+            //}
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -905,16 +1031,32 @@ namespace RFID_FEATHER_ASSETS
             }
         }
 
-        private void dtDatePicker_ValueChanged(object sender, EventArgs e)
-        {
-            AssetValidUntilDateTime();
-        }
-
         private void dtTimePicker_ValueChanged(object sender, EventArgs e)
         {
-            AssetValidUntilDateTime();
+            AssetValidUntilTime();
         }
 
+        private void AssetValidUntilTime()
+        {
+            //For Valid Until Time
+            if (!dtTimePicker.Checked)
+            {
+                dtTimePicker.CustomFormat = "'Time'";
+                dtTimePicker.Format = DateTimePickerFormat.Custom;
+            }
+            else
+            {
+                //dtTimePicker.CustomFormat = "hh:mm tt";
+                dtTimePicker.CustomFormat = "h:mm tt";
+                dtTimePicker.Format = DateTimePickerFormat.Custom;
+                //dtTimePicker.Value = DateTime.Now;
+            }
+        }
+
+        private void rbtnValidUntil_CheckedChanged(object sender, EventArgs e)
+        {
+            AssetValidUntilDateTime();
+        }
     }
 
     public class Asset
@@ -930,6 +1072,8 @@ namespace RFID_FEATHER_ASSETS
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public string imageUrls { get; set; }
+        public DateTime? validUntil { get; set; }
+        public int registerUserId { get; set; }
     }
 
     public class Owner
@@ -949,6 +1093,12 @@ namespace RFID_FEATHER_ASSETS
     public class RestResult
     {
         public string result { get; set; }
+        public string message { get; set; }
+    }
+
+    public class ImageResult
+    {
+        public string response { get; set; }
         public string message { get; set; }
     }
 }

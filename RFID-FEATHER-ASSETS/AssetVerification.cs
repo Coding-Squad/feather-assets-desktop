@@ -52,7 +52,7 @@ namespace RFID_FEATHER_ASSETS
                     tokenvalue = (string)(key.GetValue("authenticationToken"));
                     roleValue = (string)(key.GetValue("roles"));
                     portname = (string)(key.GetValue("DefaultPortName"));
-                    lblLoginID.Text = "Login ID: " + (string)(key.GetValue("LoginId")).ToString().ToUpper();
+                    lblLoginID.Text = "Login ID: " + (string)(key.GetValue("LoginId")).ToString();//.ToUpper();
                     key.Close();
 
                     if (roleValue == "ROLE_GUARD")
@@ -191,7 +191,7 @@ namespace RFID_FEATHER_ASSETS
 
                     if (verifyResult.result == "OK")
                     {
-                        txtAssetName.Text = verifyResult.name;
+                        //txtAssetName.Text = verifyResult.name;
                         txtDescription.Text = verifyResult.description;
                         //if (Boolean.Parse(verifyResult.takOutAllowed.ToString()))
                         //{
@@ -208,14 +208,61 @@ namespace RFID_FEATHER_ASSETS
 
                             string Urls = verifyResult.imageUrls;
                             string[] ReadUrls = Urls.Split(',');
-                            foreach (string GetUrls in ReadUrls)
+
+                            if (ReadUrls.Length > 1)
                             {
-                                if (ReadUrls.Length > 1 && File.Exists(ReadUrls[1])) imgCapture1.Image = Image.FromFile(ReadUrls[1]);
-                                if (ReadUrls.Length > 2 && File.Exists(ReadUrls[2])) imgCapture2.Image = Image.FromFile(ReadUrls[2]);
-                                if (ReadUrls.Length > 3 && File.Exists(ReadUrls[3])) imgCapture3.Image = Image.FromFile(ReadUrls[3]);
-                                if (ReadUrls.Length > 4 && File.Exists(ReadUrls[4])) imgCapture4.Image = Image.FromFile(ReadUrls[4]);
-                                if (ReadUrls.Length > 5 && File.Exists(ReadUrls[5])) imgCapture5.Image = Image.FromFile(ReadUrls[5]);
+                                imgCapture1.Load("http://52.163.93.95:8080/FeatherAssets/api/images/1/asset/" + ReadUrls[1]);
+                                lblOwnerPhoto.Visible = false;
                             }
+                            if (ReadUrls.Length > 2)
+                            {
+                                imgCapture2.Load("http://52.163.93.95:8080/FeatherAssets/api/images/1/asset/" + ReadUrls[2]);
+                                lblValidIDPhoto.Visible = false;
+                            }
+                            if (ReadUrls.Length > 3)
+                            {
+                                imgCapture3.Load("http://52.163.93.95:8080/FeatherAssets/api/images/1/asset/" + ReadUrls[3]);
+                                lblAssetPhoto1.Visible = false;
+                            }
+                            if (ReadUrls.Length > 4)
+                            {
+                                imgCapture4.Load("http://52.163.93.95:8080/FeatherAssets/api/images/1/asset/" + ReadUrls[4]);
+                                lblAssetPhoto2.Visible = false;
+                            }
+                            if (ReadUrls.Length > 5)
+                            {
+                                imgCapture5.Load("http://52.163.93.95:8080/FeatherAssets/api/images/1/asset/" + ReadUrls[5]);
+                                lblAssetPhoto3.Visible = false;
+                            }
+
+                            //foreach (string GetUrls in ReadUrls)
+                            //{
+                            //    if (ReadUrls.Length > 1 && File.Exists(ReadUrls[1]))
+                            //    {
+                            //        imgCapture1.Image = Image.FromFile(ReadUrls[1]);
+                            //        lblOwnerPhoto.Visible = false;
+                            //    }
+                            //    if (ReadUrls.Length > 2 && File.Exists(ReadUrls[2]))
+                            //    {
+                            //        imgCapture2.Image = Image.FromFile(ReadUrls[2]);
+                            //        lblValidIDPhoto.Visible = false;
+                            //    }
+                            //    if (ReadUrls.Length > 3 && File.Exists(ReadUrls[3]))
+                            //    {
+                            //        imgCapture3.Image = Image.FromFile(ReadUrls[3]);
+                            //        lblAssetPhoto1.Visible = false;
+                            //    }
+                            //    if (ReadUrls.Length > 4 && File.Exists(ReadUrls[4]))
+                            //    {
+                            //        imgCapture4.Image = Image.FromFile(ReadUrls[4]);
+                            //        lblAssetPhoto2.Visible = false;
+                            //    }
+                            //    if (ReadUrls.Length > 5 && File.Exists(ReadUrls[5]))
+                            //    {
+                            //        imgCapture5.Image = Image.FromFile(ReadUrls[5]);
+                            //        lblAssetPhoto3.Visible = false;
+                            //    }
+                            //}
                         //}
                         //else
                         //{
@@ -225,10 +272,10 @@ namespace RFID_FEATHER_ASSETS
                         //}
 
                         //Display User's Information
-                        if (File.Exists(verifyResult.owner.imageUrl)) picOwner.Image =  Image.FromFile(verifyResult.owner.imageUrl);
-                        txtOwnerName.Text = verifyResult.owner.lastName + " " + verifyResult.owner.firstName;
-                        txtOwnerPosition.Text = verifyResult.owner.position;
-                        txtOwnerDescription.Text = verifyResult.owner.description;
+                        //if (File.Exists(verifyResult.owner.imageUrl)) picOwner.Image =  Image.FromFile(verifyResult.owner.imageUrl);
+                        //txtOwnerName.Text = verifyResult.owner.lastName + " " + verifyResult.owner.firstName;
+                        //txtOwnerPosition.Text = verifyResult.owner.position;
+                        //txtOwnerDescription.Text = verifyResult.owner.description;
 
                         //VerifyTimer.Stop();
                         //VerifyTimer.Start();
@@ -538,6 +585,7 @@ namespace RFID_FEATHER_ASSETS
             imgCapture3.Image = null;
             imgCapture4.Image = null;
             imgCapture5.Image = null;
+
             txtRFIDTag.Text = string.Empty;
             txtAssetName.Text = string.Empty;
             txtDescription.Text = string.Empty;
@@ -549,6 +597,13 @@ namespace RFID_FEATHER_ASSETS
             txtTakeOutNote.Text = string.Empty;
             //picOwner.Image = null;
             //btnVerifyAsset.Focus();
+
+            lblOwnerPhoto.Visible = true;
+            lblValidIDPhoto.Visible = true;
+            lblAssetPhoto1.Visible = true;
+            lblAssetPhoto2.Visible = true;
+            lblAssetPhoto3.Visible = true;
+
             this.Refresh();
         }
 
@@ -741,6 +796,116 @@ namespace RFID_FEATHER_ASSETS
             //ClearTimer.Stop();
         }
         #endregion
+
+        private void btnCreateReport_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (btnCreateReport.Text.Trim().ToUpper() == "REPORTCREATED")
+                {
+                    MessageBox.Show("Record is already reported.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    btnCreateReport.Focus();
+                    return;
+                }
+
+                using (ReportCreation ReportCreationForm = new ReportCreation())
+                {
+                    if (ReportCreationForm.ShowDialog() == DialogResult.OK)
+                    {
+                        //btnSave.Visible = false;
+                        btnCreateReport.Text = "Report Created";//btnCreateReport.Visible = false;
+                        //grpBoxReportedInfo.Visible = true;
+
+                        //// Read the contents of PortSelectionForm's.
+                        //picPersonBroughtOut.Image = ReportCreationForm.PersonPhoto;
+                        //txtReportedNote.Text = " " + ReportCreationForm.ExplanationNote;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void btnSubmit_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (btnSubmit.Text.Trim().ToUpper() == "SUBMITTED")
+                {
+                    MessageBox.Show("Record is already submitted.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    btnSubmit.Focus();
+                    return;
+                }
+
+                if (txtRFIDTag.Text.Length == 0 /*|| txtDescription.Text.Length == 0 || txtTakeOutNote.Text.Length == 0 || imgCapture1.Image == null*/)
+                {
+                    MessageBox.Show("RFID Tag is required.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    btnSubmit.Focus();
+                    return;
+                }
+                
+                ////For Web Service
+                //Asset asset = new Asset();
+
+                //asset.tag = txtRFIDTag.Text;
+                //asset.tagType = 1;
+                //asset.companyId = 1;
+                ////asset.ownerId = currentOwnerId;//oId;
+                ////asset.name = txtAssetName.Text;
+                //asset.description = txtDescription.Text;
+                //asset.takeOutInfo = txtTakeOutNote.Text;
+                ////asset.imageUrls = txtCapturedImagePath.Text;//txtImagePath.Text;
+
+                //RestClient client = new RestClient("http://52.163.93.95:8080/FeatherAssets/");//("http://feather-assets.herokuapp.com/");
+                //RestRequest register = new RestRequest("/api/asset/add", Method.POST);
+
+                //var authToken = tokenvalue;
+                //register.AddHeader("X-Auth-Token", authToken);
+                //register.AddHeader("Content-Type", "application/json; charset=utf-8");
+                //register.RequestFormat = DataFormat.Json;
+                //register.AddBody(asset);
+
+                //lblSubmittingInformation.Visible = true;
+                //this.Refresh();
+
+
+                //IRestResponse response = client.Execute(register);
+                //lblSubmittingInformation.Visible = false;
+
+                //var content = response.Content;
+
+                //if (response.StatusCode == HttpStatusCode.OK)//if (response.IsSuccessStatusCode)
+                //{
+                //    JsonDeserializer deserial = new JsonDeserializer();
+                //    RestResult restResult = deserial.Deserialize<RestResult>(response);
+
+                //    if (restResult.result == "OK")
+                //    {
+                //        MessageBox.Show("Record successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //        btnSubmit.Text = "Submitted";
+                //        //ClearFields();
+                //    }
+                //    else
+                //    {
+                //        MessageBox.Show(restResult.result + " " + restResult.message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //    }
+
+                //}
+                //else
+                //{
+                //    MessageBox.Show("Error Code " +
+                //    response.StatusCode /*+ " : Message - " + response.ErrorMessage*/);
+                //    return;
+                //}
+
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }  
+        }
 
     }
 

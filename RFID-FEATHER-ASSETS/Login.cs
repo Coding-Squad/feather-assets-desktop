@@ -113,7 +113,7 @@ namespace RFID_FEATHER_ASSETS
                         JsonDeserializer deserial = new JsonDeserializer();
                         loginResult = deserial.Deserialize<LoginResult>(response);
 
-                        SaveAssetSystemInfo(loginResult.authenticationToken, loginResult.roles, string.Empty, txtUserName.Text.Trim());
+                        SaveAssetSystemInfo(loginResult.authenticationToken, loginResult.roles, string.Empty, loginResult.userId, txtUserName.Text.Trim());
 
                         //check authorities                       
                         if (loginResult.roles == "ROLE_ADMIN")
@@ -159,7 +159,7 @@ namespace RFID_FEATHER_ASSETS
              
         }
 
-        private void SaveAssetSystemInfo(string autoken, string roles, string companylogin, string loginid)
+        private void SaveAssetSystemInfo(string autoken, string roles, string companylogin, int userId, string loginid)
         {
             try
             {
@@ -171,7 +171,8 @@ namespace RFID_FEATHER_ASSETS
                 if (!string.IsNullOrEmpty(autoken)) key.SetValue("authenticationToken", autoken);
                 if (!string.IsNullOrEmpty(roles)) key.SetValue("roles", roles);
                 if (!string.IsNullOrEmpty(companylogin)) key.SetValue("CompanyLogin", cboCompanyList.Text);
-                if (!string.IsNullOrEmpty(loginid)) key.SetValue("LoginId", loginid);
+                if (userId != null) key.SetValue("UserId", userId);
+                if (!string.IsNullOrEmpty(loginid)) key.SetValue("UserName", loginid);
                 key.Close();
             }
             catch (Exception ex)
@@ -196,7 +197,7 @@ namespace RFID_FEATHER_ASSETS
 
         private void cboCompanyList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SaveAssetSystemInfo(string.Empty, string.Empty, cboCompanyList.Text.Trim(), string.Empty);
+            //SaveAssetSystemInfo(string.Empty, string.Empty, cboCompanyList.Text.Trim(), string.Empty, string.Empty);
         }
 
         private void LoginActivity_FormClosed(object sender, FormClosedEventArgs e)
