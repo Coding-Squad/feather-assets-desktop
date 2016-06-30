@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -31,12 +31,15 @@ namespace RFID_FEATHER_ASSETS
         string tokenvalue;
         string roleValue;
         int userId;
+        int companyId;
         private FilterInfoCollection webcam;
         private VideoCaptureDevice cam;
         bool IsCameraConnected = false;
         string newImgFileNames;
         string ImgFileName;
         string validUntilValue;
+        int assetId;
+        string updatedImgFileNames;
 
         public AssetRegistration()//(string tokenvaluesource, string portnamesource)
         {
@@ -47,7 +50,7 @@ namespace RFID_FEATHER_ASSETS
             //roleValue = roleSource;
             GetAssetSystemInfo();
 
-            InitializeOwner();
+            //InitializeOwner();
             InitializeCamera();
             InitializePhotoLabel();
         }
@@ -75,6 +78,7 @@ namespace RFID_FEATHER_ASSETS
                     roleValue = (string)(key.GetValue("roles"));
                     portname = (string)(key.GetValue("DefaultPortName"));
                     txtSaveImageDir.Text = (string)(key.GetValue("AssetsImagePath"));
+                    companyId = (int)(key.GetValue("companyId"));
                     userId = (int)(key.GetValue("UserId"));
                     lblLoginUserName.Text = "Username: " + (string)(key.GetValue("UserName")).ToString();//.ToUpper();
                     key.Close();
@@ -128,7 +132,18 @@ namespace RFID_FEATHER_ASSETS
         {
             if (txtRFIDTag.Text.Length != 0 || imgCapture1.Image != null)
             {
-                DialogResult result = MessageBox.Show("Are you sure you want to cancel the registration?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                string cancelMsg;
+
+                if (btnSubmit.Text.ToUpper() == "SUBMIT")
+                {
+                    cancelMsg = "Are you sure you want to cancel the registration?";
+                }
+                else
+                {
+                    cancelMsg = "Are you sure you want to cancel the update?";
+                }
+
+                DialogResult result = MessageBox.Show(cancelMsg, this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
                 if (result == DialogResult.Yes)
                 {
                     CallMainMenu();
@@ -153,122 +168,180 @@ namespace RFID_FEATHER_ASSETS
                     btnGetRFIDTag.Focus();
                     return;
                 }
-                #region old code
-                /*if (!CheckDuplicateRFID())
+
+                if (btnSubmit.Text.ToUpper() == "UPDATE")
                 {
-                    MessageBox.Show("RFID Tag is already assigned.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    txtRFIDTag.Focus();
-                    return;
-                }*/
+                    updateAssetInfo();
+                }
+                else
+                {
+                    //For Web Service
+                    Asset asset = new Asset();
 
-                //For MySqlConnection
-                //MySqlConnection con = new MySqlConnection(connectionString);
-                //con.Open();
-                //MySqlCommand cmd = new MySqlCommand("insert into asset(rfid_tag,company_id,name,description,images,take_out_allowed,take_out_info,created_at,updated_at) values (@rfid_tag,@company_id,@name,@description,@images,@take_out_allowed,@take_out_info,@created_at,@updated_at)", con);
-                //cmd.Parameters.AddWithValue("@rfid_tag", txtRFIDTag.Text);
-                ////cmd.Parameters.AddWithValue("@owner_id", 1);
-                //cmd.Parameters.AddWithValue("@company_id", 1);
-                //cmd.Parameters.AddWithValue("@name", txtAssetName.Text);
-                //cmd.Parameters.AddWithValue("@description", txtDescription.Text);
-                //if (radbtnYes.Checked)
-                //{
-                //    cmd.Parameters.AddWithValue("@take_out_allowed", 1);
-                //}
-                //else
-                //{
-                //    cmd.Parameters.AddWithValue("@take_out_allowed", 0);
-                //}
-                //cmd.Parameters.AddWithValue("@take_out_info", txtTakeOutNote.Text);
-                ////cmd.Parameters.AddWithValue("@Section", combosec.SelectedItem.ToString());  
-                //cmd.Parameters.AddWithValue("@created_at", DateTime.Now);
-                //cmd.Parameters.AddWithValue("@updated_at", DateTime.Now);
-                //cmd.Parameters.AddWithValue("@images", txtImagePath.Text);
+                    //int oId;
+                    //bool parseOK = Int32.TryParse(comboOwner.SelectedValue.ToString(), out oId);
 
-                //cmd.ExecuteNonQuery();
-                //con.Close();
-                //MessageBox.Show("Asset successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //ClearFields();
-                #endregion
+                    //int currentOwnerId =  Convert.ToInt32(((Owner)comboOwner.SelectedItem).userId);
 
+                    asset.tag = txtRFIDTag.Text;
+                    asset.tagType = 1;
+                    asset.companyId = companyId;//1;
+                    //asset.ownerId = currentOwnerId;//oId;
+                    asset.name = txtDescription.Text.Trim();//txtAssetName.Text;
+                    asset.description = txtDescription.Text.Trim();
+                    //if (radbtnYes.Checked)
+                    //{
+                    //    asset.takeOutAllowed = true;
+                    //}
+                    //else
+                    //{
+                    //asset.takeOutAllowed = false;
+                    //}
+                    asset.takeOutInfo = txtTakeOutNote.Text.Trim();
+                    asset.imageUrls = newImgFileNames; //txtCapturedImagePath.Text;//txtImagePath.Text;
+                    asset.registerUserId = userId;//lblLoginUserName.Text.Substring(lblLoginUserName.Text.IndexOf(":") + 2);
+                    asset.updateUserId = userId;
+                    //For Validity Expiration
+                    if (rbtnValidToday.Checked)
+                    {
+                        validUntilValue = DateTime.UtcNow.ToString("yyyy-MM-dd T") + "17:00";
+                    }
+                    else if (rbtnValidUntil.Checked)
+                    {
+                        if (dtTimePicker.Checked) validUntilValue = dtDatePicker.Value.ToString("yyyy-MM-dd") + dtTimePicker.Value.ToString("THH:mm");
+                        else validUntilValue = dtDatePicker.Value.ToString("yyyy-MM-dd T") + "17:00";
+                    }
+                    else validUntilValue = null;
+
+                    DateTime? dt = null;
+                    asset.validUntil = validUntilValue != null ? Convert.ToDateTime(validUntilValue) : dt;
+
+
+                    RestClient client = new RestClient("http://52.163.93.95:8080/FeatherAssets/");//("http://feather-assets.herokuapp.com/");
+                    RestRequest register = new RestRequest("/api/asset/add", Method.POST);
+
+                    var authToken = tokenvalue;
+                    register.AddHeader("X-Auth-Token", authToken);
+                    register.AddHeader("Content-Type", "application/json; charset=utf-8");
+                    register.RequestFormat = DataFormat.Json;
+                    register.AddBody(asset);
+
+                    lblSubmittingInformation.Visible = true;
+                    this.Refresh();
+
+
+                    IRestResponse response = client.Execute(register);
+                    lblSubmittingInformation.Visible = false;
+
+                    var content = response.Content;
+
+                    if (response.StatusCode == HttpStatusCode.OK)//if (response.IsSuccessStatusCode)
+                    {
+                        JsonDeserializer deserial = new JsonDeserializer();
+                        RestResult restResult = deserial.Deserialize<RestResult>(response);
+
+                        if (restResult.result == "OK")
+                        {
+                            SaveTransaction();
+
+                            MessageBox.Show("Record successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            ClearFields();
+                        }
+                        else
+                        {
+                            MessageBox.Show(restResult.result + " " + restResult.message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+
+                    }
+                    else
+                    {
+                        MessageBox.Show("Error Code " +
+                        response.StatusCode /*+ " : Message - " + response.ErrorMessage*/);
+                        return;
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }  
+        }
+
+        private void SaveTransaction()
+        {
+            //Saving to transaction table
+            try
+            {
                 //For Web Service
-                Asset asset = new Asset();
+                Transaction transactDet = new Transaction();
 
-                //int oId;
-                //bool parseOK = Int32.TryParse(comboOwner.SelectedValue.ToString(), out oId);
+                transactDet.companyId = companyId;//1;
+                //transactDet.readerId = 1;
+                //transactDet.notes = txtExplanationNotes.Text.Trim();
+                //transactDet.imageUrl = newImgFileNames;//txtCapturedImagePath.Text;//txtImagePath.Text;
 
-                //int currentOwnerId =  Convert.ToInt32(((Owner)comboOwner.SelectedItem).userId);
-
-                asset.tag = txtRFIDTag.Text;
-                asset.tagType = 1;
-                asset.companyId = 1;
-                //asset.ownerId = currentOwnerId;//oId;
-                asset.name = txtDescription.Text.Trim();//txtAssetName.Text;
-                asset.description = txtDescription.Text.Trim();
-                //if (radbtnYes.Checked)
-                //{
-                //    asset.takeOutAllowed = true;
-                //}
-                //else
-                //{
-                //asset.takeOutAllowed = false;
-                //}
-                asset.takeOutInfo = txtTakeOutNote.Text.Trim();
-                asset.imageUrls = newImgFileNames; //txtCapturedImagePath.Text;//txtImagePath.Text;
-                asset.registerUserId = userId;//lblLoginUserName.Text.Substring(lblLoginUserName.Text.IndexOf(":") + 2);
-
-                //For Validity Expiration
-                if (rbtnValidToday.Checked)
+                //Gettting the assetId
+                if (btnSubmit.Text.ToUpper() == "SUBMIT")
                 {
-                    validUntilValue = DateTime.UtcNow.ToString("yyyy-MM-dd T") + "17:00";
-                }
-                else if (rbtnValidUntil.Checked)
-                {
-                    if (dtTimePicker.Checked) validUntilValue = dtDatePicker.Value.ToString("yyyy-MM-dd") + dtTimePicker.Value.ToString("THH:mm");
-                    else validUntilValue = dtDatePicker.Value.ToString("yyyy-MM-dd T") + "17:00";
-                }
-                else validUntilValue = null;
+                    GetAsset getAsset = new GetAsset();
 
-                DateTime? dt = null;
-                asset.validUntil = validUntilValue != null ? Convert.ToDateTime(validUntilValue) : dt;
+                    getAsset.companyId = companyId;
+                    getAsset.tag = txtRFIDTag.Text;
+                    getAsset.tagType = 1;
 
+                    RestClient clientinfo = new RestClient("http://52.163.93.95:8080/FeatherAssets/");
+                    RestRequest assetinfo = new RestRequest("/api/asset/company-tag", Method.POST);
+
+                    assetinfo.RequestFormat = DataFormat.Json;
+                    assetinfo.AddHeader("Content-Type", "application/json; charset=utf-8");
+                    assetinfo.AddHeader("X-Auth-Token", tokenvalue);
+                    assetinfo.AddBody(getAsset);
+
+                    IRestResponse responseinfo = clientinfo.Execute(assetinfo);
+                    var contentinfo = responseinfo.Content;
+
+                    if (responseinfo.StatusCode == HttpStatusCode.OK)
+                    {
+                        JsonDeserializer deserial = new JsonDeserializer();
+                        AssetInfo assetInfo = deserial.Deserialize<AssetInfo>(responseinfo);
+
+                        assetId = assetInfo.assetId;
+                    }
+                }
+                transactDet.assetId = assetId;
+                //end-Getting assetId
 
                 RestClient client = new RestClient("http://52.163.93.95:8080/FeatherAssets/");//("http://feather-assets.herokuapp.com/");
-                RestRequest register = new RestRequest("/api/asset/add", Method.POST);
+                RestRequest transact = new RestRequest("/api/asset/transact", Method.POST);
 
                 var authToken = tokenvalue;
-                register.AddHeader("X-Auth-Token", authToken);
-                register.AddHeader("Content-Type", "application/json; charset=utf-8");
-                register.RequestFormat = DataFormat.Json;
-                register.AddBody(asset);
+                transact.AddHeader("X-Auth-Token", authToken);
+                transact.AddHeader("Content-Type", "application/json; charset=utf-8");
+                transact.RequestFormat = DataFormat.Json;
+                transact.AddBody(transactDet);
 
-                lblSubmittingInformation.Visible = true;
-                this.Refresh();
+                //lblSubmittingInformation.Visible = true;
+                //this.Refresh();
 
-
-                IRestResponse response = client.Execute(register);
+                IRestResponse response = client.Execute(transact);
                 lblSubmittingInformation.Visible = false;
 
                 var content = response.Content;
 
-                if (response.StatusCode == HttpStatusCode.OK)//if (response.IsSuccessStatusCode)
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
                     JsonDeserializer deserial = new JsonDeserializer();
                     RestResult restResult = deserial.Deserialize<RestResult>(response);
 
-                    if (restResult.result == "OK")
+                    if (restResult.result != "OK")
                     {
-                        MessageBox.Show("Record successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        ClearFields();
+                        MessageBox.Show("Saving transaction..." + "\n" + restResult.result + " " + restResult.message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
-                    else
-                    {
-                        MessageBox.Show(restResult.result + " " + restResult.message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                        
+
                 }
                 else
                 {
-                    MessageBox.Show("Error Code " +
+                    MessageBox.Show("Saving transaction..." +"\n" +"Error Code " +
                     response.StatusCode /*+ " : Message - " + response.ErrorMessage*/);
                     return;
                 }
@@ -278,6 +351,83 @@ namespace RFID_FEATHER_ASSETS
             {
                 MessageBox.Show(ex.Message);
             }  
+        }
+
+        private void updateAssetInfo()
+        {
+            Asset updateInfo = new Asset();
+
+            updateInfo.companyId = companyId;//1;
+            //updateInfo.registerUserId = userId;
+            updateInfo.updateUserId = userId;
+            updateInfo.assetId = assetId;
+            updateInfo.name = txtDescription.Text.Trim();
+            updateInfo.description = txtDescription.Text.Trim();
+            updateInfo.imageUrls = updatedImgFileNames;
+            updateInfo.tag = txtRFIDTag.Text;
+            updateInfo.tagType = 1;
+            //updateInfo.takeOutAllowed = false;
+            updateInfo.takeOutInfo = txtTakeOutNote.Text.Trim();
+
+            if (rbtnValidToday.Checked)
+            {
+                validUntilValue = DateTime.UtcNow.ToString("yyyy-MM-dd T") + "17:00";
+            }
+            else if (rbtnValidUntil.Checked)
+            {
+                if (dtTimePicker.Checked) validUntilValue = dtDatePicker.Value.ToString("yyyy-MM-dd") + dtTimePicker.Value.ToString("THH:mm");
+                else validUntilValue = dtDatePicker.Value.ToString("yyyy-MM-dd T") + "17:00";
+            }
+            else validUntilValue = null;
+            DateTime? dt = null;
+
+            updateInfo.validUntil = validUntilValue != null ? Convert.ToDateTime(validUntilValue) : dt;
+
+
+            RestClient client = new RestClient("http://52.163.93.95:8080/FeatherAssets/");
+            RestRequest updateAssetInfo = new RestRequest("/api/asset/update", Method.POST);
+
+            updateAssetInfo.AddHeader("X-Auth-Token", tokenvalue);
+            updateAssetInfo.AddHeader("Content-Type", "application/json; charset=utf-8");
+            updateAssetInfo.RequestFormat = DataFormat.Json;
+            updateAssetInfo.AddBody(updateInfo);
+
+            lblSubmittingInformation.Visible = true;
+            lblSubmittingInformation.Text = "Updating Information. Please wait...";
+            this.Refresh();
+
+
+            IRestResponse response = client.Execute(updateAssetInfo);
+            lblSubmittingInformation.Visible = false;
+            lblSubmittingInformation.Text = "Submitting Information. Please wait...";
+
+            var content = response.Content;
+
+            if (response.StatusCode == HttpStatusCode.OK)//if (response.IsSuccessStatusCode)
+            {
+                JsonDeserializer deserial = new JsonDeserializer();
+                RestResult restResult = deserial.Deserialize<RestResult>(response);
+
+                if (restResult.result == "OK")
+                {
+                    SaveTransaction();
+
+                    MessageBox.Show("Record successfully updated.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    ClearFields();
+                }
+                else
+                {
+                    MessageBox.Show(restResult.result + " " + restResult.message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("Error Code " +
+                response.StatusCode /*+ " : Message - " + response.ErrorMessage*/);
+                return;
+            }
+
         }
 
         private void SubmitImage()
@@ -341,8 +491,10 @@ namespace RFID_FEATHER_ASSETS
             lblAssetPhoto3.Visible = true;
 
             rbtnValidToday.Checked = true;
-
-            btnGetRFIDTag.Focus();
+            btnCapturePhoto.Text = "Capture Owner Photo";
+            btnSubmit.Text = "Submit";
+            this.Refresh();
+            //btnGetRFIDTag.Focus();
         }
 
         #region old code
@@ -407,6 +559,7 @@ namespace RFID_FEATHER_ASSETS
         private void btnGetRFIDTag_Click(object sender, EventArgs e)
         {
             //ReaderMethodProc();
+            //ClearFields();
             try
             {
                 int nReturnValue = 0;
@@ -638,13 +791,24 @@ namespace RFID_FEATHER_ASSETS
                     IsCameraConnected = true;
                     cameraBox.BackColor = Color.White;
                     lblNoCameraAvailable.Visible = false;
-                    //btnCapturePhoto.Text = "Capture Image";
+
+                    getCaptureButtonText();
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void getCaptureButtonText()
+        {
+            if (imgCapture1.Image == null) btnCapturePhoto.Text = "Capture Owner Photo";
+            else if (imgCapture2.Image == null) btnCapturePhoto.Text = "Capture Valid ID Photo";
+            else if (imgCapture3.Image == null) btnCapturePhoto.Text = "Capture Asset Photo 1";
+            else if (imgCapture4.Image == null) btnCapturePhoto.Text = "Capture Asset Photo 2";
+            else if (imgCapture5.Image == null) btnCapturePhoto.Text = "Capture Asset Photo 3";
+            else btnCapturePhoto.Text = "Captured Completed";
         }
 
         private void btnCapturePhoto_Click(object sender, EventArgs e)
@@ -667,8 +831,11 @@ namespace RFID_FEATHER_ASSETS
                     }
                     else if (IsCameraConnected)
                     {
-                        btnCapturePhoto.Text = "Processing. Please wait...";
-                        btnCapturePhoto.Refresh();
+                        if (imgCapture5.Image == null)
+                        {
+                            btnCapturePhoto.Text = "Processing. Please wait...";
+                            btnCapturePhoto.Refresh();
+                        }
 
                         //Assigned captured image in each picture box
                         if (imgCapture1.Image == null)
@@ -708,8 +875,16 @@ namespace RFID_FEATHER_ASSETS
                         }
 
                         SubmitImage();
-                        newImgFileNames = newImgFileNames + "," + ImgFileName;
 
+                        //if (string.IsNullOrEmpty(newImgFileNames)) 
+                        //    newImgFileNames = ImgFileName;
+                        //else
+                            //if (btnSubmit.Text.ToUpper() == "UPDATE")
+                            //{
+                            //    updatedImgFileNames = updatedImgFileNames + "," + ImgFileName;
+                            //}
+                            //else newImgFileNames = newImgFileNames + "," + ImgFileName;
+                            newImgFileNames = newImgFileNames + "," + ImgFileName;
                         ////Saving for captured images
                         //string dirPath = txtSaveImageDir.Text.Trim() + @"\";//@"C:\Users\USER\Pictures\";
                         //string fileName = "Image";
@@ -951,57 +1126,9 @@ namespace RFID_FEATHER_ASSETS
         }
         #endregion
 
-        #region old code
-        //OpenFileDialog fd1 = new OpenFileDialog();
-
-        //private void btnBrowseImage_Click(object sender, EventArgs e)
-        //{
-        //    fd1.Filter = "image files|*.jpg;*.png;*.gif;*.icon;.*;";
-
-        //    DialogResult dres1 = fd1.ShowDialog();
-        //    if (dres1 == DialogResult.Abort)
-        //        return;
-        //    if (dres1 == DialogResult.Cancel)
-        //        return;
-      
-        //    //if (!CheckDuplicatePicture())
-        //    //{
-        //    //    MessageBox.Show("Picture is already assigned.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    //    btnBrowseImage.Focus();
-        //    //    return;
-        //    //}
-        //    //else
-        //    //{
-        //        txtImagePath.Text = fd1.FileName;
-
-        //        picOwner.Image = Image.FromFile(fd1.FileName);
-        //        MemoryStream ms1 = new MemoryStream();
-        //        picOwner.Image.Save(ms1, System.Drawing.Imaging.ImageFormat.Jpeg);
-        //    //}
-        //}
-
-        //private bool CheckDuplicatePicture()
-        //{
-        //    MySqlConnection con = new MySqlConnection(connectionString);
-        //    con.Open();
-        //    MySqlCommand cmd = new MySqlCommand("select * from asset where images like '%" + Path.GetFileName(fd1.FileName) + "%'", con);
-        //    MySqlDataReader rd = cmd.ExecuteReader();
-        //    if (rd.HasRows)
-        //    {
-        //        rd.Close();
-        //        return false;
-        //    }
-        //    else
-        //    {
-        //        rd.Close();
-        //        return true;
-        //    }
-        //}
-        #endregion
-
         private void CurrentTimer_Tick(object sender, EventArgs e)
         {
-            lblCurrentDateTime.Text = DateTime.Now.ToString("h:mm:ss tt") + "\n" + DateTime.Now.ToString("dddd, MMMM dd, yyyy"); //DateTime.Now.ToString("dddd, MMMM dd, yyyy h:mm:ss tt");
+            lblCurrentDateTime.Text = DateTime.Now.ToString("h:mm:sstt") + "\n" + DateTime.Now.ToString("dddd, MMMM dd, yyyy"); //DateTime.Now.ToString("dddd, MMMM dd, yyyy h:mm:ss tt");
 
             //if (dtDatePicker.Checked) dtDatePicker.Value = DateTime.Now;
             //if (dtTimePicker.Checked) dtTimePicker.Value = DateTime.Now;
@@ -1057,10 +1184,130 @@ namespace RFID_FEATHER_ASSETS
         {
             AssetValidUntilDateTime();
         }
+
+        private void btnGetAssetInfo_Click(object sender, EventArgs e)
+        {
+            //ClearFields();
+
+            btnGetRFIDTag.PerformClick();
+            if (!string.IsNullOrEmpty(txtRFIDTag.Text)) getAssetInfo();
+            btnGetAssetInfo.Focus();
+        }
+
+        private void getAssetInfo()
+        {
+            try
+            {
+                lblLoadingInformation.Visible = true;
+                lblLoadingInformation.Refresh();
+
+                GetAsset getAsset = new GetAsset();
+
+                getAsset.companyId = companyId;
+                getAsset.tag = txtRFIDTag.Text;
+                getAsset.tagType = 1;
+
+                RestClient client = new RestClient("http://52.163.93.95:8080/FeatherAssets/");
+                RestRequest assetinfo = new RestRequest("/api/asset/company-tag", Method.POST);
+
+                assetinfo.RequestFormat = DataFormat.Json;
+                assetinfo.AddHeader("Content-Type", "application/json; charset=utf-8");
+                assetinfo.AddHeader("X-Auth-Token", tokenvalue);
+                assetinfo.AddBody(getAsset);
+
+                IRestResponse response = client.Execute(assetinfo);
+                var content = response.Content;
+
+                lblLoadingInformation.Visible = false;
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    JsonDeserializer deserial = new JsonDeserializer();
+                    AssetInfo assetInfo = deserial.Deserialize<AssetInfo>(response);
+ 
+                    assetId = assetInfo.assetId;
+                    updatedImgFileNames = assetInfo.imageUrls;
+                    txtDescription.Text = assetInfo.description;
+                    txtTakeOutNote.Text = assetInfo.takeOutInfo;
+
+                    //if (assetInfo.validUntil != Convert.ToDateTime(DateTime.Now.ToString("g")))
+                    //{
+                    if (assetInfo.validUntil == null) rbtnNoExpiration.Checked = true;
+                    else
+                    {
+                        rbtnValidUntil.Checked = true;
+                        validUntilValue = assetInfo.validUntil.Value.ToString("yyyy-MM-dd");
+                        dtDatePicker.Value = Convert.ToDateTime(validUntilValue);
+
+                        //if (Convert.ToDateTime(assetInfo.validUntil).ToString("HH:mm") != "00:00")
+                        //{
+                        validUntilValue = assetInfo.validUntil.Value.ToString("HH:mm tt");
+                        dtTimePicker.Value = Convert.ToDateTime(validUntilValue);
+                        dtTimePicker.Checked = true;
+                        AssetValidUntilTime();
+                        //}
+                    }
+                    //}
+                    
+                    string urls = assetInfo.imageUrls;
+                    string[] ReadUrls = urls.Split(',');
+
+                    //http://52.163.93.95:8080/FeatherAssets/api/images/{companyId}/{type}/
+
+                    if (ReadUrls.Length > 1)
+                    {
+                        imgCapture1.Load("http://52.163.93.95:8080/FeatherAssets/api/images/1/asset/" + ReadUrls[1]);
+                        lblOwnerPhoto.Visible = false;
+                    }
+                    if (ReadUrls.Length > 2)
+                    {
+                        imgCapture2.Load("http://52.163.93.95:8080/FeatherAssets/api/images/1/asset/" + ReadUrls[2]);
+                        lblValidIDPhoto.Visible = false;
+                    }
+                    if (ReadUrls.Length > 3)
+                    {
+                        imgCapture3.Load("http://52.163.93.95:8080/FeatherAssets/api/images/1/asset/" + ReadUrls[3]);
+                        lblAssetPhoto1.Visible = false;
+                    }
+                    if (ReadUrls.Length > 4)
+                    {
+                        imgCapture4.Load("http://52.163.93.95:8080/FeatherAssets/api/images/1/asset/" + ReadUrls[4]);
+                        lblAssetPhoto2.Visible = false;
+                    }
+                    if (ReadUrls.Length > 5)
+                    {
+                        imgCapture5.Load("http://52.163.93.95:8080/FeatherAssets/api/images/1/asset/" + ReadUrls[5]);
+                        lblAssetPhoto3.Visible = false;
+                    }
+
+                    getCaptureButtonText();
+
+                    btnSubmit.Text = "Update";
+                    btnSubmit.Focus();
+                    return;
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    MessageBox.Show("Error connecting to server.. please try again later");
+                }
+                else
+                {
+                    HttpStatusCode statusCode = response.StatusCode;
+                    int numericStatusCode = (int)statusCode;
+                    //show error code
+                    MessageBox.Show("Error" + numericStatusCode);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
     }
 
     public class Asset
     {
+        public int assetId { get; set; }
         public string tag { get; set; }
         public int tagType { get; set; }
         public int companyId { get; set; }
@@ -1074,21 +1321,22 @@ namespace RFID_FEATHER_ASSETS
         public string imageUrls { get; set; }
         public DateTime? validUntil { get; set; }
         public int registerUserId { get; set; }
+        public int updateUserId { get; set; }
     }
 
-    public class Owner
-    {
-        public int userId { get; set; }
-        public int companyId { get; set; }
-        public string firstName { get; set; }
-        public string lastName { get; set; }
-        public string position { get; set; }
-        public string description { get; set; }
-        public string imageUrl { get; set; }
-        public string email { get; set; }
-        public string authorities { get; set; }
-        public string fullName { get { return lastName + ", " + firstName; } }
-    }
+    //public class Owner
+    //{
+    //    public int userId { get; set; }
+    //    public int companyId { get; set; }
+    //    public string firstName { get; set; }
+    //    public string lastName { get; set; }
+    //    public string position { get; set; }
+    //    public string description { get; set; }
+    //    public string imageUrl { get; set; }
+    //    public string email { get; set; }
+    //    public string authorities { get; set; }
+    //    public string fullName { get { return lastName + ", " + firstName; } }
+    //}
 
     public class RestResult
     {
@@ -1101,4 +1349,42 @@ namespace RFID_FEATHER_ASSETS
         public string response { get; set; }
         public string message { get; set; }
     }
+
+    public class AssetInfo
+    {
+        public int assetId { get; set; }
+        public int companyId { get; set; }
+        public int registerUserId { get; set; }
+        public string name { get; set; }
+        public string description { get; set; }
+        public string imageUrls { get; set; }
+        public string tag { get; set; }
+        public int tagType { get; set; }
+        public bool takeOutAllowed { get; set; }
+        public string takeOutInfo { get; set; }
+        public DateTime? validUntil { get; set; }
+    }
+
+    public class GetAsset
+    {
+        public int companyId { get; set; }
+        public string tag { get; set; }
+        public int tagType { get; set; }
+    }
+
+    //public class UpdateAsset
+    //{
+    //    public int companyId { get; set; }
+    //    public int registerUserId { get; set; }
+    //    public int updateUserId { get; set; }
+    //    public int assetId { get; set; }
+    //    public string name { get; set; }
+    //    public string description { get; set; }
+    //    public string imageUrls { get; set; }
+    //    public string tag { get; set; }
+    //    public int tagType { get; set; }
+    //    public bool takeOutAllowed { get; set; }
+    //    public string takeOutInfo { get; set; }
+    //    public DateTime? validUntil { get; set; }
+    //}
 }

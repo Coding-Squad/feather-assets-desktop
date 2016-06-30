@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblSubmittingInformation = new System.Windows.Forms.Label();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.btnSubmit = new System.Windows.Forms.Button();
             this.rbtnValidUnlimited = new System.Windows.Forms.RadioButton();
             this.rbtnValidUntil = new System.Windows.Forms.RadioButton();
             this.rbtnValidToday = new System.Windows.Forms.RadioButton();
             this.dtTimePicker = new System.Windows.Forms.DateTimePicker();
             this.dtDatePicker = new System.Windows.Forms.DateTimePicker();
-            this.lblSubmittingInformation = new System.Windows.Forms.Label();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.btnSubmit = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -57,6 +57,45 @@
             this.groupBox1.TabIndex = 60;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Validity Expiration";
+            // 
+            // lblSubmittingInformation
+            // 
+            this.lblSubmittingInformation.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblSubmittingInformation.AutoSize = true;
+            this.lblSubmittingInformation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSubmittingInformation.ForeColor = System.Drawing.Color.Green;
+            this.lblSubmittingInformation.Location = new System.Drawing.Point(7, 109);
+            this.lblSubmittingInformation.Name = "lblSubmittingInformation";
+            this.lblSubmittingInformation.Size = new System.Drawing.Size(260, 16);
+            this.lblSubmittingInformation.TabIndex = 81;
+            this.lblSubmittingInformation.Text = "Submitting Information. Please wait...";
+            this.lblSubmittingInformation.Visible = false;
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnCancel.BackColor = System.Drawing.Color.Orange;
+            this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCancel.Location = new System.Drawing.Point(141, 133);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(106, 39);
+            this.btnCancel.TabIndex = 80;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // btnSubmit
+            // 
+            this.btnSubmit.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnSubmit.BackColor = System.Drawing.Color.Orange;
+            this.btnSubmit.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSubmit.Location = new System.Drawing.Point(29, 133);
+            this.btnSubmit.Name = "btnSubmit";
+            this.btnSubmit.Size = new System.Drawing.Size(106, 39);
+            this.btnSubmit.TabIndex = 79;
+            this.btnSubmit.Text = "Submit";
+            this.btnSubmit.UseVisualStyleBackColor = false;
+            this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
             // 
             // rbtnValidUnlimited
             // 
@@ -81,6 +120,7 @@
             this.rbtnValidUntil.TabIndex = 60;
             this.rbtnValidUntil.Text = "Until";
             this.rbtnValidUntil.UseVisualStyleBackColor = true;
+            this.rbtnValidUntil.CheckedChanged += new System.EventHandler(this.rbtnValidUntil_CheckedChanged);
             // 
             // rbtnValidToday
             // 
@@ -109,6 +149,7 @@
             this.dtTimePicker.Size = new System.Drawing.Size(98, 22);
             this.dtTimePicker.TabIndex = 63;
             this.dtTimePicker.TabStop = false;
+            this.dtTimePicker.ValueChanged += new System.EventHandler(this.dtTimePicker_ValueChanged);
             // 
             // dtDatePicker
             // 
@@ -123,48 +164,12 @@
             this.dtDatePicker.TabIndex = 62;
             this.dtDatePicker.TabStop = false;
             // 
-            // lblSubmittingInformation
-            // 
-            this.lblSubmittingInformation.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.lblSubmittingInformation.AutoSize = true;
-            this.lblSubmittingInformation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSubmittingInformation.ForeColor = System.Drawing.Color.Green;
-            this.lblSubmittingInformation.Location = new System.Drawing.Point(7, 109);
-            this.lblSubmittingInformation.Name = "lblSubmittingInformation";
-            this.lblSubmittingInformation.Size = new System.Drawing.Size(260, 16);
-            this.lblSubmittingInformation.TabIndex = 81;
-            this.lblSubmittingInformation.Text = "Submitting Information. Please wait...";
-            this.lblSubmittingInformation.Visible = false;
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnCancel.BackColor = System.Drawing.Color.Orange;
-            this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancel.Location = new System.Drawing.Point(141, 133);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(106, 39);
-            this.btnCancel.TabIndex = 80;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = false;
-            // 
-            // btnSubmit
-            // 
-            this.btnSubmit.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnSubmit.BackColor = System.Drawing.Color.Orange;
-            this.btnSubmit.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSubmit.Location = new System.Drawing.Point(29, 133);
-            this.btnSubmit.Name = "btnSubmit";
-            this.btnSubmit.Size = new System.Drawing.Size(106, 39);
-            this.btnSubmit.TabIndex = 79;
-            this.btnSubmit.Text = "Submit";
-            this.btnSubmit.UseVisualStyleBackColor = false;
-            // 
             // AssetRenewal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(296, 212);
+            this.ControlBox = false;
             this.Controls.Add(this.groupBox1);
             this.MaximizeBox = false;
             this.Name = "AssetRenewal";

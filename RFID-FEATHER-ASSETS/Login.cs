@@ -25,7 +25,7 @@ namespace RFID_FEATHER_ASSETS
         {
             InitializeComponent();
             //cmbComPort.Text = portnamesource;
-            GetAssetSystemInfo();
+            //GetAssetSystemInfo();
         }
 
         private void GetAssetSystemInfo()
@@ -38,7 +38,7 @@ namespace RFID_FEATHER_ASSETS
                 //if it does exist, retrieve the stored values  
                 if (key != null)
                 {
-                    cboCompanyList.Text = (string)(key.GetValue("CompanyLogin"));
+                    cboCompanyList.Text = (string)(key.GetValue("companyId"));
                     key.Close();
                 }
             }
@@ -58,13 +58,13 @@ namespace RFID_FEATHER_ASSETS
         {
             try
             {
-                //Validation for Company 
-                if (string.IsNullOrEmpty (cboCompanyList.Text.Trim()))
-                {
-                    lblCompanyRequired.Visible = true;
-                    cboCompanyList.Focus();
-                    return;
-                } else lblCompanyRequired.Visible = false;
+                ////Validation for Company 
+                //if (string.IsNullOrEmpty (cboCompanyList.Text.Trim()))
+                //{
+                //    lblCompanyRequired.Visible = true;
+                //    cboCompanyList.Focus();
+                //    return;
+                //} else lblCompanyRequired.Visible = false;
 
                 //Validation for User Name and Password
                 if (txtUserName.TextLength == 0 || txtPassword.TextLength == 0)
@@ -113,7 +113,7 @@ namespace RFID_FEATHER_ASSETS
                         JsonDeserializer deserial = new JsonDeserializer();
                         loginResult = deserial.Deserialize<LoginResult>(response);
 
-                        SaveAssetSystemInfo(loginResult.authenticationToken, loginResult.roles, string.Empty, loginResult.userId, txtUserName.Text.Trim());
+                        SaveAssetSystemInfo(loginResult.authenticationToken, loginResult.roles, loginResult.companyId, loginResult.userId, txtUserName.Text.Trim());
 
                         //check authorities                       
                         if (loginResult.roles == "ROLE_ADMIN")
@@ -159,7 +159,7 @@ namespace RFID_FEATHER_ASSETS
              
         }
 
-        private void SaveAssetSystemInfo(string autoken, string roles, string companylogin, int userId, string loginid)
+        private void SaveAssetSystemInfo(string autoken, string roles, int companyId, int userId, string loginid)
         {
             try
             {
@@ -170,8 +170,8 @@ namespace RFID_FEATHER_ASSETS
                 //storing the values  
                 if (!string.IsNullOrEmpty(autoken)) key.SetValue("authenticationToken", autoken);
                 if (!string.IsNullOrEmpty(roles)) key.SetValue("roles", roles);
-                if (!string.IsNullOrEmpty(companylogin)) key.SetValue("CompanyLogin", cboCompanyList.Text);
-                if (userId != null) key.SetValue("UserId", userId);
+                key.SetValue("companyId", companyId);
+                key.SetValue("UserId", userId);
                 if (!string.IsNullOrEmpty(loginid)) key.SetValue("UserName", loginid);
                 key.Close();
             }

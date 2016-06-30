@@ -47,8 +47,10 @@
             this.txtSaveImageDir = new System.Windows.Forms.TextBox();
             this.btnBrowseImagePath = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lblLoadingInformation = new System.Windows.Forms.Label();
+            this.btnGetAssetInfo = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.rbtnValidUnlimited = new System.Windows.Forms.RadioButton();
+            this.rbtnNoExpiration = new System.Windows.Forms.RadioButton();
             this.rbtnValidUntil = new System.Windows.Forms.RadioButton();
             this.rbtnValidToday = new System.Windows.Forms.RadioButton();
             this.dtTimePicker = new System.Windows.Forms.DateTimePicker();
@@ -70,12 +72,17 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.lblLoginUserName = new System.Windows.Forms.Label();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.lblValidIDPhoto = new System.Windows.Forms.Label();
             this.lblOwnerPhoto = new System.Windows.Forms.Label();
             this.imgCapture1 = new System.Windows.Forms.PictureBox();
             this.imgCapture2 = new System.Windows.Forms.PictureBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.checkBox5 = new System.Windows.Forms.CheckBox();
+            this.checkBox4 = new System.Windows.Forms.CheckBox();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.lblAssetPhoto3 = new System.Windows.Forms.Label();
             this.lblAssetPhoto2 = new System.Windows.Forms.Label();
             this.lblAssetPhoto1 = new System.Windows.Forms.Label();
@@ -148,10 +155,11 @@
             this.lblCurrentDateTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCurrentDateTime.BackColor = System.Drawing.Color.WhiteSmoke;
             this.lblCurrentDateTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCurrentDateTime.Location = new System.Drawing.Point(826, 723);
+            this.lblCurrentDateTime.Location = new System.Drawing.Point(804, 723);
             this.lblCurrentDateTime.Margin = new System.Windows.Forms.Padding(0);
             this.lblCurrentDateTime.Name = "lblCurrentDateTime";
-            this.lblCurrentDateTime.Size = new System.Drawing.Size(130, 26);
+            this.lblCurrentDateTime.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.lblCurrentDateTime.Size = new System.Drawing.Size(150, 26);
             this.lblCurrentDateTime.TabIndex = 31;
             // 
             // splitContainer1
@@ -354,6 +362,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.lblLoadingInformation);
+            this.groupBox2.Controls.Add(this.btnGetAssetInfo);
             this.groupBox2.Controls.Add(this.groupBox4);
             this.groupBox2.Controls.Add(this.comboOwner);
             this.groupBox2.Controls.Add(this.lblSubmittingInformation);
@@ -378,10 +388,36 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Asset Information";
             // 
+            // lblLoadingInformation
+            // 
+            this.lblLoadingInformation.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblLoadingInformation.AutoSize = true;
+            this.lblLoadingInformation.Font = new System.Drawing.Font("Microsoft Sans Serif", 21F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLoadingInformation.ForeColor = System.Drawing.Color.Green;
+            this.lblLoadingInformation.Location = new System.Drawing.Point(-2, 368);
+            this.lblLoadingInformation.Name = "lblLoadingInformation";
+            this.lblLoadingInformation.Size = new System.Drawing.Size(477, 32);
+            this.lblLoadingInformation.TabIndex = 65;
+            this.lblLoadingInformation.Text = "Getting Information. Please wait...";
+            this.lblLoadingInformation.Visible = false;
+            // 
+            // btnGetAssetInfo
+            // 
+            this.btnGetAssetInfo.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnGetAssetInfo.BackColor = System.Drawing.Color.Orange;
+            this.btnGetAssetInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGetAssetInfo.Location = new System.Drawing.Point(265, 149);
+            this.btnGetAssetInfo.Name = "btnGetAssetInfo";
+            this.btnGetAssetInfo.Size = new System.Drawing.Size(109, 26);
+            this.btnGetAssetInfo.TabIndex = 62;
+            this.btnGetAssetInfo.Text = "Get Asset Info";
+            this.btnGetAssetInfo.UseVisualStyleBackColor = false;
+            this.btnGetAssetInfo.Click += new System.EventHandler(this.btnGetAssetInfo_Click);
+            // 
             // groupBox4
             // 
             this.groupBox4.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.groupBox4.Controls.Add(this.rbtnValidUnlimited);
+            this.groupBox4.Controls.Add(this.rbtnNoExpiration);
             this.groupBox4.Controls.Add(this.rbtnValidUntil);
             this.groupBox4.Controls.Add(this.rbtnValidToday);
             this.groupBox4.Controls.Add(this.dtTimePicker);
@@ -394,17 +430,17 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Validity Expiration";
             // 
-            // rbtnValidUnlimited
+            // rbtnNoExpiration
             // 
-            this.rbtnValidUnlimited.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.rbtnValidUnlimited.AutoSize = true;
-            this.rbtnValidUnlimited.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbtnValidUnlimited.Location = new System.Drawing.Point(12, 74);
-            this.rbtnValidUnlimited.Name = "rbtnValidUnlimited";
-            this.rbtnValidUnlimited.Size = new System.Drawing.Size(82, 20);
-            this.rbtnValidUnlimited.TabIndex = 8;
-            this.rbtnValidUnlimited.Text = "Unlimited";
-            this.rbtnValidUnlimited.UseVisualStyleBackColor = true;
+            this.rbtnNoExpiration.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.rbtnNoExpiration.AutoSize = true;
+            this.rbtnNoExpiration.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbtnNoExpiration.Location = new System.Drawing.Point(12, 74);
+            this.rbtnNoExpiration.Name = "rbtnNoExpiration";
+            this.rbtnNoExpiration.Size = new System.Drawing.Size(106, 20);
+            this.rbtnNoExpiration.TabIndex = 8;
+            this.rbtnNoExpiration.Text = "No Expiration";
+            this.rbtnNoExpiration.UseVisualStyleBackColor = true;
             // 
             // rbtnValidUntil
             // 
@@ -503,12 +539,12 @@
             // 
             this.btnGetRFIDTag.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.btnGetRFIDTag.BackColor = System.Drawing.Color.Orange;
-            this.btnGetRFIDTag.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnGetRFIDTag.Location = new System.Drawing.Point(266, 149);
+            this.btnGetRFIDTag.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGetRFIDTag.Location = new System.Drawing.Point(185, 149);
             this.btnGetRFIDTag.Name = "btnGetRFIDTag";
-            this.btnGetRFIDTag.Size = new System.Drawing.Size(107, 26);
+            this.btnGetRFIDTag.Size = new System.Drawing.Size(79, 26);
             this.btnGetRFIDTag.TabIndex = 6;
-            this.btnGetRFIDTag.Text = "Get RFID Tag";
+            this.btnGetRFIDTag.Text = "Get RFID";
             this.btnGetRFIDTag.UseVisualStyleBackColor = false;
             this.btnGetRFIDTag.Click += new System.EventHandler(this.btnGetRFIDTag_Click);
             // 
@@ -664,6 +700,8 @@
             // 
             // splitContainer3.Panel1
             // 
+            this.splitContainer3.Panel1.Controls.Add(this.checkBox2);
+            this.splitContainer3.Panel1.Controls.Add(this.checkBox1);
             this.splitContainer3.Panel1.Controls.Add(this.lblValidIDPhoto);
             this.splitContainer3.Panel1.Controls.Add(this.lblOwnerPhoto);
             this.splitContainer3.Panel1.Controls.Add(this.imgCapture1);
@@ -673,6 +711,9 @@
             // 
             // splitContainer3.Panel2
             // 
+            this.splitContainer3.Panel2.Controls.Add(this.checkBox5);
+            this.splitContainer3.Panel2.Controls.Add(this.checkBox4);
+            this.splitContainer3.Panel2.Controls.Add(this.checkBox3);
             this.splitContainer3.Panel2.Controls.Add(this.lblAssetPhoto3);
             this.splitContainer3.Panel2.Controls.Add(this.lblAssetPhoto2);
             this.splitContainer3.Panel2.Controls.Add(this.lblAssetPhoto1);
@@ -684,6 +725,30 @@
             this.splitContainer3.Size = new System.Drawing.Size(953, 262);
             this.splitContainer3.SplitterDistance = 382;
             this.splitContainer3.TabIndex = 49;
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox2.Location = new System.Drawing.Point(192, 19);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(127, 17);
+            this.checkBox2.TabIndex = 58;
+            this.checkBox2.Text = "Update valid id photo";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.Visible = false;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox1.Location = new System.Drawing.Point(6, 19);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(123, 17);
+            this.checkBox1.TabIndex = 57;
+            this.checkBox1.Text = "Update owner photo";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.Visible = false;
             // 
             // lblValidIDPhoto
             // 
@@ -702,7 +767,7 @@
             this.lblOwnerPhoto.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblOwnerPhoto.AutoSize = true;
             this.lblOwnerPhoto.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblOwnerPhoto.Location = new System.Drawing.Point(51, 101);
+            this.lblOwnerPhoto.Location = new System.Drawing.Point(50, 101);
             this.lblOwnerPhoto.Name = "lblOwnerPhoto";
             this.lblOwnerPhoto.Size = new System.Drawing.Size(96, 18);
             this.lblOwnerPhoto.TabIndex = 55;
@@ -756,12 +821,48 @@
             this.label6.Size = new System.Drawing.Size(372, 10);
             this.label6.TabIndex = 50;
             // 
+            // checkBox5
+            // 
+            this.checkBox5.AutoSize = true;
+            this.checkBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox5.Location = new System.Drawing.Point(377, 19);
+            this.checkBox5.Name = "checkBox5";
+            this.checkBox5.Size = new System.Drawing.Size(128, 17);
+            this.checkBox5.TabIndex = 61;
+            this.checkBox5.Text = "Update asset photo 3";
+            this.checkBox5.UseVisualStyleBackColor = true;
+            this.checkBox5.Visible = false;
+            // 
+            // checkBox4
+            // 
+            this.checkBox4.AutoSize = true;
+            this.checkBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox4.Location = new System.Drawing.Point(191, 19);
+            this.checkBox4.Name = "checkBox4";
+            this.checkBox4.Size = new System.Drawing.Size(128, 17);
+            this.checkBox4.TabIndex = 60;
+            this.checkBox4.Text = "Update asset photo 2";
+            this.checkBox4.UseVisualStyleBackColor = true;
+            this.checkBox4.Visible = false;
+            // 
+            // checkBox3
+            // 
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox3.Location = new System.Drawing.Point(5, 19);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(128, 17);
+            this.checkBox3.TabIndex = 59;
+            this.checkBox3.Text = "Update asset photo 1";
+            this.checkBox3.UseVisualStyleBackColor = true;
+            this.checkBox3.Visible = false;
+            // 
             // lblAssetPhoto3
             // 
             this.lblAssetPhoto3.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblAssetPhoto3.AutoSize = true;
             this.lblAssetPhoto3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAssetPhoto3.Location = new System.Drawing.Point(420, 101);
+            this.lblAssetPhoto3.Location = new System.Drawing.Point(421, 101);
             this.lblAssetPhoto3.Name = "lblAssetPhoto3";
             this.lblAssetPhoto3.Size = new System.Drawing.Size(101, 18);
             this.lblAssetPhoto3.TabIndex = 58;
@@ -773,7 +874,7 @@
             this.lblAssetPhoto2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblAssetPhoto2.AutoSize = true;
             this.lblAssetPhoto2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAssetPhoto2.Location = new System.Drawing.Point(233, 101);
+            this.lblAssetPhoto2.Location = new System.Drawing.Point(234, 101);
             this.lblAssetPhoto2.Name = "lblAssetPhoto2";
             this.lblAssetPhoto2.Size = new System.Drawing.Size(101, 18);
             this.lblAssetPhoto2.TabIndex = 57;
@@ -785,7 +886,7 @@
             this.lblAssetPhoto1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblAssetPhoto1.AutoSize = true;
             this.lblAssetPhoto1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAssetPhoto1.Location = new System.Drawing.Point(47, 101);
+            this.lblAssetPhoto1.Location = new System.Drawing.Point(46, 101);
             this.lblAssetPhoto1.Name = "lblAssetPhoto1";
             this.lblAssetPhoto1.Size = new System.Drawing.Size(101, 18);
             this.lblAssetPhoto1.TabIndex = 56;
@@ -970,11 +1071,18 @@
         private System.Windows.Forms.Label lblAssetPhoto3;
         private System.Windows.Forms.Label lblAssetPhoto2;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.RadioButton rbtnValidUnlimited;
+        private System.Windows.Forms.RadioButton rbtnNoExpiration;
         private System.Windows.Forms.RadioButton rbtnValidUntil;
         private System.Windows.Forms.RadioButton rbtnValidToday;
         private System.Windows.Forms.DateTimePicker dtTimePicker;
         private System.Windows.Forms.DateTimePicker dtDatePicker;
+        private System.Windows.Forms.Button btnGetAssetInfo;
+        private System.Windows.Forms.Label lblLoadingInformation;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox checkBox5;
+        private System.Windows.Forms.CheckBox checkBox4;
+        private System.Windows.Forms.CheckBox checkBox3;
 
     }
 }

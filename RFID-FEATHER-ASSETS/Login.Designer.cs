@@ -45,7 +45,7 @@
             // txtUserName
             // 
             this.txtUserName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
-            this.txtUserName.Location = new System.Drawing.Point(33, 126);
+            this.txtUserName.Location = new System.Drawing.Point(33, 78);
             this.txtUserName.Name = "txtUserName";
             this.txtUserName.Size = new System.Drawing.Size(178, 22);
             this.txtUserName.TabIndex = 0;
@@ -53,7 +53,7 @@
             // txtPassword
             // 
             this.txtPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
-            this.txtPassword.Location = new System.Drawing.Point(33, 174);
+            this.txtPassword.Location = new System.Drawing.Point(33, 129);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(178, 22);
@@ -65,7 +65,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.label1.ForeColor = System.Drawing.Color.Black;
-            this.label1.Location = new System.Drawing.Point(30, 107);
+            this.label1.Location = new System.Drawing.Point(30, 59);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(76, 13);
             this.label1.TabIndex = 2;
@@ -75,7 +75,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.label2.Location = new System.Drawing.Point(30, 155);
+            this.label2.Location = new System.Drawing.Point(30, 110);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(78, 13);
             this.label2.TabIndex = 3;
@@ -85,7 +85,7 @@
             // 
             this.btnLogin.BackColor = System.Drawing.Color.Orange;
             this.btnLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold);
-            this.btnLogin.Location = new System.Drawing.Point(33, 218);
+            this.btnLogin.Location = new System.Drawing.Point(33, 176);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(85, 35);
             this.btnLogin.TabIndex = 2;
@@ -97,7 +97,7 @@
             // 
             this.btnCancel.BackColor = System.Drawing.Color.Orange;
             this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold);
-            this.btnCancel.Location = new System.Drawing.Point(126, 218);
+            this.btnCancel.Location = new System.Drawing.Point(126, 176);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(85, 35);
             this.btnCancel.TabIndex = 3;
@@ -110,7 +110,7 @@
             this.lblUserPasswordRequired.AutoSize = true;
             this.lblUserPasswordRequired.BackColor = System.Drawing.Color.WhiteSmoke;
             this.lblUserPasswordRequired.ForeColor = System.Drawing.Color.Red;
-            this.lblUserPasswordRequired.Location = new System.Drawing.Point(30, 199);
+            this.lblUserPasswordRequired.Location = new System.Drawing.Point(30, 155);
             this.lblUserPasswordRequired.Name = "lblUserPasswordRequired";
             this.lblUserPasswordRequired.Size = new System.Drawing.Size(184, 13);
             this.lblUserPasswordRequired.TabIndex = 8;
@@ -122,7 +122,7 @@
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F);
             this.label4.ForeColor = System.Drawing.Color.Black;
-            this.label4.Location = new System.Drawing.Point(83, 12);
+            this.label4.Location = new System.Drawing.Point(83, 16);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(76, 25);
             this.label4.TabIndex = 9;
@@ -133,7 +133,7 @@
             this.lblSigningIn.AutoSize = true;
             this.lblSigningIn.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold);
             this.lblSigningIn.ForeColor = System.Drawing.Color.Black;
-            this.lblSigningIn.Location = new System.Drawing.Point(85, 260);
+            this.lblSigningIn.Location = new System.Drawing.Point(85, 220);
             this.lblSigningIn.Name = "lblSigningIn";
             this.lblSigningIn.Size = new System.Drawing.Size(88, 16);
             this.lblSigningIn.TabIndex = 10;
@@ -145,11 +145,12 @@
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.label3.ForeColor = System.Drawing.Color.Black;
-            this.label3.Location = new System.Drawing.Point(30, 56);
+            this.label3.Location = new System.Drawing.Point(227, 69);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(67, 13);
             this.label3.TabIndex = 11;
             this.label3.Text = "COMPANY";
+            this.label3.Visible = false;
             // 
             // cboCompanyList
             // 
@@ -159,10 +160,11 @@
             this.cboCompanyList.Items.AddRange(new object[] {
             "Company1",
             "Company2"});
-            this.cboCompanyList.Location = new System.Drawing.Point(33, 74);
+            this.cboCompanyList.Location = new System.Drawing.Point(230, 87);
             this.cboCompanyList.Name = "cboCompanyList";
             this.cboCompanyList.Size = new System.Drawing.Size(178, 24);
             this.cboCompanyList.TabIndex = 5;
+            this.cboCompanyList.Visible = false;
             this.cboCompanyList.SelectedIndexChanged += new System.EventHandler(this.cboCompanyList_SelectedIndexChanged);
             // 
             // lblCompanyRequired
@@ -170,7 +172,7 @@
             this.lblCompanyRequired.AutoSize = true;
             this.lblCompanyRequired.BackColor = System.Drawing.Color.WhiteSmoke;
             this.lblCompanyRequired.ForeColor = System.Drawing.Color.Red;
-            this.lblCompanyRequired.Location = new System.Drawing.Point(106, 56);
+            this.lblCompanyRequired.Location = new System.Drawing.Point(303, 69);
             this.lblCompanyRequired.Name = "lblCompanyRequired";
             this.lblCompanyRequired.Size = new System.Drawing.Size(105, 13);
             this.lblCompanyRequired.TabIndex = 12;
@@ -182,7 +184,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ClientSize = new System.Drawing.Size(243, 290);
+            this.ClientSize = new System.Drawing.Size(243, 251);
             this.Controls.Add(this.lblCompanyRequired);
             this.Controls.Add(this.cboCompanyList);
             this.Controls.Add(this.label3);

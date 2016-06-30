@@ -69,7 +69,6 @@ C:\Users\USER\Desktop\Git\Tentative-Desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RF
 C:\Users\USER\Desktop\Git\Tentative-Desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.RegisterUser.resources
 C:\Users\USER\Desktop\Git\Tentative-Desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.Properties.Resources.resources
 C:\Users\USER\Desktop\Git\Tentative-Desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID-FEATHER-ASSETS.csproj.GenerateResource.Cache
-C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\bin\Debug\zh-Hant\Microsoft.Data.OData.resources.dll
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\bin\Debug\RFID-FEATHER-ASSETS.exe.config
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\bin\Debug\RFID-FEATHER-ASSETS.exe
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\bin\Debug\RFID-FEATHER-ASSETS.pdb
@@ -114,6 +113,7 @@ C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\bin\Debug\ko\Microsoft.Data.OData.resources.dll
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\bin\Debug\ru\Microsoft.Data.OData.resources.dll
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\bin\Debug\zh-Hans\Microsoft.Data.OData.resources.dll
+C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\bin\Debug\zh-Hant\Microsoft.Data.OData.resources.dll
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\bin\Debug\de\System.Spatial.resources.dll
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\bin\Debug\es\System.Spatial.resources.dll
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\bin\Debug\fr\System.Spatial.resources.dll
@@ -123,18 +123,18 @@ C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\bin\Debug\ru\System.Spatial.resources.dll
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\bin\Debug\zh-Hans\System.Spatial.resources.dll
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\bin\Debug\zh-Hant\System.Spatial.resources.dll
+C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID-FEATHER-ASSETS.csprojResolveAssemblyReference.cache
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.AssetRenewal.resources
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.Assets.resources
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.LoginActivity.resources
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.Verification.resources
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.AssetRegistration.resources
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.MainMenu.resources
-C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.registerCompanyActivity.resources
+C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.Properties.Resources.resources
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.ReportCreation.resources
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.SerialPortSelection.resources
+C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.TransactionHistory.resources
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.RegisterUser.resources
-C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.Properties.Resources.resources
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID-FEATHER-ASSETS.csproj.GenerateResource.Cache
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID-FEATHER-ASSETS.exe
 C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID-FEATHER-ASSETS.pdb
-C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID-FEATHER-ASSETS.csprojResolveAssemblyReference.cache

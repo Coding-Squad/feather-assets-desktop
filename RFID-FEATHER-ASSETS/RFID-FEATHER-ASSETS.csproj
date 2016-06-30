@@ -125,6 +125,11 @@
     <Compile Include="InventoryBuffer.cs" />
     <Compile Include="ITalker.cs" />
     <Compile Include="MessageTran.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="ReaderMethod.cs" />
     <Compile Include="ReaderSetting.cs" />
     <Compile Include="AssetRegistration.cs">
@@ -139,12 +144,6 @@
     <Compile Include="MainMenu.Designer.cs">
       <DependentUpon>MainMenu.cs</DependentUpon>
     </Compile>
-    <Compile Include="registerCompanyActivity.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="registerCompanyActivity.Designer.cs">
-      <DependentUpon>registerCompanyActivity.cs</DependentUpon>
-    </Compile>
     <Compile Include="ReportCreation.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -156,6 +155,12 @@
     </Compile>
     <Compile Include="SerialPortSelection.Designer.cs">
       <DependentUpon>SerialPortSelection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TransactionHistory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TransactionHistory.Designer.cs">
+      <DependentUpon>TransactionHistory.cs</DependentUpon>
     </Compile>
     <Compile Include="UserRegistration.cs">
       <SubType>Form</SubType>
@@ -184,8 +189,10 @@
     <EmbeddedResource Include="MainMenu.resx">
       <DependentUpon>MainMenu.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="registerCompanyActivity.resx">
-      <DependentUpon>registerCompanyActivity.cs</DependentUpon>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ReportCreation.resx">
       <DependentUpon>ReportCreation.cs</DependentUpon>
@@ -193,19 +200,12 @@
     <EmbeddedResource Include="SerialPortSelection.resx">
       <DependentUpon>SerialPortSelection.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="TransactionHistory.resx">
+      <DependentUpon>TransactionHistory.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserRegistration.resx">
       <DependentUpon>UserRegistration.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
@@ -219,6 +219,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\circle-loader-black.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\circle-loader-small.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

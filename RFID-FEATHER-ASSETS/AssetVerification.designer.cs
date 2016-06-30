@@ -35,6 +35,8 @@
             this.CurrentDateTimer = new System.Windows.Forms.Timer(this.components);
             this.ClearTimer = new System.Windows.Forms.Timer(this.components);
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblLoadingInformation = new System.Windows.Forms.Label();
+            this.lblSubmittingInformation = new System.Windows.Forms.Label();
             this.lblAssetPhoto3 = new System.Windows.Forms.Label();
             this.lblAssetPhoto2 = new System.Windows.Forms.Label();
             this.lblAssetPhoto1 = new System.Windows.Forms.Label();
@@ -42,14 +44,20 @@
             this.lblOwnerPhoto = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.btnBack = new System.Windows.Forms.Button();
-            this.btnCreateReport = new System.Windows.Forms.Button();
+            this.btnReport = new System.Windows.Forms.Button();
             this.btnSubmit = new System.Windows.Forms.Button();
-            this.lblLoginID = new System.Windows.Forms.Label();
+            this.lblLoginUserName = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
-            this.lblLoadingInformation = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.imgCapture5 = new System.Windows.Forms.PictureBox();
+            this.imgCapture4 = new System.Windows.Forms.PictureBox();
+            this.imgCapture3 = new System.Windows.Forms.PictureBox();
+            this.imgCapture2 = new System.Windows.Forms.PictureBox();
+            this.imgCapture1 = new System.Windows.Forms.PictureBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.txtValidUntil = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.txtTakeOutNote = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -59,30 +67,24 @@
             this.label9 = new System.Windows.Forms.Label();
             this.txtDescription = new System.Windows.Forms.TextBox();
             this.grpBoxReportedInfo = new System.Windows.Forms.GroupBox();
+            this.txtReportedNote = new System.Windows.Forms.TextBox();
+            this.picPersonBroughtOut = new System.Windows.Forms.PictureBox();
             this.label5 = new System.Windows.Forms.Label();
             this.txtOwnerDescription = new System.Windows.Forms.TextBox();
             this.btnVerifyAsset = new System.Windows.Forms.Button();
             this.txtOwnerPosition = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.picOwner = new System.Windows.Forms.PictureBox();
             this.txtOwnerName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.lblSubmittingInformation = new System.Windows.Forms.Label();
-            this.imgCapture5 = new System.Windows.Forms.PictureBox();
-            this.imgCapture4 = new System.Windows.Forms.PictureBox();
-            this.imgCapture3 = new System.Windows.Forms.PictureBox();
-            this.imgCapture2 = new System.Windows.Forms.PictureBox();
-            this.imgCapture1 = new System.Windows.Forms.PictureBox();
-            this.picPersonBroughtOut = new System.Windows.Forms.PictureBox();
-            this.picOwner = new System.Windows.Forms.PictureBox();
-            this.txtReportedNote = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.grpBoxReportedInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgCapture5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgCapture4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgCapture3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgCapture2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgCapture1)).BeginInit();
+            this.groupBox2.SuspendLayout();
+            this.grpBoxReportedInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picPersonBroughtOut)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picOwner)).BeginInit();
             this.SuspendLayout();
@@ -92,10 +94,11 @@
             this.lblCurrentDateTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCurrentDateTime.BackColor = System.Drawing.SystemColors.Control;
             this.lblCurrentDateTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCurrentDateTime.Location = new System.Drawing.Point(822, 723);
+            this.lblCurrentDateTime.Location = new System.Drawing.Point(834, 723);
             this.lblCurrentDateTime.Margin = new System.Windows.Forms.Padding(0);
             this.lblCurrentDateTime.Name = "lblCurrentDateTime";
-            this.lblCurrentDateTime.Size = new System.Drawing.Size(162, 26);
+            this.lblCurrentDateTime.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.lblCurrentDateTime.Size = new System.Drawing.Size(150, 26);
             this.lblCurrentDateTime.TabIndex = 42;
             // 
             // VerifyTimer
@@ -125,9 +128,9 @@
             this.groupBox1.Controls.Add(this.lblOwnerPhoto);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.btnBack);
-            this.groupBox1.Controls.Add(this.btnCreateReport);
+            this.groupBox1.Controls.Add(this.btnReport);
             this.groupBox1.Controls.Add(this.btnSubmit);
-            this.groupBox1.Controls.Add(this.lblLoginID);
+            this.groupBox1.Controls.Add(this.lblLoginUserName);
             this.groupBox1.Controls.Add(this.label14);
             this.groupBox1.Controls.Add(this.label15);
             this.groupBox1.Controls.Add(this.label6);
@@ -145,6 +148,32 @@
             this.groupBox1.Size = new System.Drawing.Size(987, 750);
             this.groupBox1.TabIndex = 43;
             this.groupBox1.TabStop = false;
+            // 
+            // lblLoadingInformation
+            // 
+            this.lblLoadingInformation.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblLoadingInformation.AutoSize = true;
+            this.lblLoadingInformation.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLoadingInformation.ForeColor = System.Drawing.Color.Green;
+            this.lblLoadingInformation.Location = new System.Drawing.Point(36, 207);
+            this.lblLoadingInformation.Name = "lblLoadingInformation";
+            this.lblLoadingInformation.Size = new System.Drawing.Size(608, 42);
+            this.lblLoadingInformation.TabIndex = 46;
+            this.lblLoadingInformation.Text = "Getting Information. Please wait...";
+            this.lblLoadingInformation.Visible = false;
+            // 
+            // lblSubmittingInformation
+            // 
+            this.lblSubmittingInformation.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblSubmittingInformation.AutoSize = true;
+            this.lblSubmittingInformation.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSubmittingInformation.ForeColor = System.Drawing.Color.Green;
+            this.lblSubmittingInformation.Location = new System.Drawing.Point(671, 267);
+            this.lblSubmittingInformation.Name = "lblSubmittingInformation";
+            this.lblSubmittingInformation.Size = new System.Drawing.Size(288, 18);
+            this.lblSubmittingInformation.TabIndex = 76;
+            this.lblSubmittingInformation.Text = "Submitting Information. Please wait...";
+            this.lblSubmittingInformation.Visible = false;
             // 
             // lblAssetPhoto3
             // 
@@ -229,25 +258,25 @@
             this.btnBack.UseVisualStyleBackColor = false;
             this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
             // 
-            // btnCreateReport
+            // btnReport
             // 
-            this.btnCreateReport.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnCreateReport.BackColor = System.Drawing.Color.Orange;
-            this.btnCreateReport.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCreateReport.Location = new System.Drawing.Point(816, 279);
-            this.btnCreateReport.Name = "btnCreateReport";
-            this.btnCreateReport.Size = new System.Drawing.Size(145, 35);
-            this.btnCreateReport.TabIndex = 67;
-            this.btnCreateReport.Text = "Create Report";
-            this.btnCreateReport.UseVisualStyleBackColor = false;
-            this.btnCreateReport.Click += new System.EventHandler(this.btnCreateReport_Click);
+            this.btnReport.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnReport.BackColor = System.Drawing.Color.Orange;
+            this.btnReport.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReport.Location = new System.Drawing.Point(816, 290);
+            this.btnReport.Name = "btnReport";
+            this.btnReport.Size = new System.Drawing.Size(145, 35);
+            this.btnReport.TabIndex = 67;
+            this.btnReport.Text = "Report";
+            this.btnReport.UseVisualStyleBackColor = false;
+            this.btnReport.Click += new System.EventHandler(this.btnCreateReport_Click);
             // 
             // btnSubmit
             // 
             this.btnSubmit.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.btnSubmit.BackColor = System.Drawing.Color.Orange;
             this.btnSubmit.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSubmit.Location = new System.Drawing.Point(669, 279);
+            this.btnSubmit.Location = new System.Drawing.Point(669, 290);
             this.btnSubmit.Name = "btnSubmit";
             this.btnSubmit.Size = new System.Drawing.Size(145, 35);
             this.btnSubmit.TabIndex = 66;
@@ -255,16 +284,16 @@
             this.btnSubmit.UseVisualStyleBackColor = false;
             this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
             // 
-            // lblLoginID
+            // lblLoginUserName
             // 
-            this.lblLoginID.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblLoginID.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.lblLoginID.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblLoginID.Location = new System.Drawing.Point(5, 736);
-            this.lblLoginID.Margin = new System.Windows.Forms.Padding(0);
-            this.lblLoginID.Name = "lblLoginID";
-            this.lblLoginID.Size = new System.Drawing.Size(140, 14);
-            this.lblLoginID.TabIndex = 58;
+            this.lblLoginUserName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblLoginUserName.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.lblLoginUserName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLoginUserName.Location = new System.Drawing.Point(5, 736);
+            this.lblLoginUserName.Margin = new System.Windows.Forms.Padding(0);
+            this.lblLoginUserName.Name = "lblLoginUserName";
+            this.lblLoginUserName.Size = new System.Drawing.Size(140, 14);
+            this.lblLoginUserName.TabIndex = 58;
             // 
             // label14
             // 
@@ -290,19 +319,6 @@
             this.label15.Text = "Asset Pictures";
             this.label15.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // lblLoadingInformation
-            // 
-            this.lblLoadingInformation.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.lblLoadingInformation.AutoSize = true;
-            this.lblLoadingInformation.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblLoadingInformation.ForeColor = System.Drawing.Color.Green;
-            this.lblLoadingInformation.Location = new System.Drawing.Point(36, 207);
-            this.lblLoadingInformation.Name = "lblLoadingInformation";
-            this.lblLoadingInformation.Size = new System.Drawing.Size(608, 42);
-            this.lblLoadingInformation.TabIndex = 46;
-            this.lblLoadingInformation.Text = "Getting Information. Please wait...";
-            this.lblLoadingInformation.Visible = false;
-            // 
             // label6
             // 
             this.label6.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -313,9 +329,72 @@
             this.label6.Size = new System.Drawing.Size(622, 10);
             this.label6.TabIndex = 46;
             // 
+            // imgCapture5
+            // 
+            this.imgCapture5.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.imgCapture5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.imgCapture5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.imgCapture5.Location = new System.Drawing.Point(651, 410);
+            this.imgCapture5.Name = "imgCapture5";
+            this.imgCapture5.Size = new System.Drawing.Size(310, 310);
+            this.imgCapture5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.imgCapture5.TabIndex = 44;
+            this.imgCapture5.TabStop = false;
+            // 
+            // imgCapture4
+            // 
+            this.imgCapture4.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.imgCapture4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.imgCapture4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.imgCapture4.Location = new System.Drawing.Point(340, 410);
+            this.imgCapture4.Name = "imgCapture4";
+            this.imgCapture4.Size = new System.Drawing.Size(310, 310);
+            this.imgCapture4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.imgCapture4.TabIndex = 43;
+            this.imgCapture4.TabStop = false;
+            // 
+            // imgCapture3
+            // 
+            this.imgCapture3.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.imgCapture3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.imgCapture3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.imgCapture3.Location = new System.Drawing.Point(29, 410);
+            this.imgCapture3.Name = "imgCapture3";
+            this.imgCapture3.Size = new System.Drawing.Size(310, 310);
+            this.imgCapture3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.imgCapture3.TabIndex = 42;
+            this.imgCapture3.TabStop = false;
+            // 
+            // imgCapture2
+            // 
+            this.imgCapture2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.imgCapture2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.imgCapture2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.imgCapture2.Location = new System.Drawing.Point(340, 46);
+            this.imgCapture2.Name = "imgCapture2";
+            this.imgCapture2.Size = new System.Drawing.Size(310, 310);
+            this.imgCapture2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.imgCapture2.TabIndex = 41;
+            this.imgCapture2.TabStop = false;
+            // 
+            // imgCapture1
+            // 
+            this.imgCapture1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.imgCapture1.BackColor = System.Drawing.SystemColors.Control;
+            this.imgCapture1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.imgCapture1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.imgCapture1.Location = new System.Drawing.Point(29, 46);
+            this.imgCapture1.Name = "imgCapture1";
+            this.imgCapture1.Size = new System.Drawing.Size(310, 310);
+            this.imgCapture1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.imgCapture1.TabIndex = 40;
+            this.imgCapture1.TabStop = false;
+            // 
             // groupBox2
             // 
             this.groupBox2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.groupBox2.Controls.Add(this.txtValidUntil);
+            this.groupBox2.Controls.Add(this.label10);
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.txtTakeOutNote);
             this.groupBox2.Controls.Add(this.label4);
@@ -327,17 +406,42 @@
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.Location = new System.Drawing.Point(669, 20);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(292, 226);
+            this.groupBox2.Size = new System.Drawing.Size(292, 244);
             this.groupBox2.TabIndex = 59;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Asset Information";
+            // 
+            // txtValidUntil
+            // 
+            this.txtValidUntil.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.txtValidUntil.BackColor = System.Drawing.Color.White;
+            this.txtValidUntil.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtValidUntil.Location = new System.Drawing.Point(155, 41);
+            this.txtValidUntil.MaxLength = 45;
+            this.txtValidUntil.Name = "txtValidUntil";
+            this.txtValidUntil.ReadOnly = true;
+            this.txtValidUntil.Size = new System.Drawing.Size(120, 22);
+            this.txtValidUntil.TabIndex = 27;
+            this.txtValidUntil.TabStop = false;
+            // 
+            // label10
+            // 
+            this.label10.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Location = new System.Drawing.Point(153, 20);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(80, 20);
+            this.label10.TabIndex = 26;
+            this.label10.Text = "Valid Until";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // label7
             // 
             this.label7.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(13, 74);
+            this.label7.Location = new System.Drawing.Point(13, 97);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(89, 20);
             this.label7.TabIndex = 25;
@@ -348,7 +452,7 @@
             this.txtTakeOutNote.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtTakeOutNote.BackColor = System.Drawing.Color.White;
             this.txtTakeOutNote.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtTakeOutNote.Location = new System.Drawing.Point(17, 165);
+            this.txtTakeOutNote.Location = new System.Drawing.Point(17, 188);
             this.txtTakeOutNote.MaxLength = 100;
             this.txtTakeOutNote.Multiline = true;
             this.txtTakeOutNote.Name = "txtTakeOutNote";
@@ -362,7 +466,7 @@
             this.label4.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(15, 144);
+            this.label4.Location = new System.Drawing.Point(15, 167);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(112, 20);
             this.label4.TabIndex = 23;
@@ -373,7 +477,7 @@
             this.txtAssetName.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtAssetName.BackColor = System.Drawing.Color.White;
             this.txtAssetName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtAssetName.Location = new System.Drawing.Point(248, 140);
+            this.txtAssetName.Location = new System.Drawing.Point(248, 163);
             this.txtAssetName.MaxLength = 45;
             this.txtAssetName.Name = "txtAssetName";
             this.txtAssetName.ReadOnly = true;
@@ -387,7 +491,7 @@
             this.label8.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(152, 144);
+            this.label8.Location = new System.Drawing.Point(152, 167);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(96, 20);
             this.label8.TabIndex = 13;
@@ -400,7 +504,7 @@
             this.txtRFIDTag.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtRFIDTag.BackColor = System.Drawing.Color.White;
             this.txtRFIDTag.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtRFIDTag.Location = new System.Drawing.Point(17, 49);
+            this.txtRFIDTag.Location = new System.Drawing.Point(17, 72);
             this.txtRFIDTag.MaxLength = 45;
             this.txtRFIDTag.Name = "txtRFIDTag";
             this.txtRFIDTag.ReadOnly = true;
@@ -413,7 +517,7 @@
             this.label9.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(13, 28);
+            this.label9.Location = new System.Drawing.Point(13, 51);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(79, 20);
             this.label9.TabIndex = 10;
@@ -425,7 +529,7 @@
             this.txtDescription.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtDescription.BackColor = System.Drawing.Color.White;
             this.txtDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDescription.Location = new System.Drawing.Point(16, 95);
+            this.txtDescription.Location = new System.Drawing.Point(16, 118);
             this.txtDescription.MaxLength = 45;
             this.txtDescription.Multiline = true;
             this.txtDescription.Name = "txtDescription";
@@ -455,6 +559,33 @@
             this.grpBoxReportedInfo.TabStop = false;
             this.grpBoxReportedInfo.Text = "Reported Information";
             this.grpBoxReportedInfo.Visible = false;
+            // 
+            // txtReportedNote
+            // 
+            this.txtReportedNote.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.txtReportedNote.BackColor = System.Drawing.Color.White;
+            this.txtReportedNote.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtReportedNote.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtReportedNote.Location = new System.Drawing.Point(18, 7);
+            this.txtReportedNote.Multiline = true;
+            this.txtReportedNote.Name = "txtReportedNote";
+            this.txtReportedNote.ReadOnly = true;
+            this.txtReportedNote.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
+            this.txtReportedNote.Size = new System.Drawing.Size(24, 10);
+            this.txtReportedNote.TabIndex = 49;
+            this.txtReportedNote.TabStop = false;
+            this.txtReportedNote.Visible = false;
+            // 
+            // picPersonBroughtOut
+            // 
+            this.picPersonBroughtOut.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.picPersonBroughtOut.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picPersonBroughtOut.Location = new System.Drawing.Point(-100, -21);
+            this.picPersonBroughtOut.Name = "picPersonBroughtOut";
+            this.picPersonBroughtOut.Size = new System.Drawing.Size(85, 85);
+            this.picPersonBroughtOut.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picPersonBroughtOut.TabIndex = 48;
+            this.picPersonBroughtOut.TabStop = false;
             // 
             // label5
             // 
@@ -518,6 +649,17 @@
             this.label2.Text = "Position";
             this.label2.Visible = false;
             // 
+            // picOwner
+            // 
+            this.picOwner.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picOwner.Location = new System.Drawing.Point(274, 94);
+            this.picOwner.Name = "picOwner";
+            this.picOwner.Size = new System.Drawing.Size(18, 22);
+            this.picOwner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picOwner.TabIndex = 42;
+            this.picOwner.TabStop = false;
+            this.picOwner.Visible = false;
+            // 
             // txtOwnerName
             // 
             this.txtOwnerName.BackColor = System.Drawing.Color.White;
@@ -543,118 +685,6 @@
             this.label1.Text = "Name";
             this.label1.Visible = false;
             // 
-            // lblSubmittingInformation
-            // 
-            this.lblSubmittingInformation.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.lblSubmittingInformation.AutoSize = true;
-            this.lblSubmittingInformation.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSubmittingInformation.ForeColor = System.Drawing.Color.Green;
-            this.lblSubmittingInformation.Location = new System.Drawing.Point(671, 249);
-            this.lblSubmittingInformation.Name = "lblSubmittingInformation";
-            this.lblSubmittingInformation.Size = new System.Drawing.Size(288, 18);
-            this.lblSubmittingInformation.TabIndex = 76;
-            this.lblSubmittingInformation.Text = "Submitting Information. Please wait...";
-            this.lblSubmittingInformation.Visible = false;
-            // 
-            // imgCapture5
-            // 
-            this.imgCapture5.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.imgCapture5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.imgCapture5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.imgCapture5.Location = new System.Drawing.Point(651, 410);
-            this.imgCapture5.Name = "imgCapture5";
-            this.imgCapture5.Size = new System.Drawing.Size(310, 310);
-            this.imgCapture5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.imgCapture5.TabIndex = 44;
-            this.imgCapture5.TabStop = false;
-            // 
-            // imgCapture4
-            // 
-            this.imgCapture4.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.imgCapture4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.imgCapture4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.imgCapture4.Location = new System.Drawing.Point(340, 410);
-            this.imgCapture4.Name = "imgCapture4";
-            this.imgCapture4.Size = new System.Drawing.Size(310, 310);
-            this.imgCapture4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.imgCapture4.TabIndex = 43;
-            this.imgCapture4.TabStop = false;
-            // 
-            // imgCapture3
-            // 
-            this.imgCapture3.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.imgCapture3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.imgCapture3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.imgCapture3.Location = new System.Drawing.Point(29, 410);
-            this.imgCapture3.Name = "imgCapture3";
-            this.imgCapture3.Size = new System.Drawing.Size(310, 310);
-            this.imgCapture3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.imgCapture3.TabIndex = 42;
-            this.imgCapture3.TabStop = false;
-            // 
-            // imgCapture2
-            // 
-            this.imgCapture2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.imgCapture2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.imgCapture2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.imgCapture2.Location = new System.Drawing.Point(340, 46);
-            this.imgCapture2.Name = "imgCapture2";
-            this.imgCapture2.Size = new System.Drawing.Size(310, 310);
-            this.imgCapture2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.imgCapture2.TabIndex = 41;
-            this.imgCapture2.TabStop = false;
-            // 
-            // imgCapture1
-            // 
-            this.imgCapture1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.imgCapture1.BackColor = System.Drawing.SystemColors.Control;
-            this.imgCapture1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.imgCapture1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.imgCapture1.Location = new System.Drawing.Point(29, 46);
-            this.imgCapture1.Name = "imgCapture1";
-            this.imgCapture1.Size = new System.Drawing.Size(310, 310);
-            this.imgCapture1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.imgCapture1.TabIndex = 40;
-            this.imgCapture1.TabStop = false;
-            // 
-            // picPersonBroughtOut
-            // 
-            this.picPersonBroughtOut.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.picPersonBroughtOut.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picPersonBroughtOut.Location = new System.Drawing.Point(-100, -21);
-            this.picPersonBroughtOut.Name = "picPersonBroughtOut";
-            this.picPersonBroughtOut.Size = new System.Drawing.Size(85, 85);
-            this.picPersonBroughtOut.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picPersonBroughtOut.TabIndex = 48;
-            this.picPersonBroughtOut.TabStop = false;
-            // 
-            // picOwner
-            // 
-            this.picOwner.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picOwner.Location = new System.Drawing.Point(274, 94);
-            this.picOwner.Name = "picOwner";
-            this.picOwner.Size = new System.Drawing.Size(18, 22);
-            this.picOwner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picOwner.TabIndex = 42;
-            this.picOwner.TabStop = false;
-            this.picOwner.Visible = false;
-            // 
-            // txtReportedNote
-            // 
-            this.txtReportedNote.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.txtReportedNote.BackColor = System.Drawing.Color.White;
-            this.txtReportedNote.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtReportedNote.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtReportedNote.Location = new System.Drawing.Point(18, 7);
-            this.txtReportedNote.Multiline = true;
-            this.txtReportedNote.Name = "txtReportedNote";
-            this.txtReportedNote.ReadOnly = true;
-            this.txtReportedNote.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
-            this.txtReportedNote.Size = new System.Drawing.Size(24, 10);
-            this.txtReportedNote.TabIndex = 49;
-            this.txtReportedNote.TabStop = false;
-            this.txtReportedNote.Visible = false;
-            // 
             // Verification
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -674,15 +704,15 @@
             this.Shown += new System.EventHandler(this.Verification_Shown);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.grpBoxReportedInfo.ResumeLayout(false);
-            this.grpBoxReportedInfo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgCapture5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgCapture4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgCapture3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgCapture2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgCapture1)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.grpBoxReportedInfo.ResumeLayout(false);
+            this.grpBoxReportedInfo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picPersonBroughtOut)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picOwner)).EndInit();
             this.ResumeLayout(false);
@@ -715,7 +745,7 @@
         private System.Windows.Forms.PictureBox imgCapture1;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Label lblLoginID;
+        private System.Windows.Forms.Label lblLoginUserName;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txtDescription;
@@ -733,10 +763,12 @@
         private System.Windows.Forms.Label lblAssetPhoto3;
         private System.Windows.Forms.Label lblAssetPhoto2;
         private System.Windows.Forms.Label lblAssetPhoto1;
-        private System.Windows.Forms.Button btnCreateReport;
+        private System.Windows.Forms.Button btnReport;
         private System.Windows.Forms.Button btnSubmit;
         private System.Windows.Forms.Label lblSubmittingInformation;
         private System.Windows.Forms.TextBox txtReportedNote;
+        private System.Windows.Forms.TextBox txtValidUntil;
+        private System.Windows.Forms.Label label10;
 
 
     }

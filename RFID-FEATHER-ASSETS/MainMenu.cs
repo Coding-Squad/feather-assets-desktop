@@ -79,5 +79,12 @@ namespace RFID_FEATHER_ASSETS
             LoginActivity LoginForm = new LoginActivity();
             LoginForm.Show();
         }
+
+        private void btnTransactionHistory_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            TransactionHistory transactionHistory = new TransactionHistory();
+            transactionHistory.Show();
+        }
     }
 }

@@ -15,6 +15,8 @@ namespace RFID_FEATHER_ASSETS
     public partial class Verification : Form
     {
         //string connectionString = "server=128.199.83.107;port=3306;uid=root;pwd=aws123;database=feather_assets;";
+        public static int AssetIdValue = 0;
+        public int companyId;
 
         private Reader.ReaderMethod reader;
         private ReaderSetting m_curSetting = new ReaderSetting();
@@ -28,6 +30,8 @@ namespace RFID_FEATHER_ASSETS
         string tokenvalue;
         bool IsCallingMainMenu = false;
         string roleValue;
+        int userId;
+        //int companyId;
 
         public Verification()//string tokenvaluesource, string roleSource) //(string tokenvaluesource, string portnamesource, string roleSource)
         {
@@ -52,7 +56,9 @@ namespace RFID_FEATHER_ASSETS
                     tokenvalue = (string)(key.GetValue("authenticationToken"));
                     roleValue = (string)(key.GetValue("roles"));
                     portname = (string)(key.GetValue("DefaultPortName"));
-                    lblLoginID.Text = "Login ID: " + (string)(key.GetValue("LoginId")).ToString();//.ToUpper();
+                    companyId = (int)(key.GetValue("companyId"));
+                    userId = (int)(key.GetValue("UserId"));
+                    lblLoginUserName.Text = "Username: " + (string)(key.GetValue("UserName")).ToString();//.ToUpper();
                     key.Close();
 
                     if (roleValue == "ROLE_GUARD")
@@ -162,7 +168,7 @@ namespace RFID_FEATHER_ASSETS
 
                 VerifyRequest verifyRequest = new VerifyRequest();
                 verifyRequest.tag = txtRFIDTag.Text;
-                verifyRequest.companyId = 1;
+                verifyRequest.companyId = companyId;//1;
                 verifyRequest.tagType = 1;
 
                 //initialize web service
@@ -191,6 +197,7 @@ namespace RFID_FEATHER_ASSETS
 
                     if (verifyResult.result == "OK")
                     {
+                        AssetIdValue = verifyResult.assetId;
                         //txtAssetName.Text = verifyResult.name;
                         txtDescription.Text = verifyResult.description;
                         //if (Boolean.Parse(verifyResult.takOutAllowed.ToString()))
@@ -283,6 +290,39 @@ namespace RFID_FEATHER_ASSETS
                         //ClearTimer.Stop();
                         //ClearTimer.Start();
 
+                        txtValidUntil.Text = verifyResult.validUntil != DateTime.MinValue ? verifyResult.validUntil.ToString("g") : "No Expiration";
+
+                        //Validate Asset Validity Expiration
+                        if (verifyResult.validUntil < Convert.ToDateTime(DateTime.Now.ToString("g")) && verifyResult.validUntil != DateTime.MinValue)
+                        {
+                            if (roleValue == "ROLE_ADMIN")
+                            {
+                                DialogResult result = MessageBox.Show("Asset is already expired." + "\n" + "Do you want to renew the asset?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                                if (result == DialogResult.Yes)
+                                {
+                                    IsCallingMainMenu = true;
+                                    reader.CloseCom();
+
+                                    using (AssetRenewal RenewalForm = new AssetRenewal())
+                                    {
+                                        if (RenewalForm.ShowDialog() == DialogResult.OK)
+                                        {
+                                            btnSubmit.Text = "Renewed";
+                                        }
+
+                                        IsCallingMainMenu = false;
+                                        ReaderMethodProc();
+                                        VerifyAssetProc(); 
+                                    }
+                                }
+                            }
+                            else if (roleValue == "ROLE_GUARD")
+                            {
+                                MessageBox.Show("Asset is already expired." + "\n" + "Please go to admin for renewal.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                            }
+                        }
+
+                        btnBack.Focus();
                         return;
                     }
                     else
@@ -305,69 +345,6 @@ namespace RFID_FEATHER_ASSETS
 
                 ClearFields();
 
-                #region old connection
-                /*MySqlConnection con = new MySqlConnection(connectionString);
-                con.Open();
-                MySqlCommand cmd = new MySqlCommand("select * from asset where rfid_tag='" + txtRFIDTag.Text + "'", con);
-                MySqlDataReader rd = cmd.ExecuteReader();
-                */
-            
-
-                /*if (rd.Read())
-                {
-                    txtAssetName.Text = (rd["name"].ToString());
-                    txtOwnerName.Text = (rd["description"].ToString());
-                    ////txtTakeOutAvailability.Text = (rd["take_out_allowed"].ToString());
-                    if (Boolean.Parse(rd["take_out_allowed"].ToString()))
-                    {
-                        txtTakeOutAvailability.Text = "Allowed to take-out.";
-                    }
-                    else
-                    {
-                        txtTakeOutAvailability.Text = "Not allowed to take-out.";
-                    }
-                    txtTakeOutNote.Text = (rd["take_out_info"].ToString());
-
-                    if (File.Exists(rd["images"].ToString()))
-                    {
-                        picOwner.Image = Image.FromFile(rd["images"].ToString());
-                    }
-                    else 
-                    {
-                        MessageBox.Show("Image not found for this path: " + rd["images"].ToString(), "Asset Verification", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        btnVerifyAsset.Focus();
-                        rd.Close();
-                        return;
-                    }
-
-                    VerifyTimer.Stop();
-                    VerifyTimer.Start();
-
-                    ClearTimer.Stop();
-                    ClearTimer.Start();
-
-                    rd.Close();
-                    return;
-                }*/
-                /*else
-                {
-                    rd.Close();
-                    DialogResult result = MessageBox.Show("RFID Tag not found. Do you want to register the asset?", "Asset Verification", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2);
-                    if (result == DialogResult.Yes)
-                    {
-                        this.Hide();
-                        reader.CloseCom();
-                        AssetRegistration AssetForm = new AssetRegistration(portname);
-                        AssetForm.Show();
-                    }
-                    else
-                    {
-                        btnVerifyAsset.Focus();
-                        return;
-                    }
-                
-                }*/
-                #endregion
             }
             catch (Exception ex)
             {
@@ -586,6 +563,7 @@ namespace RFID_FEATHER_ASSETS
             imgCapture4.Image = null;
             imgCapture5.Image = null;
 
+            txtValidUntil.Text = string.Empty;
             txtRFIDTag.Text = string.Empty;
             txtAssetName.Text = string.Empty;
             txtDescription.Text = string.Empty;
@@ -604,6 +582,8 @@ namespace RFID_FEATHER_ASSETS
             lblAssetPhoto2.Visible = true;
             lblAssetPhoto3.Visible = true;
 
+            btnSubmit.Text = "Submit";
+            btnReport.Text = "Report";
             this.Refresh();
         }
 
@@ -780,7 +760,7 @@ namespace RFID_FEATHER_ASSETS
         private void CurrentTimer_Tick(object sender, EventArgs e)
         {
             //Display the current date and time
-            lblCurrentDateTime.Text = DateTime.Now.ToString("h:mm:ss tt") + "\n" + DateTime.Now.ToString("dddd, MMMM dd, yyyy"); //DateTime.Now.ToString("dddd, MMMM dd, yyyy h:mm:ss tt");
+            lblCurrentDateTime.Text = DateTime.Now.ToString("h:mm:sstt") + "\n" + DateTime.Now.ToString("dddd, MMMM dd, yyyy"); //DateTime.Now.ToString("dddd, MMMM dd, yyyy h:mm:ss tt");
         }
 
         private void VerifyTimer_Tick(object sender, EventArgs e)
@@ -801,25 +781,34 @@ namespace RFID_FEATHER_ASSETS
         {
             try
             {
-                if (btnCreateReport.Text.Trim().ToUpper() == "REPORTCREATED")
-                {
-                    MessageBox.Show("Record is already reported.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                    btnCreateReport.Focus();
-                    return;
-                }
+                ValidationMessage();
+                if (!IsCallingMainMenu) return;
+
+                IsCallingMainMenu = true;
+                reader.CloseCom();
 
                 using (ReportCreation ReportCreationForm = new ReportCreation())
                 {
                     if (ReportCreationForm.ShowDialog() == DialogResult.OK)
                     {
                         //btnSave.Visible = false;
-                        btnCreateReport.Text = "Report Created";//btnCreateReport.Visible = false;
+                        btnReport.Text = "Reported";//btnCreateReport.Visible = false;
                         //grpBoxReportedInfo.Visible = true;
 
                         //// Read the contents of PortSelectionForm's.
                         //picPersonBroughtOut.Image = ReportCreationForm.PersonPhoto;
                         //txtReportedNote.Text = " " + ReportCreationForm.ExplanationNote;
                     }
+                    //else
+                    //{
+                    //    IsCallingMainMenu = false;
+                    //    LoopVerification();
+                    //}
+
+                    IsCallingMainMenu = false;
+                    ReaderMethodProc();
+                    VerifyAssetProc();
+                    //ReportCreationForm.Dispose();   
                 }
             }
             catch (Exception ex)
@@ -832,79 +821,113 @@ namespace RFID_FEATHER_ASSETS
         {
             try
             {
-                if (btnSubmit.Text.Trim().ToUpper() == "SUBMITTED")
+                if (btnSubmit.Text.Trim().ToUpper() == "SUBMITTED" || btnSubmit.Text.Trim().ToUpper() == "RENEWED" || btnReport.Text.Trim().ToUpper() == "REPORTED" || txtRFIDTag.Text.Length == 0)
                 {
-                    MessageBox.Show("Record is already submitted.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                    btnSubmit.Focus();
+                    ValidationMessage();
                     return;
                 }
 
-                if (txtRFIDTag.Text.Length == 0 /*|| txtDescription.Text.Length == 0 || txtTakeOutNote.Text.Length == 0 || imgCapture1.Image == null*/)
+                IsCallingMainMenu = true;
+                reader.CloseCom();
+
+                //For Web Service
+                Transaction transactDet = new Transaction();
+
+                transactDet.companyId = companyId;//1;
+                //transactDet.readerId = 1;
+                transactDet.assetId = Verification.AssetIdValue;
+                //transactDet.notes = txtExplanationNotes.Text.Trim();
+                //transactDet.imageUrl = newImgFileNames;//txtCapturedImagePath.Text;//txtImagePath.Text;
+
+
+                RestClient client = new RestClient("http://52.163.93.95:8080/FeatherAssets/");//("http://feather-assets.herokuapp.com/");
+                RestRequest transact = new RestRequest("/api/asset/transact", Method.POST);
+
+                var authToken = tokenvalue;
+                transact.AddHeader("X-Auth-Token", authToken);
+                transact.AddHeader("Content-Type", "application/json; charset=utf-8");
+                transact.RequestFormat = DataFormat.Json;
+                transact.AddBody(transactDet);
+
+                lblSubmittingInformation.Visible = true;
+                this.Refresh();
+
+
+                IRestResponse response = client.Execute(transact);
+                lblSubmittingInformation.Visible = false;
+
+                var content = response.Content;
+
+                if (response.StatusCode == HttpStatusCode.OK)//if (response.IsSuccessStatusCode)
                 {
-                    MessageBox.Show("RFID Tag is required.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                    btnSubmit.Focus();
+                    JsonDeserializer deserial = new JsonDeserializer();
+                    RestResult restResult = deserial.Deserialize<RestResult>(response);
+
+                    if (restResult.result == "OK")
+                    {
+                        btnSubmit.Text = "SUBMITTED";
+                        MessageBox.Show("Record successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        IsCallingMainMenu = false;
+                        ReaderMethodProc();
+                        VerifyAssetProc();
+                    }
+                    else
+                    {
+                        MessageBox.Show(restResult.result + " " + restResult.message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+
+                }
+                else
+                {
+                    MessageBox.Show("Error Code " +
+                    response.StatusCode /*+ " : Message - " + response.ErrorMessage*/);
                     return;
                 }
-                
-                ////For Web Service
-                //Asset asset = new Asset();
-
-                //asset.tag = txtRFIDTag.Text;
-                //asset.tagType = 1;
-                //asset.companyId = 1;
-                ////asset.ownerId = currentOwnerId;//oId;
-                ////asset.name = txtAssetName.Text;
-                //asset.description = txtDescription.Text;
-                //asset.takeOutInfo = txtTakeOutNote.Text;
-                ////asset.imageUrls = txtCapturedImagePath.Text;//txtImagePath.Text;
-
-                //RestClient client = new RestClient("http://52.163.93.95:8080/FeatherAssets/");//("http://feather-assets.herokuapp.com/");
-                //RestRequest register = new RestRequest("/api/asset/add", Method.POST);
-
-                //var authToken = tokenvalue;
-                //register.AddHeader("X-Auth-Token", authToken);
-                //register.AddHeader("Content-Type", "application/json; charset=utf-8");
-                //register.RequestFormat = DataFormat.Json;
-                //register.AddBody(asset);
-
-                //lblSubmittingInformation.Visible = true;
-                //this.Refresh();
-
-
-                //IRestResponse response = client.Execute(register);
-                //lblSubmittingInformation.Visible = false;
-
-                //var content = response.Content;
-
-                //if (response.StatusCode == HttpStatusCode.OK)//if (response.IsSuccessStatusCode)
-                //{
-                //    JsonDeserializer deserial = new JsonDeserializer();
-                //    RestResult restResult = deserial.Deserialize<RestResult>(response);
-
-                //    if (restResult.result == "OK")
-                //    {
-                //        MessageBox.Show("Record successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //        btnSubmit.Text = "Submitted";
-                //        //ClearFields();
-                //    }
-                //    else
-                //    {
-                //        MessageBox.Show(restResult.result + " " + restResult.message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //    }
-
-                //}
-                //else
-                //{
-                //    MessageBox.Show("Error Code " +
-                //    response.StatusCode /*+ " : Message - " + response.ErrorMessage*/);
-                //    return;
-                //}
 
             }
             catch (System.Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }  
+        }
+
+        private void ValidationMessage()
+        {
+            IsCallingMainMenu = true;
+            reader.CloseCom();
+
+            if (btnSubmit.Text.Trim().ToUpper() == "SUBMITTED")
+            {
+                MessageBox.Show("Record is already submitted.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                btnSubmit.Focus();
+                IsCallingMainMenu = false;
+            }
+
+            if (btnSubmit.Text.Trim().ToUpper() == "RENEWED")
+            {
+                MessageBox.Show("Asset is already renewed.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                btnSubmit.Focus();
+                IsCallingMainMenu = false;
+            }
+
+            if (btnReport.Text.Trim().ToUpper() == "REPORTED")
+            {
+                MessageBox.Show("Record is already reported.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                btnReport.Focus();
+                IsCallingMainMenu = false;
+            }
+
+            if (txtRFIDTag.Text.Length == 0)
+            {
+                MessageBox.Show("RFID Tag is required. Please scan...", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                btnSubmit.Focus();
+                IsCallingMainMenu = false;
+            }
+
+            ReaderMethodProc();
+            VerifyAssetProc();
+            //return;
         }
 
     }
@@ -918,11 +941,13 @@ namespace RFID_FEATHER_ASSETS
 
     public class VerifyResult
     {
+        public int assetId { get; set; }
         public string name {get; set;}
         public string description {get;set;}
         public string imageUrls {get;set;}
         public bool takOutAllowed {get;set;}
         public string takeOutInfo {get;set;}
+        public DateTime validUntil { get; set; }
         public string result {get;set;}
         public string message {get;set;}
         public OwnerList owner { get; set; }

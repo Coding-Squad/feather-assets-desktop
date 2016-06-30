@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -26,10 +27,15 @@ namespace RFID_FEATHER_ASSETS
         private FilterInfoCollection webcam;
         private VideoCaptureDevice cam;
         bool IsCameraConnected = false;
+        string newImgFileNames;
+        string ImgFileName;
+        int companyId;
 
         public ReportCreation()
         {
             InitializeComponent();
+
+            //label1.Text = Form1.SetValueForText1;
 
             GetAssetSystemInfo();
             InitializeCamera();
@@ -112,7 +118,8 @@ namespace RFID_FEATHER_ASSETS
                 if (key != null)
                 {
                     tokenvalue = (string)(key.GetValue("authenticationToken"));
-                    txtSaveImageDir.Text = (string)(key.GetValue("PersonImagePath"));
+                    //txtSaveImageDir.Text = (string)(key.GetValue("PersonImagePath"));
+                    companyId = (int)(key.GetValue("companyId"));
                     key.Close();
                 }
             }
@@ -132,66 +139,59 @@ namespace RFID_FEATHER_ASSETS
                     txtExplanationNotes.Focus();
                     return;
                 }
+               
+                //For Web Service
+                Transaction transactDet = new Transaction();
+
+                transactDet.companyId = companyId;//1;
+                //transactDet.readerId = 1;
+                transactDet.assetId = Verification.AssetIdValue;
+                transactDet.notes = txtExplanationNotes.Text.Trim();
+                transactDet.imageUrl = newImgFileNames;//txtCapturedImagePath.Text;//txtImagePath.Text;
+
+
+                RestClient client = new RestClient("http://52.163.93.95:8080/FeatherAssets/");//("http://feather-assets.herokuapp.com/");
+                RestRequest transact = new RestRequest("/api/asset/transact", Method.POST);
+
+                var authToken = tokenvalue;
+                transact.AddHeader("X-Auth-Token", authToken);
+                transact.AddHeader("Content-Type", "application/json; charset=utf-8");
+                transact.RequestFormat = DataFormat.Json;
+                transact.AddBody(transactDet);
+
+                lblSubmittingInformation.Visible = true;
+                this.Refresh();
+
+
+                IRestResponse response = client.Execute(transact);
+                lblSubmittingInformation.Visible = false;
+
+                var content = response.Content;
+
+                if (response.StatusCode == HttpStatusCode.OK)//if (response.IsSuccessStatusCode)
+                {
+                    JsonDeserializer deserial = new JsonDeserializer();
+                    RestResult restResult = deserial.Deserialize<RestResult>(response);
+
+                    if (restResult.result == "OK")
+                    {
+                        MessageBox.Show("Report successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        if (IsCameraConnected) cam.Stop();
+                        DialogResult = DialogResult.OK;
+                        this.Dispose(); //ClearFields();
+                    }
+                    else
+                    {
+                        MessageBox.Show(restResult.result + " " + restResult.message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+
+                }
                 else
                 {
-                    //PersonPhoto = imgCapture1.Image;
-                    //ExplanationNote = txtExplanationNote.Text;
-
-                    DialogResult = DialogResult.OK;
-                    //this.Dispose();
+                    MessageBox.Show("Error Code " +
+                    response.StatusCode /*+ " : Message - " + response.ErrorMessage*/);
+                    return;
                 }
-                   
-                ////For Web Service
-                //Asset asset = new Asset();
-
-                //asset.tag = txtRFIDTag.Text;
-                //asset.tagType = 1;
-                //asset.companyId = 1;
-                //asset.description = txtDescription.Text;
-                //asset.takeOutInfo = txtExplanationNote.Text;
-                //asset.imageUrls = txtCapturedImagePath.Text;//txtImagePath.Text;
-
-                //RestClient client = new RestClient("http://52.163.93.95:8080/FeatherAssets/");//("http://feather-assets.herokuapp.com/");
-                //RestRequest register = new RestRequest("/api/asset/add", Method.POST);
-
-                //var authToken = tokenvalue;
-                //register.AddHeader("X-Auth-Token", authToken);
-                //register.AddHeader("Content-Type", "application/json; charset=utf-8");
-                //register.RequestFormat = DataFormat.Json;
-                //register.AddBody(asset);
-
-                //lblSubmittingInformation.Visible = true;
-                //this.Refresh();
-
-
-                //IRestResponse response = client.Execute(register);
-                //lblSubmittingInformation.Visible = false;
-
-                //var content = response.Content;
-
-                //if (response.StatusCode == HttpStatusCode.OK)//if (response.IsSuccessStatusCode)
-                //{
-                //    JsonDeserializer deserial = new JsonDeserializer();
-                //    RestResult restResult = deserial.Deserialize<RestResult>(response);
-
-                //    if (restResult.result == "OK")
-                //    {
-                //        MessageBox.Show("Record successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                          //DialogResult = DialogResult.OK;
-                          //this.Dispose(); //ClearFields();
-                //    }
-                //    else
-                //    {
-                //        MessageBox.Show(restResult.result + " " + restResult.message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //    }
-
-                //}
-                //else
-                //{
-                //    MessageBox.Show("Error Code " +
-                //    response.StatusCode /*+ " : Message - " + response.ErrorMessage*/);
-                //    return;
-                //}
 
             }
             catch (System.Exception ex)
@@ -209,14 +209,14 @@ namespace RFID_FEATHER_ASSETS
         {
             try
             {
-                if (string.IsNullOrEmpty(txtSaveImageDir.Text))
+               /* if (string.IsNullOrEmpty(txtSaveImageDir.Text))
                 {
                     MessageBox.Show("Please select Image Path.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     btnBrowseImagePath.Focus();
                     return;
                 }
                 else
-                {
+                {*/
                     //btnGetRFIDTag.PerformClick();
                     //reader.CloseCom();
                     if (cam == null || btnCapturePhoto.Text == "Refresh Camera")
@@ -225,6 +225,12 @@ namespace RFID_FEATHER_ASSETS
                     }
                     else if (IsCameraConnected)
                     {
+                        if (imgCapture2.Image == null)
+                        {
+                            btnCapturePhoto.Text = "Processing. Please wait...";
+                            btnCapturePhoto.Refresh();
+                        }
+
                         //Assigned captured image in each picture box
                         if (imgCapture1.Image == null)
                         {
@@ -244,25 +250,67 @@ namespace RFID_FEATHER_ASSETS
                             return;
                         }
 
-                        //Saving for captured images
-                        string dirPath = txtSaveImageDir.Text.Trim() + @"\";//@"C:\Users\USER\Pictures\";
-                        string fileName = "Image";
-                        string[] files = Directory.GetFiles(dirPath);
-                        int count = files.Count(file => { return file.Contains(fileName); });
+                        SubmitImage();
 
-                        string newFileName = (count == 0) ? "ReportedImage.jpg" : String.Format("{0}{1}.jpg", fileName, count + 1);
+                        //if (string.IsNullOrEmpty(newImgFileNames))
+                        //    newImgFileNames = ImgFileName;
+                        //else
+                            newImgFileNames = newImgFileNames + "," + ImgFileName;
 
-                        cameraBox.Image.Save(dirPath + newFileName);
-                        txtCapturedImagePath.Text = txtCapturedImagePath.Text + "," + dirPath + newFileName;
+                        ////Saving for captured images
+                        //string dirPath = txtSaveImageDir.Text.Trim() + @"\";//@"C:\Users\USER\Pictures\";
+                        //string fileName = "Image";
+                        //string[] files = Directory.GetFiles(dirPath);
+                        //int count = files.Count(file => { return file.Contains(fileName); });
+
+                        //string newFileName = (count == 0) ? "ReportedImage.jpg" : String.Format("{0}{1}.jpg", fileName, count + 1);
+
+                        //cameraBox.Image.Save(dirPath + newFileName);
+                        //txtCapturedImagePath.Text = txtCapturedImagePath.Text + "," + dirPath + newFileName;
 
                         cam.Stop();
                         InitializeCamera();
                     }
                 }
-            }
+            //}
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void SubmitImage()
+        {
+            Bitmap Image = (Bitmap)cameraBox.Image;
+            Image.Save("img.jpg", ImageFormat.Jpeg);
+
+            RestClient client = new RestClient("http://52.163.93.95:8080/FeatherAssets/");
+            RestRequest upload = new RestRequest("/api/upload/image", Method.POST);
+
+            upload.AddHeader("X-Auth-Token", tokenvalue);
+            upload.AddHeader("Content-Type", "multipart/form-data");
+            upload.AlwaysMultipartFormData = true;
+            upload.AddFile("file", "img.jpg", "image/jpg");
+            upload.AddParameter("companyId", 1);
+            upload.AddParameter("type", "asset");
+
+
+            IRestResponse response = client.Execute(upload);
+
+            var content = response.Content;
+
+            if (response.StatusCode == HttpStatusCode.OK)//if (response.IsSuccessStatusCode)
+            {
+                JsonDeserializer deserial = new JsonDeserializer();
+                ImageResult imageResult = deserial.Deserialize<ImageResult>(response);
+
+                ImgFileName = imageResult.message;
+            }
+            else
+            {
+                MessageBox.Show("Error Code " +
+                response.StatusCode /*+ " : Message - " + response.ErrorMessage*/);
+                return;
             }
         }
 
@@ -291,28 +339,44 @@ namespace RFID_FEATHER_ASSETS
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            if (imgCapture1.Image != null || !string.IsNullOrEmpty(txtExplanationNotes.Text))
-            {
-                DialogResult result = MessageBox.Show("Are you sure you want to cancel the report creation?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
-                if (result == DialogResult.Yes)
+            try
+            { 
+                if (imgCapture1.Image != null || !string.IsNullOrEmpty(txtExplanationNotes.Text))
+                {
+                    DialogResult result = MessageBox.Show("Are you sure you want to cancel the report creation?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                    if (result == DialogResult.Yes)
+                    {
+                        if (IsCameraConnected) cam.Stop();
+                        DialogResult = DialogResult.Cancel;
+                        this.Dispose();
+                    }
+                    else
+                    {
+                        //btnGetRFIDTag.Focus();
+                        //this.Dispose();
+                        return;
+                    }
+                }
+                else
                 {
                     if (IsCameraConnected) cam.Stop();
-                    DialogResult = DialogResult.Cancel;
                     this.Dispose();
+                    //return;
                 }
-                //else
-                //{
-                //    //btnGetRFIDTag.Focus();
-                //    //this.Dispose();
-                //    return;
-                //}
             }
-            else
+            catch (Exception ex)
             {
-                if (IsCameraConnected) cam.Stop();
-                this.Dispose();
-                //return;
+                MessageBox.Show(ex.Message);
             }
         }
+    }
+
+    public class Transaction
+    {
+        public int companyId { get; set; }
+        public int readerId { get; set; }
+        public int assetId { get; set; }
+        public string notes { get; set; }
+        public string imageUrl { get; set; }
     }
 }
