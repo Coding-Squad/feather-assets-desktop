@@ -760,7 +760,7 @@ namespace RFID_FEATHER_ASSETS
         private void CurrentTimer_Tick(object sender, EventArgs e)
         {
             //Display the current date and time
-            lblCurrentDateTime.Text = DateTime.Now.ToString("h:mm:sstt") + "\n" + DateTime.Now.ToString("dddd, MMMM dd, yyyy"); //DateTime.Now.ToString("dddd, MMMM dd, yyyy h:mm:ss tt");
+            lblCurrentDateTime.Text = DateTime.Now.ToString("h:mm:ss tt") + "\n " + DateTime.Now.ToString("MM/dd/yyyy");//DateTime.Now.ToString("dddd, MMMM dd, yyyy");
         }
 
         private void VerifyTimer_Tick(object sender, EventArgs e)

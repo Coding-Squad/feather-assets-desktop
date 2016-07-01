@@ -155,11 +155,10 @@
             this.lblCurrentDateTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCurrentDateTime.BackColor = System.Drawing.Color.WhiteSmoke;
             this.lblCurrentDateTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCurrentDateTime.Location = new System.Drawing.Point(804, 723);
+            this.lblCurrentDateTime.Location = new System.Drawing.Point(877, 723);
             this.lblCurrentDateTime.Margin = new System.Windows.Forms.Padding(0);
             this.lblCurrentDateTime.Name = "lblCurrentDateTime";
-            this.lblCurrentDateTime.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.lblCurrentDateTime.Size = new System.Drawing.Size(150, 26);
+            this.lblCurrentDateTime.Size = new System.Drawing.Size(79, 26);
             this.lblCurrentDateTime.TabIndex = 31;
             // 
             // splitContainer1
@@ -557,7 +556,7 @@
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(125, 39);
             this.btnCancel.TabIndex = 10;
-            this.btnCancel.Text = "Cancel";
+            this.btnCancel.Text = "Back";
             this.btnCancel.UseVisualStyleBackColor = false;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
@@ -686,7 +685,7 @@
             this.lblLoginUserName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblLoginUserName.BackColor = System.Drawing.Color.WhiteSmoke;
             this.lblLoginUserName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblLoginUserName.Location = new System.Drawing.Point(5, 271);
+            this.lblLoginUserName.Location = new System.Drawing.Point(5, 272);
             this.lblLoginUserName.Margin = new System.Windows.Forms.Padding(0);
             this.lblLoginUserName.Name = "lblLoginUserName";
             this.lblLoginUserName.Size = new System.Drawing.Size(140, 14);

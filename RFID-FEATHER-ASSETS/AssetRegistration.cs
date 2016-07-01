@@ -130,6 +130,14 @@ namespace RFID_FEATHER_ASSETS
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            newImgFileNames = string.Empty;
+
+            if (btnCancel.Text.ToUpper() == "BACK")
+            {
+                CallMainMenu();
+                return;
+            }
+
             if (txtRFIDTag.Text.Length != 0 || imgCapture1.Image != null)
             {
                 string cancelMsg;
@@ -146,7 +154,8 @@ namespace RFID_FEATHER_ASSETS
                 DialogResult result = MessageBox.Show(cancelMsg, this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
                 if (result == DialogResult.Yes)
                 {
-                    CallMainMenu();
+                    //CallMainMenu();
+                    ClearFields();
                 }
                 else
                 {
@@ -154,7 +163,7 @@ namespace RFID_FEATHER_ASSETS
                     return;
                 }
             }
-            else CallMainMenu();
+            //else CallMainMenu();
         }  
 
         private void btnSubmit_Click(object sender, EventArgs e)
@@ -363,7 +372,7 @@ namespace RFID_FEATHER_ASSETS
             updateInfo.assetId = assetId;
             updateInfo.name = txtDescription.Text.Trim();
             updateInfo.description = txtDescription.Text.Trim();
-            updateInfo.imageUrls = updatedImgFileNames;
+            updateInfo.imageUrls = newImgFileNames; //updatedImgFileNames
             updateInfo.tag = txtRFIDTag.Text;
             updateInfo.tagType = 1;
             //updateInfo.takeOutAllowed = false;
@@ -447,6 +456,8 @@ namespace RFID_FEATHER_ASSETS
 
 
             IRestResponse response = client.Execute(upload);
+            getCaptureButtonText();
+            btnCancel.Text = "Cancel";
 
             var content = response.Content;
 
@@ -493,6 +504,7 @@ namespace RFID_FEATHER_ASSETS
             rbtnValidToday.Checked = true;
             btnCapturePhoto.Text = "Capture Owner Photo";
             btnSubmit.Text = "Submit";
+            btnCancel.Text = "Back";
             this.Refresh();
             //btnGetRFIDTag.Focus();
         }
@@ -576,6 +588,7 @@ namespace RFID_FEATHER_ASSETS
                         //listBox1.Items.Add(tagInfo);
                         txtRFIDTag.Text = tagInfo.ToString();
                         txtDescription.Focus();//txtAssetName.Focus();
+                        btnCancel.Text = "Cancel";
                     }
                 }
                 //else if (nReturnValue == 0)
@@ -792,7 +805,7 @@ namespace RFID_FEATHER_ASSETS
                     cameraBox.BackColor = Color.White;
                     lblNoCameraAvailable.Visible = false;
 
-                    getCaptureButtonText();
+                    if (btnSubmit.Text.ToUpper() == "UPDATE") getCaptureButtonText();
                 }
             }
             catch (Exception ex)
@@ -842,31 +855,31 @@ namespace RFID_FEATHER_ASSETS
                         {
                             imgCapture1.Image = cameraBox.Image;
                             lblOwnerPhoto.Visible = false;
-                            btnCapturePhoto.Text = "Capture Valid ID Photo";
+                            //btnCapturePhoto.Text = "Capture Valid ID Photo";
                         }
                         else if (imgCapture2.Image == null) 
                         { 
                             imgCapture2.Image = cameraBox.Image;
                             lblValidIDPhoto.Visible = false;
-                            btnCapturePhoto.Text = "Capture Asset Photo 1";
+                            //btnCapturePhoto.Text = "Capture Asset Photo 1";
                         }
                         else if (imgCapture3.Image == null)
                         {
                             imgCapture3.Image = cameraBox.Image;
                             lblAssetPhoto1.Visible = false;
-                            btnCapturePhoto.Text = "Capture Asset Photo 2";
+                            //btnCapturePhoto.Text = "Capture Asset Photo 2";
                         }
                         else if (imgCapture4.Image == null)
                         {
                             imgCapture4.Image = cameraBox.Image;
                             lblAssetPhoto2.Visible = false;
-                            btnCapturePhoto.Text = "Capture Asset Photo 3";
+                            //btnCapturePhoto.Text = "Capture Asset Photo 3";
                         }
                         else if (imgCapture5.Image == null)
                         {
                             imgCapture5.Image = cameraBox.Image;
                             lblAssetPhoto3.Visible = false;
-                            btnCapturePhoto.Text = "Captured Completed";
+                            //btnCapturePhoto.Text = "Captured Completed";
                         }
                         else
                         {
@@ -1128,7 +1141,7 @@ namespace RFID_FEATHER_ASSETS
 
         private void CurrentTimer_Tick(object sender, EventArgs e)
         {
-            lblCurrentDateTime.Text = DateTime.Now.ToString("h:mm:sstt") + "\n" + DateTime.Now.ToString("dddd, MMMM dd, yyyy"); //DateTime.Now.ToString("dddd, MMMM dd, yyyy h:mm:ss tt");
+            lblCurrentDateTime.Text = DateTime.Now.ToString("h:mm:ss tt") + "\n " + DateTime.Now.ToString("MM/dd/yyyy");//DateTime.Now.ToString("dddd, MMMM dd, yyyy");
 
             //if (dtDatePicker.Checked) dtDatePicker.Value = DateTime.Now;
             //if (dtTimePicker.Checked) dtTimePicker.Value = DateTime.Now;
@@ -1280,10 +1293,11 @@ namespace RFID_FEATHER_ASSETS
                         lblAssetPhoto3.Visible = false;
                     }
 
-                    getCaptureButtonText();
-
+                    btnCancel.Text = "Cancel";
                     btnSubmit.Text = "Update";
                     btnSubmit.Focus();
+
+                    getCaptureButtonText();
                     return;
                 }
                 else if (response.StatusCode == HttpStatusCode.NotFound)

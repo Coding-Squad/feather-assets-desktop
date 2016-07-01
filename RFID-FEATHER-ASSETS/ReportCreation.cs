@@ -236,13 +236,13 @@ namespace RFID_FEATHER_ASSETS
                         {
                             imgCapture1.Image = cameraBox.Image;
                             lblPersonPhoto.Visible = false;
-                            btnCapturePhoto.Text = "Capture Valid ID Photo";
+                            //btnCapturePhoto.Text = "Capture Valid ID Photo";
                         }
                         else if (imgCapture2.Image == null)
                         {
                             imgCapture2.Image = cameraBox.Image;
                             lblValidIDPhoto.Visible = false;
-                            btnCapturePhoto.Text = "Captured Completed";
+                            //btnCapturePhoto.Text = "Captured Completed";
                         }
                         else
                         {
@@ -296,6 +296,9 @@ namespace RFID_FEATHER_ASSETS
 
 
             IRestResponse response = client.Execute(upload);
+
+            if (imgCapture2.Image == null) btnCapturePhoto.Text = "Capture Valid ID Photo";            
+            else btnCapturePhoto.Text = "Captured Completed";
 
             var content = response.Content;
 

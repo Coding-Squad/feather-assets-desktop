@@ -94,11 +94,10 @@
             this.lblCurrentDateTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCurrentDateTime.BackColor = System.Drawing.SystemColors.Control;
             this.lblCurrentDateTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCurrentDateTime.Location = new System.Drawing.Point(834, 723);
+            this.lblCurrentDateTime.Location = new System.Drawing.Point(905, 723);
             this.lblCurrentDateTime.Margin = new System.Windows.Forms.Padding(0);
             this.lblCurrentDateTime.Name = "lblCurrentDateTime";
-            this.lblCurrentDateTime.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.lblCurrentDateTime.Size = new System.Drawing.Size(150, 26);
+            this.lblCurrentDateTime.Size = new System.Drawing.Size(79, 26);
             this.lblCurrentDateTime.TabIndex = 42;
             // 
             // VerifyTimer

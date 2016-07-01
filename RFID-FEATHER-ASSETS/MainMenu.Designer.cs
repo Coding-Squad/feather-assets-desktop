@@ -45,7 +45,7 @@
             this.btnScan.Location = new System.Drawing.Point(52, 137);
             this.btnScan.Name = "btnScan";
             this.btnScan.Size = new System.Drawing.Size(178, 32);
-            this.btnScan.TabIndex = 0;
+            this.btnScan.TabIndex = 1;
             this.btnScan.Text = "SCAN";
             this.btnScan.UseVisualStyleBackColor = false;
             this.btnScan.Click += new System.EventHandler(this.btnScan_Click);
@@ -57,7 +57,7 @@
             this.btnRegisterAsset.Location = new System.Drawing.Point(51, 96);
             this.btnRegisterAsset.Name = "btnRegisterAsset";
             this.btnRegisterAsset.Size = new System.Drawing.Size(178, 35);
-            this.btnRegisterAsset.TabIndex = 1;
+            this.btnRegisterAsset.TabIndex = 0;
             this.btnRegisterAsset.Text = "REGISTER ASSET";
             this.btnRegisterAsset.UseVisualStyleBackColor = false;
             this.btnRegisterAsset.Click += new System.EventHandler(this.btnRegisterAsset_Click);
@@ -132,7 +132,7 @@
             this.btnLogout.Location = new System.Drawing.Point(52, 225);
             this.btnLogout.Name = "btnLogout";
             this.btnLogout.Size = new System.Drawing.Size(178, 32);
-            this.btnLogout.TabIndex = 22;
+            this.btnLogout.TabIndex = 3;
             this.btnLogout.Text = "Log Out";
             this.btnLogout.UseVisualStyleBackColor = false;
             this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
@@ -144,7 +144,7 @@
             this.btnTransactionHistory.Location = new System.Drawing.Point(52, 172);
             this.btnTransactionHistory.Name = "btnTransactionHistory";
             this.btnTransactionHistory.Size = new System.Drawing.Size(178, 37);
-            this.btnTransactionHistory.TabIndex = 23;
+            this.btnTransactionHistory.TabIndex = 2;
             this.btnTransactionHistory.Text = "TRANSACTION HISTORY";
             this.btnTransactionHistory.UseVisualStyleBackColor = false;
             this.btnTransactionHistory.Click += new System.EventHandler(this.btnTransactionHistory_Click);

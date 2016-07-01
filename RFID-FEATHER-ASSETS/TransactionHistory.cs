@@ -56,11 +56,15 @@ namespace RFID_FEATHER_ASSETS
         {
             try
             {
+                grdViewTransactions.Rows.Clear();
+                grdViewTransactions.Refresh();
+
+                lblLoadingInformation.Text = "Getting Information. Please wait...";
                 lblLoadingInformation.Visible = true;
                 lblLoadingInformation.Refresh();
 
-                startDate = dtDateFromPicker.Value.ToString("yyyy-MM-dd");
-                endDate = dtDateToPicker.Value.ToString("yyyy-MM-dd");
+                startDate = dtDateFromPicker.Value.ToString("yyyy-MM-ddT00:01");
+                endDate = dtDateToPicker.Value.ToString("yyyy-MM-ddT23:59");
                 if (!string.IsNullOrEmpty(txtAssetID.Text.Trim())) assetId = int.Parse(txtAssetID.Text.Trim());
                 if (!string.IsNullOrEmpty(txtUserID.Text.Trim())) userId = int.Parse(txtUserID.Text.Trim());
 
@@ -87,33 +91,52 @@ namespace RFID_FEATHER_ASSETS
                     JsonDeserializer deserial = new JsonDeserializer();
                     List<GenerateResult> generateResult = deserial.Deserialize<List<GenerateResult>>(response);
 
-                    for (int i = 0; i < generateResult.Count; i++)
-                    {
-                        int idx = grdViewTransactions.Rows.Add();
-                        DataGridViewRow row = grdViewTransactions.Rows[idx];
-                       
-                        row.Cells["ColTransId"].Value = generateResult[i].transactionId;
-                        row.Cells["ColAssetId"].Value = generateResult[i].transaction.assetId;
-                        row.Cells["ColCompanyId"].Value = generateResult[i].transaction.companyId;
-                        row.Cells["ColUserId"].Value = generateResult[i].transaction.registerUserId;
-                        row.Cells["ColDescription"].Value = generateResult[i].transaction.description;
-                        row.Cells["ColImgUrl"].Value = generateResult[i].transaction.imageUrls;
-                        row.Cells["ColRFIDTag"].Value = generateResult[i].transaction.tag;
-                        row.Cells["ColTakeOutNote"].Value = generateResult[i].transaction.takeOutInfo;
-                        row.Cells["ColValidUntil"].Value = generateResult[i].transaction.validUntil;
-                        row.Cells["ColNotes"].Value = generateResult[i].notes;
-                        row.Cells["ColPersonImgUrl"].Value = generateResult[i].imageUrl;
-                        row.Cells["ColCreatedAt"].Value = generateResult[i].createdAt;
+                    string ValidUntil;
 
-                        grdViewTransactions.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.Fill);
-                        return;
-                    }   
+                    if (generateResult.Count != 0)
+                    {
+                        grdViewTransactions.ColumnHeadersVisible = true;
+
+                        for (int i = 0; i < generateResult.Count; i++)
+                        {
+                            int idx = grdViewTransactions.Rows.Add();
+                            DataGridViewRow row = grdViewTransactions.Rows[idx];
+
+                            row.Cells["ColTransId"].Value = generateResult[i].transactionId;
+                            row.Cells["ColAssetId"].Value = generateResult[i].asset.assetId ?? null;
+                            row.Cells["ColCompanyId"].Value = generateResult[i].asset.companyId ?? null;
+                            row.Cells["ColRegisterId"].Value = generateResult[i].asset.registerUserId ?? null;
+                            row.Cells["ColUpdateId"].Value = generateResult[i].asset.updateUserId ?? null;
+                            row.Cells["ColDescription"].Value = generateResult[i].asset.description;
+                            row.Cells["ColImgUrl"].Value = generateResult[i].asset.imageUrls;
+                            row.Cells["ColRFIDTag"].Value = generateResult[i].asset.tag;
+                            row.Cells["ColTakeOutNote"].Value = generateResult[i].asset.takeOutInfo;
+
+                            ValidUntil = generateResult[i].asset.validUntil != DateTime.MinValue ? generateResult[i].asset.validUntil.ToString("g") : "No Expiration";
+                            row.Cells["ColValidUntil"].Value = ValidUntil;
+
+                            row.Cells["ColNotes"].Value = generateResult[i].notes;
+                            row.Cells["ColPersonImgUrl"].Value = generateResult[i].imageUrl;
+                            row.Cells["ColCreatedAt"].Value = generateResult[i].createdAt;
+                            row.Cells["ColUpdatedAt"].Value = generateResult[i].asset.updatedAt;
+
+                            //grdViewTransactions.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.Fill);
+                            //return;
+                        }
+                    }
+                    else
+                    {
+                        grdViewTransactions.ColumnHeadersVisible = false;
+                        lblLoadingInformation.Text = "Transaction not found.";
+                        lblLoadingInformation.Visible = true;
+                        //lblLoadingInformation.Refresh();
+                    }
+
                 }
                 else 
                 {
                     MessageBox.Show("Error connecting to server.. please try again later");
-                }
-               
+                }  
             }
             catch (Exception ex)
             {
@@ -123,33 +146,48 @@ namespace RFID_FEATHER_ASSETS
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            CallMainMenu();
+        }
+
+        private void TransactionHistory_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            CallMainMenu();
+        }
+
+        private void CallMainMenu()
+        {
             this.Hide();
             MainMenu MenuForm = new MainMenu(tokenValue, roleValue);
             MenuForm.Show();
         }
+
+       
     }
 
     public class GenerateResult
     {
+        //public int? assetId { get; set; }
         public int transactionId { get; set; }
         public string notes { get; set; }
         public string imageUrl { get; set; }
         public string createdAt { get; set; }
         public string result { get; set; }
         public string message { get; set; }
-        public AssetList transaction { get; set; }
+        public AssetList asset { get; set; }
     }
 
     public class AssetList
     {
-        public int assetId { get; set; }
-        public int companyId { get; set; }
-        public int registerUserId { get; set; }
+        public int? assetId { get; set; }
+        public int? companyId { get; set; }
+        public int? registerUserId { get; set; }
+        public int? updateUserId { get; set; }
         public string name { get; set; }
         public string description { get; set; }
         public string imageUrls { get; set; }
         public string tag { get; set; }
         public string takeOutInfo { get; set; }
+        public string updatedAt { get; set; }
         public DateTime validUntil { get; set; }
     }
 }
