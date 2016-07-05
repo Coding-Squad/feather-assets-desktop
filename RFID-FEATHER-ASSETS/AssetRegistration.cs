@@ -372,7 +372,10 @@ namespace RFID_FEATHER_ASSETS
             updateInfo.assetId = assetId;
             updateInfo.name = txtDescription.Text.Trim();
             updateInfo.description = txtDescription.Text.Trim();
-            updateInfo.imageUrls = newImgFileNames; //updatedImgFileNames
+
+            if (newImgFileNames == null) updateInfo.imageUrls = updatedImgFileNames;
+            else updateInfo.imageUrls = newImgFileNames; //updatedImgFileNames
+
             updateInfo.tag = txtRFIDTag.Text;
             updateInfo.tagType = 1;
             //updateInfo.takeOutAllowed = false;
@@ -1201,8 +1204,9 @@ namespace RFID_FEATHER_ASSETS
         private void btnGetAssetInfo_Click(object sender, EventArgs e)
         {
             //ClearFields();
-
+            //txtRFIDTag.Text = string.Empty;
             btnGetRFIDTag.PerformClick();
+
             if (!string.IsNullOrEmpty(txtRFIDTag.Text)) getAssetInfo();
             btnGetAssetInfo.Focus();
         }
@@ -1262,37 +1266,39 @@ namespace RFID_FEATHER_ASSETS
                     }
                     //}
                     
-                    string urls = assetInfo.imageUrls;
-                    string[] ReadUrls = urls.Split(',');
+                   string urls = assetInfo.imageUrls;
+                   if (urls != null)
+                   {
+                       string[] ReadUrls = urls.Split(',');
 
-                    //http://52.163.93.95:8080/FeatherAssets/api/images/{companyId}/{type}/
+                       //http://52.163.93.95:8080/FeatherAssets/api/images/{companyId}/{type}/
 
-                    if (ReadUrls.Length > 1)
-                    {
-                        imgCapture1.Load("http://52.163.93.95:8080/FeatherAssets/api/images/1/asset/" + ReadUrls[1]);
-                        lblOwnerPhoto.Visible = false;
-                    }
-                    if (ReadUrls.Length > 2)
-                    {
-                        imgCapture2.Load("http://52.163.93.95:8080/FeatherAssets/api/images/1/asset/" + ReadUrls[2]);
-                        lblValidIDPhoto.Visible = false;
-                    }
-                    if (ReadUrls.Length > 3)
-                    {
-                        imgCapture3.Load("http://52.163.93.95:8080/FeatherAssets/api/images/1/asset/" + ReadUrls[3]);
-                        lblAssetPhoto1.Visible = false;
-                    }
-                    if (ReadUrls.Length > 4)
-                    {
-                        imgCapture4.Load("http://52.163.93.95:8080/FeatherAssets/api/images/1/asset/" + ReadUrls[4]);
-                        lblAssetPhoto2.Visible = false;
-                    }
-                    if (ReadUrls.Length > 5)
-                    {
-                        imgCapture5.Load("http://52.163.93.95:8080/FeatherAssets/api/images/1/asset/" + ReadUrls[5]);
-                        lblAssetPhoto3.Visible = false;
-                    }
-
+                       if (ReadUrls.Length > 1)
+                       {
+                           imgCapture1.Load("http://52.163.93.95:8080/FeatherAssets/api/images/1/asset/" + ReadUrls[1]);
+                           lblOwnerPhoto.Visible = false;
+                       }
+                       if (ReadUrls.Length > 2)
+                       {
+                           imgCapture2.Load("http://52.163.93.95:8080/FeatherAssets/api/images/1/asset/" + ReadUrls[2]);
+                           lblValidIDPhoto.Visible = false;
+                       }
+                       if (ReadUrls.Length > 3)
+                       {
+                           imgCapture3.Load("http://52.163.93.95:8080/FeatherAssets/api/images/1/asset/" + ReadUrls[3]);
+                           lblAssetPhoto1.Visible = false;
+                       }
+                       if (ReadUrls.Length > 4)
+                       {
+                           imgCapture4.Load("http://52.163.93.95:8080/FeatherAssets/api/images/1/asset/" + ReadUrls[4]);
+                           lblAssetPhoto2.Visible = false;
+                       }
+                       if (ReadUrls.Length > 5)
+                       {
+                           imgCapture5.Load("http://52.163.93.95:8080/FeatherAssets/api/images/1/asset/" + ReadUrls[5]);
+                           lblAssetPhoto3.Visible = false;
+                       }
+                   }
                     btnCancel.Text = "Cancel";
                     btnSubmit.Text = "Update";
                     btnSubmit.Focus();

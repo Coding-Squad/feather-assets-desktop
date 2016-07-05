@@ -55,6 +55,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.lblNoCameraAvailable);
             this.groupBox2.Controls.Add(this.cameraBox);
             this.groupBox2.Controls.Add(this.btnCapturePhoto);
             this.groupBox2.Controls.Add(this.lblSubmittingInformation);
@@ -67,7 +68,6 @@
             this.groupBox2.Controls.Add(this.imgCapture1);
             this.groupBox2.Controls.Add(this.imgCapture2);
             this.groupBox2.Controls.Add(this.label8);
-            this.groupBox2.Controls.Add(this.lblNoCameraAvailable);
             this.groupBox2.Controls.Add(this.txtSaveImageDir);
             this.groupBox2.Controls.Add(this.btnBrowseImagePath);
             this.groupBox2.Controls.Add(this.comVideoDeviceBox);
@@ -87,6 +87,7 @@
             this.cameraBox.Location = new System.Drawing.Point(14, 24);
             this.cameraBox.Name = "cameraBox";
             this.cameraBox.Size = new System.Drawing.Size(370, 371);
+            this.cameraBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.cameraBox.TabIndex = 60;
             this.cameraBox.TabStop = false;
             // 
@@ -171,6 +172,7 @@
             this.txtExplanationNotes.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtExplanationNotes.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtExplanationNotes.Location = new System.Drawing.Point(403, 249);
+            this.txtExplanationNotes.MaxLength = 100;
             this.txtExplanationNotes.Multiline = true;
             this.txtExplanationNotes.Name = "txtExplanationNotes";
             this.txtExplanationNotes.Size = new System.Drawing.Size(371, 119);

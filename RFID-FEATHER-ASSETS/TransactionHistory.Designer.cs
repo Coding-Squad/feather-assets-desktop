@@ -32,6 +32,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnExport = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnGenerate = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
@@ -45,6 +46,7 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lblLoadingInformation = new System.Windows.Forms.Label();
             this.grdViewTransactions = new System.Windows.Forms.DataGridView();
+            this.ColCreatedAt = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColTransId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColCompanyId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColAssetId = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -56,7 +58,6 @@
             this.ColNotes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColPersonImgUrl = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColRegisterId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColCreatedAt = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColUpdateId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColUpdatedAt = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -88,6 +89,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnExport);
             this.groupBox1.Controls.Add(this.btnCancel);
             this.groupBox1.Controls.Add(this.btnGenerate);
             this.groupBox1.Controls.Add(this.label4);
@@ -106,6 +108,19 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Search Criteria";
+            // 
+            // btnExport
+            // 
+            this.btnExport.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnExport.BackColor = System.Drawing.Color.LightGreen;
+            this.btnExport.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExport.Location = new System.Drawing.Point(575, 24);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(102, 29);
+            this.btnExport.TabIndex = 70;
+            this.btnExport.Text = "Export to CSV";
+            this.btnExport.UseVisualStyleBackColor = false;
+            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
             // 
             // btnCancel
             // 
@@ -265,6 +280,7 @@
             this.grdViewTransactions.ColumnHeadersHeight = 25;
             this.grdViewTransactions.ColumnHeadersVisible = false;
             this.grdViewTransactions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ColCreatedAt,
             this.ColTransId,
             this.ColCompanyId,
             this.ColAssetId,
@@ -276,7 +292,6 @@
             this.ColNotes,
             this.ColPersonImgUrl,
             this.ColRegisterId,
-            this.ColCreatedAt,
             this.ColUpdateId,
             this.ColUpdatedAt});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -293,6 +308,13 @@
             this.grdViewTransactions.ReadOnly = true;
             this.grdViewTransactions.Size = new System.Drawing.Size(1364, 298);
             this.grdViewTransactions.TabIndex = 1;
+            // 
+            // ColCreatedAt
+            // 
+            this.ColCreatedAt.HeaderText = "Created Date";
+            this.ColCreatedAt.Name = "ColCreatedAt";
+            this.ColCreatedAt.ReadOnly = true;
+            this.ColCreatedAt.Width = 5;
             // 
             // ColTransId
             // 
@@ -374,25 +396,20 @@
             this.ColRegisterId.HeaderText = "Created By";
             this.ColRegisterId.Name = "ColRegisterId";
             this.ColRegisterId.ReadOnly = true;
+            this.ColRegisterId.Visible = false;
             this.ColRegisterId.Width = 5;
-            // 
-            // ColCreatedAt
-            // 
-            this.ColCreatedAt.HeaderText = "Created At";
-            this.ColCreatedAt.Name = "ColCreatedAt";
-            this.ColCreatedAt.ReadOnly = true;
-            this.ColCreatedAt.Width = 5;
             // 
             // ColUpdateId
             // 
             this.ColUpdateId.HeaderText = "Update By";
             this.ColUpdateId.Name = "ColUpdateId";
             this.ColUpdateId.ReadOnly = true;
+            this.ColUpdateId.Visible = false;
             this.ColUpdateId.Width = 5;
             // 
             // ColUpdatedAt
             // 
-            this.ColUpdatedAt.HeaderText = "Updated At";
+            this.ColUpdatedAt.HeaderText = "Updated Date";
             this.ColUpdatedAt.Name = "ColUpdatedAt";
             this.ColUpdatedAt.ReadOnly = true;
             this.ColUpdatedAt.Width = 5;
@@ -403,6 +420,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1370, 385);
             this.Controls.Add(this.splitContainer1);
+            this.MaximizeBox = false;
             this.Name = "TransactionHistory";
             this.Text = "Transaction History";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -437,6 +455,8 @@
         private System.Windows.Forms.Button btnGenerate;
         private System.Windows.Forms.Label lblLoadingInformation;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.Button btnExport;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColCreatedAt;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColTransId;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColCompanyId;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColAssetId;
@@ -448,7 +468,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColNotes;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColPersonImgUrl;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColRegisterId;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColCreatedAt;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColUpdateId;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColUpdatedAt;
 

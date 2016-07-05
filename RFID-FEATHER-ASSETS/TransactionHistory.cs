@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -117,8 +119,8 @@ namespace RFID_FEATHER_ASSETS
 
                             row.Cells["ColNotes"].Value = generateResult[i].notes;
                             row.Cells["ColPersonImgUrl"].Value = generateResult[i].imageUrl;
-                            row.Cells["ColCreatedAt"].Value = generateResult[i].createdAt;
-                            row.Cells["ColUpdatedAt"].Value = generateResult[i].asset.updatedAt;
+                            row.Cells["ColCreatedAt"].Value = generateResult[i].createdAt.ToString("g");
+                            row.Cells["ColUpdatedAt"].Value = generateResult[i].asset.updatedAt.ToString("s");
 
                             //grdViewTransactions.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.Fill);
                             //return;
@@ -161,7 +163,79 @@ namespace RFID_FEATHER_ASSETS
             MenuForm.Show();
         }
 
-       
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            try
+            { 
+                // Don't save if no data is returned
+                if (grdViewTransactions.Rows.Count == 0)
+                {
+                    return;
+                }
+
+                StringBuilder sb = new StringBuilder();
+                // Column headers
+                string columnsHeader = "";
+
+                for (int i = 0; i < grdViewTransactions.Columns.Count; i++)
+                {
+                     if (grdViewTransactions.Columns[i].Visible)
+                     {
+                        columnsHeader += grdViewTransactions.Columns[i].HeaderText + ",";
+                     }
+                }
+                sb.Append(columnsHeader + Environment.NewLine);
+
+                // Go through each cell in the datagridview 
+                foreach (DataGridViewRow dgvRow in grdViewTransactions.Rows)
+                {
+                    // Make sure it's not an empty row.
+                    if (!dgvRow.IsNewRow)
+                    {
+                        for (int c = 0; c < dgvRow.Cells.Count; c++)
+                        {
+                            // Append the cells data followed by a comma to delimit.
+                            if (grdViewTransactions.Columns[c].Visible)
+                            {
+                                sb.Append(dgvRow.Cells[c].Value + ",");
+                            }
+                        }
+                        // Add a new line in the text file.
+                        sb.Append(Environment.NewLine);
+                    }
+                }
+
+                // Load up the save file dialog with the default option as saving as a .csv file.
+                SaveFileDialog sfd = new SaveFileDialog();
+
+                sfd.Filter = "CSV files (*.csv)|*.csv";
+                @sfd.FileName = "TransactionHistory_" + DateTime.Now.ToString("yyyyMMdd_hhmmss");
+
+                if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    // If they've selected a save location...
+                    using (System.IO.StreamWriter sw = new System.IO.StreamWriter(sfd.FileName, false))
+                    {
+                        // Write the stringbuilder text to the the file.
+                        sw.WriteLine(sb.ToString());
+                    }
+
+                    // Confirm to the user it has been completed.
+                    DialogResult result = MessageBox.Show("Transactions successfully exported." + "\n" + "Do you want to open this file?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                    if (result == DialogResult.Yes)
+                    {
+                        Process.Start(@sfd.FileName);
+                    }
+                    else return; 
+                }
+                else return;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+      
     }
 
     public class GenerateResult
@@ -170,7 +244,7 @@ namespace RFID_FEATHER_ASSETS
         public int transactionId { get; set; }
         public string notes { get; set; }
         public string imageUrl { get; set; }
-        public string createdAt { get; set; }
+        public DateTime createdAt { get; set; }
         public string result { get; set; }
         public string message { get; set; }
         public AssetList asset { get; set; }
@@ -187,7 +261,7 @@ namespace RFID_FEATHER_ASSETS
         public string imageUrls { get; set; }
         public string tag { get; set; }
         public string takeOutInfo { get; set; }
-        public string updatedAt { get; set; }
+        public DateTime updatedAt { get; set; }
         public DateTime validUntil { get; set; }
     }
 }

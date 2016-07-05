@@ -201,7 +201,7 @@
             this.MaximizeBox = false;
             this.Name = "LoginActivity";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Feather Assets";
+            this.Text = "FeatherTraq";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.LoginActivity_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
