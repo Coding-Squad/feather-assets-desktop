@@ -12,6 +12,7 @@ using RestSharp;
 using System.Net;
 using RestSharp.Deserializers;
 using Microsoft.Win32;
+using System.Net.NetworkInformation;
 
 namespace RFID_FEATHER_ASSETS
 {
@@ -20,12 +21,49 @@ namespace RFID_FEATHER_ASSETS
     public partial class LoginActivity : Form
     {
         //string connectionString = "server=128.199.83.107;port=3306;uid=root;pwd=aws123;database=feather_assets;";
+        string readerInfo;
 
         public LoginActivity()//string portnamesource)
         {
             InitializeComponent();
             //cmbComPort.Text = portnamesource;
             //GetAssetSystemInfo();
+            GetReaderInfo();
+        }
+
+        private void GetReaderInfo()
+        {
+            try
+            { 
+                string LocalIp = string.Empty;
+                string Domain = !string.IsNullOrEmpty(System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().DomainName) ? System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().DomainName : "x";
+                string Host = System.Net.Dns.GetHostName();
+
+                if (System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+                {
+                    System.Net.IPHostEntry host = System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName());
+                    foreach (System.Net.IPAddress ip in host.AddressList)
+                    {
+                        if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                        {
+                            LocalIp = ip.ToString();
+                            break;
+                        }
+                    }
+                    //string IpWidHost = String.Format("[Domain-{0} : Host-{1} : IP-{2}]", Domain, Host, LocalIp);
+                }
+                else return;
+           
+                var macAddr = (from nic in NetworkInterface.GetAllNetworkInterfaces()
+                               where nic.OperationalStatus == OperationalStatus.Up
+                               select nic.GetPhysicalAddress().ToString()).FirstOrDefault();
+                //var macAddrs = NetworkInterface.GetAllNetworkInterfaces().Where(nic => nic.OperationalStatus == OperationalStatus.Up).Select(nic => nic.GetPhysicalAddress().ToString()).FirstOrDefault();
+                readerInfo = /*"Domain:" + Domain +*/ "Host:" + Host + " IP Address:" + LocalIp + " Mac Address:" + macAddr;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }  
         }
 
         private void GetAssetSystemInfo()
@@ -113,7 +151,7 @@ namespace RFID_FEATHER_ASSETS
                         JsonDeserializer deserial = new JsonDeserializer();
                         loginResult = deserial.Deserialize<LoginResult>(response);
 
-                        SaveAssetSystemInfo(loginResult.authenticationToken, loginResult.roles, loginResult.companyId, loginResult.userId, txtUserName.Text.Trim());
+                        SaveAssetSystemInfo(loginResult.authenticationToken, loginResult.roles, loginResult.companyId, loginResult.userId, txtUserName.Text.Trim(), readerInfo);
 
                         //check authorities                       
                         if (loginResult.roles == "ROLE_ADMIN")
@@ -159,7 +197,7 @@ namespace RFID_FEATHER_ASSETS
              
         }
 
-        private void SaveAssetSystemInfo(string autoken, string roles, int companyId, int userId, string loginid)
+        private void SaveAssetSystemInfo(string autoken, string roles, int companyId, int userId, string loginid, string readerInfo)
         {
             try
             {
@@ -173,6 +211,7 @@ namespace RFID_FEATHER_ASSETS
                 key.SetValue("companyId", companyId);
                 key.SetValue("UserId", userId);
                 if (!string.IsNullOrEmpty(loginid)) key.SetValue("UserName", loginid);
+                if (!string.IsNullOrEmpty(readerInfo)) key.SetValue("readerInfo", readerInfo);
                 key.Close();
             }
             catch (Exception ex)

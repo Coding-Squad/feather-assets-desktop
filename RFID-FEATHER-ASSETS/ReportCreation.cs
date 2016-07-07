@@ -30,6 +30,9 @@ namespace RFID_FEATHER_ASSETS
         string newImgFileNames;
         string ImgFileName;
         int companyId;
+        string readerInfo;
+        bool isCameraChanged = false;
+        string cameraDeviceName;
 
         public ReportCreation()
         {
@@ -52,15 +55,16 @@ namespace RFID_FEATHER_ASSETS
         {
             try
             {
-                //Checking the camera status
-                comVideoDeviceBox.Items.Clear();
-                cameraBox.Image = null;
+                ////Checking the camera status
+                //comVideoDeviceBox.Items.Clear();
+                //cameraBox.Image = null;
 
-                webcam = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-                foreach (FilterInfo VideoCaptureDevice in webcam)
-                {
-                    comVideoDeviceBox.Items.Add(VideoCaptureDevice.Name);
-                }
+                //webcam = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+                //foreach (FilterInfo VideoCaptureDevice in webcam)
+                //{
+                //    comVideoDeviceBox.Items.Add(VideoCaptureDevice.Name);
+                //}
+                if (!isCameraChanged) getAvailableCamera();
 
                 if (comVideoDeviceBox.Items.Count < 1)
                 {
@@ -72,7 +76,11 @@ namespace RFID_FEATHER_ASSETS
                 }
                 else
                 {
-                    comVideoDeviceBox.SelectedIndex = 0;
+                    if (!isCameraChanged)
+                    {
+                        //isCameraChanged = false;
+                        comVideoDeviceBox.SelectedIndex = 0;
+                    }
                     StartCamera();
 
                     IsCameraConnected = true;
@@ -92,6 +100,7 @@ namespace RFID_FEATHER_ASSETS
             try
             {
                 cam = new VideoCaptureDevice(webcam[comVideoDeviceBox.SelectedIndex].MonikerString);
+                cameraDeviceName = comVideoDeviceBox.SelectedItem.ToString();
                 cam.NewFrame += new NewFrameEventHandler(cam_NewFrame);
                 cam.Start();
             }
@@ -120,6 +129,7 @@ namespace RFID_FEATHER_ASSETS
                     tokenvalue = (string)(key.GetValue("authenticationToken"));
                     //txtSaveImageDir.Text = (string)(key.GetValue("PersonImagePath"));
                     companyId = (int)(key.GetValue("companyId"));
+                    readerInfo = (string)(key.GetValue("readerInfo"));
                     key.Close();
                 }
             }
@@ -144,6 +154,7 @@ namespace RFID_FEATHER_ASSETS
                 Transaction transactDet = new Transaction();
 
                 transactDet.companyId = companyId;//1;
+                transactDet.readerInfo = readerInfo;
                 //transactDet.readerId = 1;
                 transactDet.assetId = Verification.AssetIdValue;
                 transactDet.notes = txtExplanationNotes.Text.Trim();
@@ -372,6 +383,50 @@ namespace RFID_FEATHER_ASSETS
                 MessageBox.Show(ex.Message);
             }
         }
+
+        private void chkBoxChangeCamera_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkBoxChangeCamera.Checked)
+            {
+                comVideoDeviceBox.Visible = true;
+                comVideoDeviceBox.Text = cameraDeviceName;
+
+                isCameraChanged = true;
+                //getAvailableCamera();
+            }
+            else
+                comVideoDeviceBox.Visible = false;
+        }
+
+        private void comVideoDeviceBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cam != null) cam.Stop();
+
+            if (isCameraChanged)
+            {
+                //isCameraChanged = true;
+                InitializeCamera();
+            }
+        }
+
+        private void comVideoDeviceBox_DropDown(object sender, EventArgs e)
+        {
+            getAvailableCamera();
+        }
+
+        private void getAvailableCamera()
+        {
+            //comVideoDeviceBox.SelectedIndex = 0;
+            //Checking the camera status
+            comVideoDeviceBox.Items.Clear();
+            cameraBox.Image = null;
+
+            webcam = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+            foreach (FilterInfo VideoCaptureDevice in webcam)
+            {
+                comVideoDeviceBox.Items.Add(VideoCaptureDevice.Name);
+            }
+        }
     }
 
     public class Transaction
@@ -381,5 +436,6 @@ namespace RFID_FEATHER_ASSETS
         public int assetId { get; set; }
         public string notes { get; set; }
         public string imageUrl { get; set; }
+        public string readerInfo { get; set; }
     }
 }

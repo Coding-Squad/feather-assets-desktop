@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.chkBoxChangeCamera = new System.Windows.Forms.CheckBox();
+            this.comVideoDeviceBox = new System.Windows.Forms.ComboBox();
+            this.lblNoCameraAvailable = new System.Windows.Forms.Label();
             this.cameraBox = new System.Windows.Forms.PictureBox();
             this.btnCapturePhoto = new System.Windows.Forms.Button();
             this.lblSubmittingInformation = new System.Windows.Forms.Label();
@@ -41,10 +44,8 @@
             this.imgCapture1 = new System.Windows.Forms.PictureBox();
             this.imgCapture2 = new System.Windows.Forms.PictureBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.lblNoCameraAvailable = new System.Windows.Forms.Label();
             this.txtSaveImageDir = new System.Windows.Forms.TextBox();
             this.btnBrowseImagePath = new System.Windows.Forms.Button();
-            this.comVideoDeviceBox = new System.Windows.Forms.ComboBox();
             this.txtCapturedImagePath = new System.Windows.Forms.TextBox();
             this.imagePathDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.groupBox2.SuspendLayout();
@@ -55,6 +56,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.chkBoxChangeCamera);
+            this.groupBox2.Controls.Add(this.comVideoDeviceBox);
             this.groupBox2.Controls.Add(this.lblNoCameraAvailable);
             this.groupBox2.Controls.Add(this.cameraBox);
             this.groupBox2.Controls.Add(this.btnCapturePhoto);
@@ -70,7 +73,6 @@
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.txtSaveImageDir);
             this.groupBox2.Controls.Add(this.btnBrowseImagePath);
-            this.groupBox2.Controls.Add(this.comVideoDeviceBox);
             this.groupBox2.Controls.Add(this.txtCapturedImagePath);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.Location = new System.Drawing.Point(12, 15);
@@ -80,13 +82,52 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Person Take Out Information";
             // 
+            // chkBoxChangeCamera
+            // 
+            this.chkBoxChangeCamera.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.chkBoxChangeCamera.AutoSize = true;
+            this.chkBoxChangeCamera.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkBoxChangeCamera.Location = new System.Drawing.Point(244, 24);
+            this.chkBoxChangeCamera.Name = "chkBoxChangeCamera";
+            this.chkBoxChangeCamera.Size = new System.Drawing.Size(125, 20);
+            this.chkBoxChangeCamera.TabIndex = 77;
+            this.chkBoxChangeCamera.Text = "Change Camera";
+            this.chkBoxChangeCamera.UseVisualStyleBackColor = true;
+            this.chkBoxChangeCamera.CheckedChanged += new System.EventHandler(this.chkBoxChangeCamera_CheckedChanged);
+            // 
+            // comVideoDeviceBox
+            // 
+            this.comVideoDeviceBox.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.comVideoDeviceBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comVideoDeviceBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comVideoDeviceBox.FormattingEnabled = true;
+            this.comVideoDeviceBox.Location = new System.Drawing.Point(14, 24);
+            this.comVideoDeviceBox.Name = "comVideoDeviceBox";
+            this.comVideoDeviceBox.Size = new System.Drawing.Size(227, 21);
+            this.comVideoDeviceBox.TabIndex = 76;
+            this.comVideoDeviceBox.Visible = false;
+            this.comVideoDeviceBox.DropDown += new System.EventHandler(this.comVideoDeviceBox_DropDown);
+            this.comVideoDeviceBox.SelectedIndexChanged += new System.EventHandler(this.comVideoDeviceBox_SelectedIndexChanged);
+            // 
+            // lblNoCameraAvailable
+            // 
+            this.lblNoCameraAvailable.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblNoCameraAvailable.AutoSize = true;
+            this.lblNoCameraAvailable.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblNoCameraAvailable.Location = new System.Drawing.Point(4, 182);
+            this.lblNoCameraAvailable.Name = "lblNoCameraAvailable";
+            this.lblNoCameraAvailable.Size = new System.Drawing.Size(374, 29);
+            this.lblNoCameraAvailable.TabIndex = 64;
+            this.lblNoCameraAvailable.Text = "There is no camera connected.";
+            this.lblNoCameraAvailable.Visible = false;
+            // 
             // cameraBox
             // 
             this.cameraBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.cameraBox.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.cameraBox.Location = new System.Drawing.Point(14, 24);
+            this.cameraBox.Location = new System.Drawing.Point(14, 45);
             this.cameraBox.Name = "cameraBox";
-            this.cameraBox.Size = new System.Drawing.Size(370, 371);
+            this.cameraBox.Size = new System.Drawing.Size(350, 350);
             this.cameraBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.cameraBox.TabIndex = 60;
             this.cameraBox.TabStop = false;
@@ -98,7 +139,7 @@
             this.btnCapturePhoto.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCapturePhoto.Location = new System.Drawing.Point(14, 395);
             this.btnCapturePhoto.Name = "btnCapturePhoto";
-            this.btnCapturePhoto.Size = new System.Drawing.Size(370, 39);
+            this.btnCapturePhoto.Size = new System.Drawing.Size(352, 39);
             this.btnCapturePhoto.TabIndex = 59;
             this.btnCapturePhoto.Text = "Capture Person Photo";
             this.btnCapturePhoto.UseVisualStyleBackColor = false;
@@ -229,18 +270,6 @@
             this.label8.Text = "Image Directory:";
             this.label8.Visible = false;
             // 
-            // lblNoCameraAvailable
-            // 
-            this.lblNoCameraAvailable.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.lblNoCameraAvailable.AutoSize = true;
-            this.lblNoCameraAvailable.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNoCameraAvailable.Location = new System.Drawing.Point(12, 182);
-            this.lblNoCameraAvailable.Name = "lblNoCameraAvailable";
-            this.lblNoCameraAvailable.Size = new System.Drawing.Size(374, 29);
-            this.lblNoCameraAvailable.TabIndex = 64;
-            this.lblNoCameraAvailable.Text = "There is no camera connected.";
-            this.lblNoCameraAvailable.Visible = false;
-            // 
             // txtSaveImageDir
             // 
             this.txtSaveImageDir.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -250,7 +279,7 @@
             this.txtSaveImageDir.Location = new System.Drawing.Point(121, 375);
             this.txtSaveImageDir.MaxLength = 45;
             this.txtSaveImageDir.Name = "txtSaveImageDir";
-            this.txtSaveImageDir.Size = new System.Drawing.Size(224, 21);
+            this.txtSaveImageDir.Size = new System.Drawing.Size(202, 21);
             this.txtSaveImageDir.TabIndex = 63;
             this.txtSaveImageDir.Visible = false;
             // 
@@ -259,7 +288,7 @@
             this.btnBrowseImagePath.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.btnBrowseImagePath.BackColor = System.Drawing.Color.Wheat;
             this.btnBrowseImagePath.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnBrowseImagePath.Location = new System.Drawing.Point(345, 374);
+            this.btnBrowseImagePath.Location = new System.Drawing.Point(325, 373);
             this.btnBrowseImagePath.Name = "btnBrowseImagePath";
             this.btnBrowseImagePath.Size = new System.Drawing.Size(39, 23);
             this.btnBrowseImagePath.TabIndex = 62;
@@ -267,16 +296,6 @@
             this.btnBrowseImagePath.UseVisualStyleBackColor = false;
             this.btnBrowseImagePath.Visible = false;
             this.btnBrowseImagePath.Click += new System.EventHandler(this.btnBrowseImagePath_Click);
-            // 
-            // comVideoDeviceBox
-            // 
-            this.comVideoDeviceBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.comVideoDeviceBox.FormattingEnabled = true;
-            this.comVideoDeviceBox.Location = new System.Drawing.Point(14, 375);
-            this.comVideoDeviceBox.Name = "comVideoDeviceBox";
-            this.comVideoDeviceBox.Size = new System.Drawing.Size(59, 28);
-            this.comVideoDeviceBox.TabIndex = 72;
-            this.comVideoDeviceBox.Visible = false;
             // 
             // txtCapturedImagePath
             // 
@@ -323,7 +342,6 @@
         private System.Windows.Forms.TextBox txtSaveImageDir;
         private System.Windows.Forms.Button btnBrowseImagePath;
         private System.Windows.Forms.Button btnCapturePhoto;
-        private System.Windows.Forms.ComboBox comVideoDeviceBox;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.TextBox txtCapturedImagePath;
         private System.Windows.Forms.Label lblSubmittingInformation;
@@ -331,6 +349,8 @@
         private System.Windows.Forms.PictureBox cameraBox;
         private System.Windows.Forms.PictureBox imgCapture1;
         protected System.Windows.Forms.TextBox txtExplanationNotes;
+        private System.Windows.Forms.CheckBox chkBoxChangeCamera;
+        private System.Windows.Forms.ComboBox comVideoDeviceBox;
 
 
     }

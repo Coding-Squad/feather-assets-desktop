@@ -50,13 +50,14 @@
             this.ColTransId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColCompanyId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColAssetId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColRFIDTag = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColImgUrl = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColRFIDTag = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColTakeOutNote = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColValidUntil = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColNotes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColPersonImgUrl = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColReaderInfo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColRegisterId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColUpdateId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColUpdatedAt = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -284,13 +285,14 @@
             this.ColTransId,
             this.ColCompanyId,
             this.ColAssetId,
+            this.ColRFIDTag,
             this.ColDescription,
             this.ColImgUrl,
-            this.ColRFIDTag,
             this.ColTakeOutNote,
             this.ColValidUntil,
             this.ColNotes,
             this.ColPersonImgUrl,
+            this.ColReaderInfo,
             this.ColRegisterId,
             this.ColUpdateId,
             this.ColUpdatedAt});
@@ -338,7 +340,15 @@
             this.ColAssetId.HeaderText = "Asset ID";
             this.ColAssetId.Name = "ColAssetId";
             this.ColAssetId.ReadOnly = true;
+            this.ColAssetId.Visible = false;
             this.ColAssetId.Width = 5;
+            // 
+            // ColRFIDTag
+            // 
+            this.ColRFIDTag.HeaderText = "RFID Tag";
+            this.ColRFIDTag.Name = "ColRFIDTag";
+            this.ColRFIDTag.ReadOnly = true;
+            this.ColRFIDTag.Width = 5;
             // 
             // ColDescription
             // 
@@ -354,13 +364,6 @@
             this.ColImgUrl.ReadOnly = true;
             this.ColImgUrl.Visible = false;
             this.ColImgUrl.Width = 5;
-            // 
-            // ColRFIDTag
-            // 
-            this.ColRFIDTag.HeaderText = "RFID Tag";
-            this.ColRFIDTag.Name = "ColRFIDTag";
-            this.ColRFIDTag.ReadOnly = true;
-            this.ColRFIDTag.Width = 5;
             // 
             // ColTakeOutNote
             // 
@@ -378,7 +381,7 @@
             // 
             // ColNotes
             // 
-            this.ColNotes.HeaderText = "Notes";
+            this.ColNotes.HeaderText = "Report Note";
             this.ColNotes.Name = "ColNotes";
             this.ColNotes.ReadOnly = true;
             this.ColNotes.Width = 5;
@@ -390,6 +393,13 @@
             this.ColPersonImgUrl.ReadOnly = true;
             this.ColPersonImgUrl.Visible = false;
             this.ColPersonImgUrl.Width = 5;
+            // 
+            // ColReaderInfo
+            // 
+            this.ColReaderInfo.HeaderText = "Reader Information";
+            this.ColReaderInfo.Name = "ColReaderInfo";
+            this.ColReaderInfo.ReadOnly = true;
+            this.ColReaderInfo.Width = 5;
             // 
             // ColRegisterId
             // 
@@ -460,13 +470,14 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColTransId;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColCompanyId;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColAssetId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColRFIDTag;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColDescription;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColImgUrl;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColRFIDTag;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColTakeOutNote;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColValidUntil;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColNotes;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColPersonImgUrl;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColReaderInfo;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColRegisterId;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColUpdateId;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColUpdatedAt;

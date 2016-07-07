@@ -17,6 +17,7 @@ namespace RFID_FEATHER_ASSETS
         //string connectionString = "server=128.199.83.107;port=3306;uid=root;pwd=aws123;database=feather_assets;";
         public static int AssetIdValue = 0;
         public int companyId;
+        string readerInfo;
 
         private Reader.ReaderMethod reader;
         private ReaderSetting m_curSetting = new ReaderSetting();
@@ -59,6 +60,7 @@ namespace RFID_FEATHER_ASSETS
                     companyId = (int)(key.GetValue("companyId"));
                     userId = (int)(key.GetValue("UserId"));
                     lblLoginUserName.Text = "Username: " + (string)(key.GetValue("UserName")).ToString();//.ToUpper();
+                    readerInfo = (string)(key.GetValue("readerInfo"));
                     key.Close();
 
                     if (roleValue == "ROLE_GUARD")
@@ -834,6 +836,7 @@ namespace RFID_FEATHER_ASSETS
                 Transaction transactDet = new Transaction();
 
                 transactDet.companyId = companyId;//1;
+                transactDet.readerInfo = readerInfo;
                 //transactDet.readerId = 1;
                 transactDet.assetId = Verification.AssetIdValue;
                 //transactDet.notes = txtExplanationNotes.Text.Trim();

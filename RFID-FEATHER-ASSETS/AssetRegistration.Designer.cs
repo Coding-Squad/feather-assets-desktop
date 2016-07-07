@@ -35,10 +35,11 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.chkBoxChangeCamera = new System.Windows.Forms.CheckBox();
+            this.comVideoDeviceBox = new System.Windows.Forms.ComboBox();
             this.lblNoCameraAvailable = new System.Windows.Forms.Label();
             this.btnCapturePhoto = new System.Windows.Forms.Button();
             this.cameraBox = new System.Windows.Forms.PictureBox();
-            this.comVideoDeviceBox = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.radbtnYes = new System.Windows.Forms.RadioButton();
             this.radbtnNo = new System.Windows.Forms.RadioButton();
@@ -200,10 +201,11 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.chkBoxChangeCamera);
+            this.groupBox1.Controls.Add(this.comVideoDeviceBox);
             this.groupBox1.Controls.Add(this.lblNoCameraAvailable);
             this.groupBox1.Controls.Add(this.btnCapturePhoto);
             this.groupBox1.Controls.Add(this.cameraBox);
-            this.groupBox1.Controls.Add(this.comVideoDeviceBox);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.radbtnYes);
             this.groupBox1.Controls.Add(this.radbtnNo);
@@ -221,12 +223,39 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Camera Preview";
             // 
+            // chkBoxChangeCamera
+            // 
+            this.chkBoxChangeCamera.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.chkBoxChangeCamera.AutoSize = true;
+            this.chkBoxChangeCamera.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkBoxChangeCamera.Location = new System.Drawing.Point(294, 36);
+            this.chkBoxChangeCamera.Name = "chkBoxChangeCamera";
+            this.chkBoxChangeCamera.Size = new System.Drawing.Size(125, 20);
+            this.chkBoxChangeCamera.TabIndex = 36;
+            this.chkBoxChangeCamera.Text = "Change Camera";
+            this.chkBoxChangeCamera.UseVisualStyleBackColor = true;
+            this.chkBoxChangeCamera.CheckedChanged += new System.EventHandler(this.chkBoxChangeCamera_CheckedChanged);
+            // 
+            // comVideoDeviceBox
+            // 
+            this.comVideoDeviceBox.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.comVideoDeviceBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comVideoDeviceBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comVideoDeviceBox.FormattingEnabled = true;
+            this.comVideoDeviceBox.Location = new System.Drawing.Point(64, 36);
+            this.comVideoDeviceBox.Name = "comVideoDeviceBox";
+            this.comVideoDeviceBox.Size = new System.Drawing.Size(227, 21);
+            this.comVideoDeviceBox.TabIndex = 26;
+            this.comVideoDeviceBox.Visible = false;
+            this.comVideoDeviceBox.DropDown += new System.EventHandler(this.comVideoDeviceBox_DropDown);
+            this.comVideoDeviceBox.SelectedIndexChanged += new System.EventHandler(this.comVideoDeviceBox_SelectedIndexChanged);
+            // 
             // lblNoCameraAvailable
             // 
             this.lblNoCameraAvailable.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblNoCameraAvailable.AutoSize = true;
             this.lblNoCameraAvailable.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNoCameraAvailable.Location = new System.Drawing.Point(51, 193);
+            this.lblNoCameraAvailable.Location = new System.Drawing.Point(53, 197);
             this.lblNoCameraAvailable.Name = "lblNoCameraAvailable";
             this.lblNoCameraAvailable.Size = new System.Drawing.Size(374, 29);
             this.lblNoCameraAvailable.TabIndex = 35;
@@ -238,9 +267,9 @@
             this.btnCapturePhoto.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.btnCapturePhoto.BackColor = System.Drawing.Color.Orange;
             this.btnCapturePhoto.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCapturePhoto.Location = new System.Drawing.Point(52, 407);
+            this.btnCapturePhoto.Location = new System.Drawing.Point(63, 407);
             this.btnCapturePhoto.Name = "btnCapturePhoto";
-            this.btnCapturePhoto.Size = new System.Drawing.Size(374, 39);
+            this.btnCapturePhoto.Size = new System.Drawing.Size(352, 39);
             this.btnCapturePhoto.TabIndex = 0;
             this.btnCapturePhoto.Text = "Capture Owner Photo";
             this.btnCapturePhoto.UseVisualStyleBackColor = false;
@@ -250,22 +279,12 @@
             // 
             this.cameraBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.cameraBox.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.cameraBox.Location = new System.Drawing.Point(53, 35);
+            this.cameraBox.Location = new System.Drawing.Point(64, 57);
             this.cameraBox.Name = "cameraBox";
-            this.cameraBox.Size = new System.Drawing.Size(372, 372);
+            this.cameraBox.Size = new System.Drawing.Size(350, 350);
             this.cameraBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.cameraBox.TabIndex = 23;
             this.cameraBox.TabStop = false;
-            // 
-            // comVideoDeviceBox
-            // 
-            this.comVideoDeviceBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.comVideoDeviceBox.FormattingEnabled = true;
-            this.comVideoDeviceBox.Location = new System.Drawing.Point(95, 383);
-            this.comVideoDeviceBox.Name = "comVideoDeviceBox";
-            this.comVideoDeviceBox.Size = new System.Drawing.Size(59, 28);
-            this.comVideoDeviceBox.TabIndex = 26;
-            this.comVideoDeviceBox.Visible = false;
             // 
             // label4
             // 
@@ -311,7 +330,7 @@
             // 
             this.txtCapturedImagePath.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtCapturedImagePath.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCapturedImagePath.Location = new System.Drawing.Point(59, 388);
+            this.txtCapturedImagePath.Location = new System.Drawing.Point(61, 388);
             this.txtCapturedImagePath.MaxLength = 45;
             this.txtCapturedImagePath.Name = "txtCapturedImagePath";
             this.txtCapturedImagePath.Size = new System.Drawing.Size(61, 21);
@@ -325,7 +344,7 @@
             this.label8.BackColor = System.Drawing.Color.WhiteSmoke;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.ForeColor = System.Drawing.Color.Gray;
-            this.label8.Location = new System.Drawing.Point(54, 389);
+            this.label8.Location = new System.Drawing.Point(56, 389);
             this.label8.Margin = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(106, 16);
@@ -339,10 +358,10 @@
             this.txtSaveImageDir.BackColor = System.Drawing.Color.WhiteSmoke;
             this.txtSaveImageDir.Enabled = false;
             this.txtSaveImageDir.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSaveImageDir.Location = new System.Drawing.Point(160, 386);
+            this.txtSaveImageDir.Location = new System.Drawing.Point(162, 386);
             this.txtSaveImageDir.MaxLength = 45;
             this.txtSaveImageDir.Name = "txtSaveImageDir";
-            this.txtSaveImageDir.Size = new System.Drawing.Size(224, 21);
+            this.txtSaveImageDir.Size = new System.Drawing.Size(200, 21);
             this.txtSaveImageDir.TabIndex = 34;
             this.txtSaveImageDir.Visible = false;
             // 
@@ -351,7 +370,7 @@
             this.btnBrowseImagePath.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.btnBrowseImagePath.BackColor = System.Drawing.Color.Wheat;
             this.btnBrowseImagePath.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnBrowseImagePath.Location = new System.Drawing.Point(384, 385);
+            this.btnBrowseImagePath.Location = new System.Drawing.Point(375, 386);
             this.btnBrowseImagePath.Name = "btnBrowseImagePath";
             this.btnBrowseImagePath.Size = new System.Drawing.Size(39, 23);
             this.btnBrowseImagePath.TabIndex = 32;
@@ -1083,6 +1102,7 @@
         private System.Windows.Forms.CheckBox checkBox5;
         private System.Windows.Forms.CheckBox checkBox4;
         private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.CheckBox chkBoxChangeCamera;
 
     }
 }

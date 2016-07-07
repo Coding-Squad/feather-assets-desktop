@@ -121,6 +121,7 @@ namespace RFID_FEATHER_ASSETS
                             row.Cells["ColPersonImgUrl"].Value = generateResult[i].imageUrl;
                             row.Cells["ColCreatedAt"].Value = generateResult[i].createdAt.ToString("g");
                             row.Cells["ColUpdatedAt"].Value = generateResult[i].asset.updatedAt.ToString("s");
+                            row.Cells["ColReaderInfo"].Value = generateResult[i].readerInfo;
 
                             //grdViewTransactions.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.Fill);
                             //return;
@@ -245,8 +246,7 @@ namespace RFID_FEATHER_ASSETS
         public string notes { get; set; }
         public string imageUrl { get; set; }
         public DateTime createdAt { get; set; }
-        public string result { get; set; }
-        public string message { get; set; }
+        public string readerInfo { get; set; }
         public AssetList asset { get; set; }
     }
 

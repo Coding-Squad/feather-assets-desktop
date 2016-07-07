@@ -20,6 +20,7 @@ namespace RFID_FEATHER_ASSETS
         string tokenvalue;
         int companyId;
         int userId;
+        string readerInfo;
 
         public AssetRenewal()
         {
@@ -63,6 +64,7 @@ namespace RFID_FEATHER_ASSETS
                     tokenvalue = (string)(key.GetValue("authenticationToken"));
                     companyId = (int)(key.GetValue("companyId"));
                     userId = (int)(key.GetValue("UserId"));
+                    readerInfo = (string)(key.GetValue("readerInfo"));
                     key.Close();
                 }
             }
@@ -180,6 +182,7 @@ namespace RFID_FEATHER_ASSETS
                 Transaction transactDet = new Transaction();
 
                 transactDet.companyId = companyId;//1;
+                transactDet.readerInfo = readerInfo;
                 //transactDet.readerId = 1;
                 //transactDet.notes = txtExplanationNotes.Text.Trim();
                 //transactDet.imageUrl = newImgFileNames;//txtCapturedImagePath.Text;//txtImagePath.Text;
