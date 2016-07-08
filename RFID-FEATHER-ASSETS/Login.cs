@@ -12,26 +12,27 @@ using RestSharp;
 using System.Net;
 using RestSharp.Deserializers;
 using Microsoft.Win32;
+using System.Globalization;
+using System.Resources;
+using System.Reflection;
+using System.Threading;
 using System.Net.NetworkInformation;
 
 namespace RFID_FEATHER_ASSETS
 {
-
-    
+     
     public partial class LoginActivity : Form
     {
-        //string connectionString = "server=128.199.83.107;port=3306;uid=root;pwd=aws123;database=feather_assets;";
-        string readerInfo;
-
+        int companyid;
+		string readerInfo;
         public LoginActivity()//string portnamesource)
         {
             InitializeComponent();
-            //cmbComPort.Text = portnamesource;
-            //GetAssetSystemInfo();
-            GetReaderInfo();
+            getLanguageInfo();
+			GetReaderInfo();
         }
 
-        private void GetReaderInfo()
+		private void GetReaderInfo()
         {
             try
             { 
@@ -66,7 +67,7 @@ namespace RFID_FEATHER_ASSETS
             }  
         }
 
-        private void GetAssetSystemInfo()
+        private void getLanguageInfo()
         {
             try
             {
@@ -76,16 +77,15 @@ namespace RFID_FEATHER_ASSETS
                 //if it does exist, retrieve the stored values  
                 if (key != null)
                 {
-                    cboCompanyList.Text = (string)(key.GetValue("companyId"));
+                    selectLanguage.Text = (string)(key.GetValue("Language"));
                     key.Close();
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-            }  
+            }
         }
-
         private void ClearFields()
         {
             txtUserName.Text = string.Empty;
@@ -96,15 +96,6 @@ namespace RFID_FEATHER_ASSETS
         {
             try
             {
-                ////Validation for Company 
-                //if (string.IsNullOrEmpty (cboCompanyList.Text.Trim()))
-                //{
-                //    lblCompanyRequired.Visible = true;
-                //    cboCompanyList.Focus();
-                //    return;
-                //} else lblCompanyRequired.Visible = false;
-
-                //Validation for User Name and Password
                 if (txtUserName.TextLength == 0 || txtPassword.TextLength == 0)
                 {
                     lblUserPasswordRequired.Visible = true;
@@ -151,10 +142,18 @@ namespace RFID_FEATHER_ASSETS
                         JsonDeserializer deserial = new JsonDeserializer();
                         loginResult = deserial.Deserialize<LoginResult>(response);
 
-                        SaveAssetSystemInfo(loginResult.authenticationToken, loginResult.roles, loginResult.companyId, loginResult.userId, txtUserName.Text.Trim(), readerInfo);
+                        companyid = loginResult.companyId;
+                        SaveAssetSystemInfo(loginResult.authenticationToken, loginResult.roles, loginResult.userId, txtUserName.Text.Trim());
 
-                        //check authorities                       
-                        if (loginResult.roles == "ROLE_ADMIN")
+
+                        //check authorities    
+                        if (loginResult.roles == "ROLE_SUPERADMIN")
+                        {
+                            this.Hide();
+                            MainMenu MenuForm = new MainMenu(loginResult.authenticationToken, /*cmbComPort.Text,*/ loginResult.roles);
+                            MenuForm.ShowDialog();
+                        }
+                        else if (loginResult.roles == "ROLE_ADMIN")
                         {
                             this.Hide();
                             MainMenu MenuForm = new MainMenu(loginResult.authenticationToken, /*cmbComPort.Text,*/ loginResult.roles);
@@ -197,7 +196,7 @@ namespace RFID_FEATHER_ASSETS
              
         }
 
-        private void SaveAssetSystemInfo(string autoken, string roles, int companyId, int userId, string loginid, string readerInfo)
+        private void SaveAssetSystemInfo(string autoken, string roles, int userId, string loginid)
         {
             try
             {
@@ -208,10 +207,10 @@ namespace RFID_FEATHER_ASSETS
                 //storing the values  
                 if (!string.IsNullOrEmpty(autoken)) key.SetValue("authenticationToken", autoken);
                 if (!string.IsNullOrEmpty(roles)) key.SetValue("roles", roles);
-                key.SetValue("companyId", companyId);
+                key.SetValue("companyId", companyid);
                 key.SetValue("UserId", userId);
+                key.SetValue("Language", selectLanguage.Text.ToString());
                 if (!string.IsNullOrEmpty(loginid)) key.SetValue("UserName", loginid);
-                if (!string.IsNullOrEmpty(readerInfo)) key.SetValue("readerInfo", readerInfo);
                 key.Close();
             }
             catch (Exception ex)
@@ -243,7 +242,35 @@ namespace RFID_FEATHER_ASSETS
         {
             Environment.Exit(0);
         }
-
+        private void ChangeLanguage(string lang)
+        {
+            foreach (Control c in this.Controls)
+            {
+                ComponentResourceManager resources = new ComponentResourceManager(typeof(LoginActivity));
+                resources.ApplyResources(c, c.Name, new CultureInfo(lang));
+            }
+        }
+        private void selectLanguage_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+            //SaveAssetSystemInfo(string.Empty, string.Empty, 0,string.Empty, selectLanguage.Text.Trim());
+            if (selectLanguage.SelectedItem.ToString() == "English")
+            {
+                ChangeLanguage("en");
+            }
+            else if (selectLanguage.SelectedItem.ToString() == "Japanese")
+            {
+                ResourceManager rm = new ResourceManager("RFID_FEATHER_ASSETS.Languages.login", Assembly.GetExecutingAssembly());
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("ja-JP");
+                lblLogin.Text = rm.GetString("lblLogin");
+                lblUsername.Text = rm.GetString("lblUsername");
+                lblPassword.Text = rm.GetString("lblPassword");
+                lblUserPasswordRequired.Text = rm.GetString("lblUserPasswordRequired");
+                btnLogin.Text = rm.GetString("btnLogin");
+                btnCancel.Text = rm.GetString("btnCancel");
+                lblLanguage.Text = rm.GetString("lblLanguage");
+                lblSigningIn.Text = rm.GetString("lblSigningIn");
+            }
+        }
      }
 
     //Getters and Setters

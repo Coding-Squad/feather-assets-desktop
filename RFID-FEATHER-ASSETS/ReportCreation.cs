@@ -9,10 +9,14 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
+using System.Resources;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -28,6 +32,7 @@ namespace RFID_FEATHER_ASSETS
         private VideoCaptureDevice cam;
         bool IsCameraConnected = false;
         string newImgFileNames;
+        string language;
         string ImgFileName;
         int companyId;
         string readerInfo;
@@ -39,16 +44,62 @@ namespace RFID_FEATHER_ASSETS
             InitializeComponent();
 
             //label1.Text = Form1.SetValueForText1;
-
+            getLanguage();
+            languageHandler();
             GetAssetSystemInfo();
             InitializeCamera();
             InitializePhotoLabel();
         }
+        private void getLanguage()
+        {
+            try
+            {
+                //opening the subkey  
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\AssetSystemInfo");
 
+                //if it does exist, retrieve the stored values  
+                if (key != null)
+                {
+                    language = (string)(key.GetValue("Language"));
+                    key.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void languageHandler()
+        {
+            if (language == "Japanese")
+            {
+                ResourceManager rm = new ResourceManager("RFID_FEATHER_ASSETS.Languages.ReportCreation", Assembly.GetExecutingAssembly());
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("ja-JP");
+
+                grpInformation.Text = rm.GetString("grpInformation");
+                lblPersonPhoto.Text = rm.GetString("lblPersonPhoto");
+                lblValidIDPhoto.Text = rm.GetString("lblValidIDPhoto");
+                btnCapturePhoto.Text = "個人的な写真は取り込む";
+                lblNotes.Text = rm.GetString("lblNotes");
+                btnSubmit.Text = rm.GetString("btnSubmit");
+                btnCancel.Text = rm.GetString("btnCancel");
+                lblSubmittingInformation.Text = rm.GetString("lblSubmittingInformation");
+                lblNoCameraAvailable.Text = rm.GetString("lblNoCameraAvailable");
+                this.Text = rm.GetString("title");
+            }
+        }
         private void InitializePhotoLabel()
         {
+            if(language.ToLower() == "japanese")
+            {
+                lblPersonPhoto.Text = "第一ステップ" + "\n" + lblPersonPhoto.Text;
+                lblValidIDPhoto.Text = "第二ステップ" + "\n" + lblValidIDPhoto.Text;
+            }
+            else
+            {
             lblPersonPhoto.Text = "Step 1" + "\n" + lblPersonPhoto.Text;
             lblValidIDPhoto.Text = "Step 2" + "\n" + lblValidIDPhoto.Text;
+            }
         }
 
         private void InitializeCamera()
@@ -72,7 +123,8 @@ namespace RFID_FEATHER_ASSETS
                     IsCameraConnected = false;
                     cameraBox.BackColor = Color.Black;
                     lblNoCameraAvailable.Visible = true;
-                    btnCapturePhoto.Text = "Refresh Camera";
+                    if (language.ToUpper() == "JAPANESE") btnCapturePhoto.Text = "リフレッシュカメラ";
+                    else btnCapturePhoto.Text = "Refresh Camera";
                 }
                 else
                 {
@@ -86,7 +138,10 @@ namespace RFID_FEATHER_ASSETS
                     IsCameraConnected = true;
                     cameraBox.BackColor = Color.White;
                     lblNoCameraAvailable.Visible = false;
-                    //btnCapturePhoto.Text = "Capture Image";
+
+                    getCaptureButtonText();
+                    /*if (language.ToLower() == "japanese") btnCapturePhoto.Text = "個人的な写真は取り込む";
+                    else btnCapturePhoto.Text = "Capture Personal Photo";*/
                 }
             }
             catch (Exception ex)
@@ -145,7 +200,8 @@ namespace RFID_FEATHER_ASSETS
             {
                 if (imgCapture1.Image == null || imgCapture2.Image == null || txtExplanationNotes.Text.Length == 0)
                 {
-                    MessageBox.Show("Complete information is required.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    if (language.ToLower() == "japanese") MessageBox.Show("完全な情報は必要です.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    else MessageBox.Show("Complete information is required.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
                     txtExplanationNotes.Focus();
                     return;
                 }
@@ -186,7 +242,8 @@ namespace RFID_FEATHER_ASSETS
 
                     if (restResult.result == "OK")
                     {
-                        MessageBox.Show("Report successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        if (language.ToLower() == "japanese") MessageBox.Show("レポートが正常に保存され", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        else MessageBox.Show("Report successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                         if (IsCameraConnected) cam.Stop();
                         DialogResult = DialogResult.OK;
                         this.Dispose(); //ClearFields();
@@ -230,18 +287,21 @@ namespace RFID_FEATHER_ASSETS
                 {*/
                     //btnGetRFIDTag.PerformClick();
                     //reader.CloseCom();
-                    if (cam == null || btnCapturePhoto.Text == "Refresh Camera")
+                    if (cam == null || btnCapturePhoto.Text == "Refresh Camera" || btnCapturePhoto.Text=="リフレシュカメラ")
                     {
-                        InitializeCamera();
+                        InitializeCamera();                        
                     }
                     else if (IsCameraConnected)
                     {
+                        /*if (language.ToLower() == "japanese") btnCapturePhoto.Text = "個人的な写真は取り込む";
+                        else btnCapturePhoto.Text = "Capture Personal Photo";*/
+
                         if (imgCapture2.Image == null)
                         {
-                            btnCapturePhoto.Text = "Processing. Please wait...";
+                            if (language.ToLower() == "japanese") btnCapturePhoto.Text = "処理. お待ちください...";
+                            else btnCapturePhoto.Text = "Processing. Please wait...";
                             btnCapturePhoto.Refresh();
-                        }
-
+                        }                        
                         //Assigned captured image in each picture box
                         if (imgCapture1.Image == null)
                         {
@@ -257,7 +317,8 @@ namespace RFID_FEATHER_ASSETS
                         }
                         else
                         {
-                            MessageBox.Show("Captured Images exceeds the maximum limit.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            if (language.ToLower() == "japanese") MessageBox.Show("写真は、制限を超えます", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            else MessageBox.Show("Captured Images exceeds the maximum limit.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
 
@@ -290,6 +351,22 @@ namespace RFID_FEATHER_ASSETS
             }
         }
 
+        private void getCaptureButtonText()
+        {
+            if (language == "English")
+            {
+                if (imgCapture1.Image == null) btnCapturePhoto.Text = "Capture Owner Photo";
+                else if (imgCapture2.Image == null) btnCapturePhoto.Text = "Capture Valid ID Photo";
+                else btnCapturePhoto.Text = "Captured Completed";
+            }
+            else
+            {
+                if (imgCapture1.Image == null) btnCapturePhoto.Text = "個人的な写真は取り込む";
+                else if (imgCapture2.Image == null) btnCapturePhoto.Text = "有効な証明ID写真を取り込みます";
+                else btnCapturePhoto.Text = "撮影し完成";
+            }
+        }
+
         private void SubmitImage()
         {
             Bitmap Image = (Bitmap)cameraBox.Image;
@@ -307,9 +384,17 @@ namespace RFID_FEATHER_ASSETS
 
 
             IRestResponse response = client.Execute(upload);
-
-            if (imgCapture2.Image == null) btnCapturePhoto.Text = "Capture Valid ID Photo";            
-            else btnCapturePhoto.Text = "Captured Completed";
+            /*if (language.ToUpper() == "JAPANESE")
+            {
+                if (imgCapture2.Image == null) btnCapturePhoto.Text = "有効な証明ID写真を取り込みます";
+                else btnCapturePhoto.Text = "取り込み官僚";
+            }
+            else
+            {
+                if (imgCapture2.Image == null) btnCapturePhoto.Text = "Capture Valid ID Photo";
+                else btnCapturePhoto.Text = "Capture Completed";
+            }*/
+            getCaptureButtonText();
 
             var content = response.Content;
 
@@ -354,28 +439,58 @@ namespace RFID_FEATHER_ASSETS
         private void btnCancel_Click(object sender, EventArgs e)
         {
             try
-            { 
-                if (imgCapture1.Image != null || !string.IsNullOrEmpty(txtExplanationNotes.Text))
+            {
+                if (language.ToLower() == "japanese")
                 {
-                    DialogResult result = MessageBox.Show("Are you sure you want to cancel the report creation?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
-                    if (result == DialogResult.Yes)
+                    if (imgCapture1.Image != null || !string.IsNullOrEmpty(txtExplanationNotes.Text))
                     {
-                        if (IsCameraConnected) cam.Stop();
-                        DialogResult = DialogResult.Cancel;
-                        this.Dispose();
+                        DialogResult result = MessageBox.Show("レポートをキャンセルしてもよろしいですか？", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+
+                        if (result == DialogResult.Yes)
+                        {
+                            if (IsCameraConnected) cam.Stop();
+                            DialogResult = DialogResult.Cancel;
+                            this.Dispose();
+                        }
+                        else
+                        {
+                            //btnGetRFIDTag.Focus();
+                            //this.Dispose();
+                            return;
+                        }
                     }
                     else
                     {
-                        //btnGetRFIDTag.Focus();
-                        //this.Dispose();
-                        return;
+                        if (IsCameraConnected) cam.Stop();
+                        this.Dispose();
+                        //return;
                     }
                 }
                 else
                 {
-                    if (IsCameraConnected) cam.Stop();
-                    this.Dispose();
-                    //return;
+                    if (imgCapture1.Image != null || !string.IsNullOrEmpty(txtExplanationNotes.Text))
+                    {
+                        DialogResult result = MessageBox.Show("Are you sure you want to cancel the report creation?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+
+                        if (result == DialogResult.Yes)
+                        {
+                            if (IsCameraConnected) cam.Stop();
+                            DialogResult = DialogResult.Cancel;
+                            this.Dispose();
+                        }
+                        else
+                        {
+                            //btnGetRFIDTag.Focus();
+                            //this.Dispose();
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        if (IsCameraConnected) cam.Stop();
+                        this.Dispose();
+                        //return;
+                    }
                 }
             }
             catch (Exception ex)

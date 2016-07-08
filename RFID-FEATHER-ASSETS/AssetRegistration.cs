@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using UHFDemo;
+using System.IO;
 using RestSharp;
 using System.Net;
 using RestSharp.Deserializers;
@@ -10,6 +12,10 @@ using AForge.Video.DirectShow;
 using AForge.Video;
 using Microsoft.Win32;
 using System.Drawing.Imaging;
+using System.Threading;
+using System.Resources;
+using System.Globalization;
+using System.Reflection;
 
 namespace RFID_FEATHER_ASSETS
 {
@@ -28,6 +34,7 @@ namespace RFID_FEATHER_ASSETS
         string baudrate = "115200";
         string tokenvalue;
         string roleValue;
+        string language;
         int userId;
         int companyId;
         private FilterInfoCollection webcam;
@@ -50,19 +57,86 @@ namespace RFID_FEATHER_ASSETS
             //tokenvalue = tokenvaluesource;
             //roleValue = roleSource;
             GetAssetSystemInfo();
-
+            getLanguage();
+            languageHandler();
             //InitializeOwner();
             InitializeCamera();
             InitializePhotoLabel();
         }
+        private void getLanguage()
+        {
+            try
+            {
+                //opening the subkey  
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\AssetSystemInfo");
 
+                //if it does exist, retrieve the stored values  
+                if (key != null)
+                {
+                    language = (string)(key.GetValue("Language"));
+                    key.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void languageHandler()
+        {
+            if (language == "Japanese")
+            {
+                ResourceManager rm = new ResourceManager("RFID_FEATHER_ASSETS.Languages.AssetRegistration", Assembly.GetExecutingAssembly());
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("ja-JP");
+                this.Text = rm.GetString("title");
+                lblMemo.Text = rm.GetString("lblMemo");
+                lblDesc.Text = rm.GetString("lblDesc");
+                lblTag.Text = rm.GetString("lblTag");
+                grpCameraPreview.Text = rm.GetString("grpCameraPreview");
+                grpAssetInfo.Text = rm.GetString("grpAssetInfo");
+                grpCaptured.Text = rm.GetString("grpCaptured");
+                btnCancel.Text = rm.GetString("btnCancel");
+                btnSubmit.Text = rm.GetString("btnSubmit");
+                lblNoCameraAvailable.Text = rm.GetString("lblNoCameraAvailable");
+                rbtnValidToday.Text = rm.GetString("rbtnValidToday");
+                rbtnValidUntil.Text = rm.GetString("rbtnValidUntil");
+                rbtnNoExpiration.Text = rm.GetString("rbtnNoExpiration");
+                grpExpiration.Text = rm.GetString("grpExpiration");
+                btnGetRFIDTag.Text = rm.GetString("btnGetRFIDTag");
+                //shorter
+                btnGetAssetInfo.Text = rm.GetString("btnGetAssetInfo");
+                //shorter
+                lblOwnerPic.Text = rm.GetString("lblOwnerPic");
+                lblLoadingInformation.Text = rm.GetString("lblLoadingInformation");
+                lblAssetPic.Text = rm.GetString("lblAssetPic");
+                lblOwnerPhoto.Text = rm.GetString("lblOwnerPhoto");
+                lblValidIDPhoto.Text = rm.GetString("lblValidIDPhoto");
+                lblAssetPhoto1.Text = rm.GetString("lblAssetPhoto1");
+                lblAssetPhoto2.Text = rm.GetString("lblAssetPhoto2");
+                lblAssetPhoto3.Text = rm.GetString("lblAssetPhoto3");
+                btnCapturePhoto.Text = rm.GetString("btnCapturePhoto");
+            }
+        }
         private void InitializePhotoLabel()
         {
-            lblOwnerPhoto.Text = "Step 1" + "\n" + lblOwnerPhoto.Text;
-            lblValidIDPhoto.Text = "Step 2" + "\n"  + lblValidIDPhoto.Text;
-            lblAssetPhoto1.Text = "Step 3" + "\n" + lblAssetPhoto1.Text;
-            lblAssetPhoto2.Text = "Step 4" + "\n" + lblAssetPhoto2.Text;
-            lblAssetPhoto3.Text = "Step 5" + "\n" + lblAssetPhoto3.Text;
+            if (language == "Japanese")
+            {
+                lblOwnerPhoto.Text = "第一ステップ" + "\n" + lblOwnerPhoto.Text;
+                lblValidIDPhoto.Text = "第二ステップ" + "\n" + lblValidIDPhoto.Text;
+                lblAssetPhoto1.Text = "第三ステップ" + "\n" + lblAssetPhoto1.Text;
+                lblAssetPhoto2.Text = "第四ステップ" + "\n" + lblAssetPhoto2.Text;
+                lblAssetPhoto3.Text = "第五ステップ" + "\n" + lblAssetPhoto3.Text;
+
+            }
+            else
+            {
+                lblOwnerPhoto.Text = "Step 1" + "\n" + lblOwnerPhoto.Text;
+                lblValidIDPhoto.Text = "Step 2" + "\n" + lblValidIDPhoto.Text;
+                lblAssetPhoto1.Text = "Step 3" + "\n" + lblAssetPhoto1.Text;
+                lblAssetPhoto2.Text = "Step 4" + "\n" + lblAssetPhoto2.Text;
+                lblAssetPhoto3.Text = "Step 5" + "\n" + lblAssetPhoto3.Text;
+            }
         }
 
         private void GetAssetSystemInfo()
@@ -95,34 +169,37 @@ namespace RFID_FEATHER_ASSETS
         private void InitializeOwner()
         {
             //try
-            //{ 
-            //   var company = 1;
+            //{
+            //    //var company = 1;
 
-            //   RestClient client = new RestClient("http://52.163.93.95:8080/FeatherAssets/"); //("http://feather-assets.herokuapp.com/");
-            //   RestRequest ownerName = new RestRequest("/api/user/list/"+company, Method.GET);
+            //    RestClient client = new RestClient("http://52.163.93.95:8080/FeatherAssets/");
+            //    RestRequest ownerName = new RestRequest("/api/user/list/" + companyId, Method.GET);
 
-            //   var authToken = tokenvalue;
+            //    var authToken = tokenvalue;
 
-            //   ownerName.RequestFormat = DataFormat.Json;
-            //   ownerName.AddHeader("Content-Type", "application/json; charset=utf-8");
-            //   ownerName.AddHeader("X-Auth-Token", authToken);
+            //    ownerName.RequestFormat = DataFormat.Json;
+            //    ownerName.AddHeader("Content-Type", "application/json; charset=utf-8");
+            //    ownerName.AddHeader("X-Auth-Token", authToken);
 
-            //   var response = client.Execute<List<Owner>>(ownerName);
-            //   var content = response.Content;
+            //    var response = client.Execute<List<Owner>>(ownerName);
+            //    var content = response.Content;
 
-            //   if (response.StatusCode == HttpStatusCode.OK)
-            //   {
-            //       JsonDeserializer deserial = new JsonDeserializer();
-            //       List<Owner> owner = deserial.Deserialize<List<Owner>>(response);
+            //    if (response.StatusCode == HttpStatusCode.OK)
+            //    {
+            //        JsonDeserializer deserial = new JsonDeserializer();
+            //        List<Owner> owner = deserial.Deserialize<List<Owner>>(response);
 
-            //       this.comboOwner.DataSource = owner;
-            //       this.comboOwner.ValueMember = "userId";
-            //       this.comboOwner.DisplayMember = "fullName";
-            //   }
-            //   else
-            //   {
-            //       MessageBox.Show("Unable to reach server. please try again later.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //   }
+            //        this.comboOwner.DataSource = owner;
+            //        this.comboOwner.ValueMember = "userId";
+            //        this.comboOwner.DisplayMember = "fullName";
+            //    }
+            //    else
+            //    {
+            //        if (response.StatusCode == HttpStatusCode.InternalServerError)
+            //        {
+            //            MessageBox.Show("Unable to reach server. please try again later.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //        }                    
+            //    }
             //}
             //catch (Exception ex)
             //{
@@ -134,7 +211,7 @@ namespace RFID_FEATHER_ASSETS
         {
             newImgFileNames = string.Empty;
 
-            if (btnCancel.Text.ToUpper() == "BACK")
+            if (btnCancel.Text.ToUpper() == "BACK" || btnCancel.Text == "戻る")
             {
                 CallMainMenu();
                 return;
@@ -144,13 +221,15 @@ namespace RFID_FEATHER_ASSETS
             {
                 string cancelMsg;
 
-                if (btnSubmit.Text.ToUpper() == "SUBMIT")
+                if (btnSubmit.Text.ToUpper() == "SUBMIT" || btnSubmit.Text == "提出する")
                 {
-                    cancelMsg = "Are you sure you want to cancel the registration?";
+                    if (language == "English") cancelMsg = "Are you sure you want to cancel the registration?";
+                    else cancelMsg = "登録を取り消すにしてもよろしいですか？";
                 }
                 else
                 {
-                    cancelMsg = "Are you sure you want to cancel the update?";
+                    if (language == "English") cancelMsg = "Are you sure you want to cancel the update?";
+                    else cancelMsg = "更新を取り消すにしてもよろしいですか？";
                 }
 
                 DialogResult result = MessageBox.Show(cancelMsg, this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
@@ -174,13 +253,14 @@ namespace RFID_FEATHER_ASSETS
             {
                 if (txtRFIDTag.Text.Length == 0 ||/* txtAssetName.Text.Length == 0 ||*/ txtDescription.Text.Length == 0 || txtTakeOutNote.Text.Length == 0 || imgCapture1.Image == null)
                 {
-                    MessageBox.Show("Complete information is required.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    if (language == "English") MessageBox.Show("Complete information is required.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    else if (language == "Japanese") MessageBox.Show("完全な情報は、必要とされます.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
                     //btnBrowseImage.Focus();
                     btnGetRFIDTag.Focus();
                     return;
                 }
 
-                if (btnSubmit.Text.ToUpper() == "UPDATE")
+                if (btnSubmit.Text.ToUpper() == "UPDATE" || btnSubmit.Text == "更新する")
                 {
                     updateAssetInfo();
                 }
@@ -255,7 +335,8 @@ namespace RFID_FEATHER_ASSETS
                         {
                             SaveTransaction();
 
-                            MessageBox.Show("Record successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            if (language == "English") MessageBox.Show("Record successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            else MessageBox.Show("レコードが正常に保存され.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                             ClearFields();
                         }
                         else
@@ -293,7 +374,7 @@ namespace RFID_FEATHER_ASSETS
                 //transactDet.imageUrl = newImgFileNames;//txtCapturedImagePath.Text;//txtImagePath.Text;
 
                 //Gettting the assetId
-                if (btnSubmit.Text.ToUpper() == "SUBMIT")
+                if (btnSubmit.Text.ToUpper() == "SUBMIT" || btnSubmit.Text == "提出する")
                 {
                     GetAsset getAsset = new GetAsset();
 
@@ -347,14 +428,15 @@ namespace RFID_FEATHER_ASSETS
 
                     if (restResult.result != "OK")
                     {
-                        MessageBox.Show("Saving transaction..." + "\n" + restResult.result + " " + restResult.message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        if (language == "English") MessageBox.Show("Saving transaction..." + "\n" + restResult.result + " " + restResult.message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        else MessageBox.Show("取引を保存します。。。" + "\n" + restResult.result + " " + restResult.message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
 
                 }
                 else
                 {
-                    MessageBox.Show("Saving transaction..." +"\n" +"Error Code " +
-                    response.StatusCode /*+ " : Message - " + response.ErrorMessage*/);
+                    if (language == "English") MessageBox.Show("Saving transaction..." + "\n" + "Error Code " + response.StatusCode /*+ " : Message - " + response.ErrorMessage*/);
+                    else MessageBox.Show("取引を保存します。。。" + "\n" + "Error Code " + response.StatusCode /*+ " : Message - " + response.ErrorMessage*/);
                     return;
                 }
 
@@ -408,13 +490,15 @@ namespace RFID_FEATHER_ASSETS
             updateAssetInfo.AddBody(updateInfo);
 
             lblSubmittingInformation.Visible = true;
-            lblSubmittingInformation.Text = "Updating Information. Please wait...";
+            if (language == "English") lblSubmittingInformation.Text = "Updating Information. Please wait...";
+            else lblSubmittingInformation.Text = "情報を更新します. お待ちください...";
             this.Refresh();
 
 
             IRestResponse response = client.Execute(updateAssetInfo);
             lblSubmittingInformation.Visible = false;
-            lblSubmittingInformation.Text = "Submitting Information. Please wait...";
+            if (language == "English") lblSubmittingInformation.Text = "Submitting Information. Please wait...";
+            else lblSubmittingInformation.Text = "情報を提出します. お待ちください...";
 
             var content = response.Content;
 
@@ -427,7 +511,8 @@ namespace RFID_FEATHER_ASSETS
                 {
                     SaveTransaction();
 
-                    MessageBox.Show("Record successfully updated.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (language == "English") MessageBox.Show("Record successfully updated.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    else MessageBox.Show("レコードが正常に更新します.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     ClearFields();
                 }
                 else
@@ -457,13 +542,14 @@ namespace RFID_FEATHER_ASSETS
             upload.AddHeader("Content-Type", "multipart/form-data");
             upload.AlwaysMultipartFormData = true;
             upload.AddFile("file", "img.jpg", "image/jpg");
-            upload.AddParameter("companyId", 1);
+            upload.AddParameter("companyId", companyId);
             upload.AddParameter("type", "asset");
 
 
             IRestResponse response = client.Execute(upload);
             getCaptureButtonText();
-            btnCancel.Text = "Cancel";
+            if (language == "English") btnCancel.Text = "Cancel";
+            else btnCancel.Text = "キャンセル";
 
             var content = response.Content;
 
@@ -508,9 +594,18 @@ namespace RFID_FEATHER_ASSETS
             lblAssetPhoto3.Visible = true;
 
             rbtnValidToday.Checked = true;
-            btnCapturePhoto.Text = "Capture Owner Photo";
-            btnSubmit.Text = "Submit";
-            btnCancel.Text = "Back";
+            if (language == "English")
+            {
+                btnCapturePhoto.Text = "Capture Owner Photo";
+                btnSubmit.Text = "Submit";
+                btnCancel.Text = "Back";
+            }
+            else
+            {
+                btnCapturePhoto.Text = "所有者の写真";
+                btnSubmit.Text = "提出する";
+                btnCancel.Text = "戻る";
+            }
             this.Refresh();
             //btnGetRFIDTag.Focus();
         }
@@ -594,7 +689,8 @@ namespace RFID_FEATHER_ASSETS
                         //listBox1.Items.Add(tagInfo);
                         txtRFIDTag.Text = tagInfo.ToString();
                         txtDescription.Focus();//txtAssetName.Focus();
-                        btnCancel.Text = "Cancel";
+                        if (language == "English") btnCancel.Text = "Cancel";
+                        else btnCancel.Text = "キャンセル";
                     }
                 }
                 //else if (nReturnValue == 0)
@@ -623,7 +719,8 @@ namespace RFID_FEATHER_ASSETS
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message + "\n" + "Reader is not connected.");
+                if (language == "English") MessageBox.Show(ex.Message + "\n" + "Reader is not connected.");
+                else MessageBox.Show(ex.Message + "\n" + "リーダーが接続されていません.");
             }
         }
 
@@ -804,7 +901,8 @@ namespace RFID_FEATHER_ASSETS
                     IsCameraConnected = false;
                     cameraBox.BackColor = Color.Black;
                     lblNoCameraAvailable.Visible = true;
-                    btnCapturePhoto.Text = "Refresh Camera";
+                    if (language == "English") btnCapturePhoto.Text = "Refresh Camera";
+                    else if (language == "Japanese") btnCapturePhoto.Text = "リフレッシュカメラ";
                 }
                 else
                 {
@@ -819,7 +917,7 @@ namespace RFID_FEATHER_ASSETS
                     cameraBox.BackColor = Color.White;
                     lblNoCameraAvailable.Visible = false;
 
-                    /*if (btnSubmit.Text.ToUpper() == "UPDATE")*/ getCaptureButtonText();
+                    if (btnSubmit.Text.ToUpper() == "UPDATE" || btnSubmit.Text == "更新する") getCaptureButtonText();
                 }
             }
             catch (Exception ex)
@@ -830,28 +928,32 @@ namespace RFID_FEATHER_ASSETS
 
         private void getCaptureButtonText()
         {
-            if (imgCapture1.Image == null) btnCapturePhoto.Text = "Capture Owner Photo";
-            else if (imgCapture2.Image == null) btnCapturePhoto.Text = "Capture Valid ID Photo";
-            else if (imgCapture3.Image == null) btnCapturePhoto.Text = "Capture Asset Photo 1";
-            else if (imgCapture4.Image == null) btnCapturePhoto.Text = "Capture Asset Photo 2";
-            else if (imgCapture5.Image == null) btnCapturePhoto.Text = "Capture Asset Photo 3";
-            else btnCapturePhoto.Text = "Captured Completed";
+            if (language == "English")
+            {
+                if (imgCapture1.Image == null) btnCapturePhoto.Text = "Capture Owner Photo";
+                else if (imgCapture2.Image == null) btnCapturePhoto.Text = "Capture Valid ID Photo";
+                else if (imgCapture3.Image == null) btnCapturePhoto.Text = "Capture Asset Photo 1";
+                else if (imgCapture4.Image == null) btnCapturePhoto.Text = "Capture Asset Photo 2";
+                else if (imgCapture5.Image == null) btnCapturePhoto.Text = "Capture Asset Photo 3";
+                else btnCapturePhoto.Text = "Captured Completed";
+            }
+            else
+            {
+                if (imgCapture1.Image == null) btnCapturePhoto.Text = "所有者の写真";
+                else if (imgCapture2.Image == null) btnCapturePhoto.Text = "有効なIDの写真";
+                else if (imgCapture3.Image == null) btnCapturePhoto.Text = "アセットの写真一";
+                else if (imgCapture4.Image == null) btnCapturePhoto.Text = "アセットの写真二";
+                else if (imgCapture5.Image == null) btnCapturePhoto.Text = "アセットの写真三";
+                else btnCapturePhoto.Text = "完成しました";
+            }
         }
 
         private void btnCapturePhoto_Click(object sender, EventArgs e)
         {
             try
             {
-                /*if (string.IsNullOrEmpty(txtSaveImageDir.Text))
+                if (language == "English")
                 {
-                    MessageBox.Show("Please select Image Path.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    btnBrowseImagePath.Focus();
-                    return;
-                }
-                else
-                {*/
-                    //btnGetRFIDTag.PerformClick();
-                    //reader.CloseCom();
                     if (cam == null || btnCapturePhoto.Text == "Refresh Camera")
                     {
                         InitializeCamera();
@@ -871,8 +973,8 @@ namespace RFID_FEATHER_ASSETS
                             lblOwnerPhoto.Visible = false;
                             //btnCapturePhoto.Text = "Capture Valid ID Photo";
                         }
-                        else if (imgCapture2.Image == null) 
-                        { 
+                        else if (imgCapture2.Image == null)
+                        {
                             imgCapture2.Image = cameraBox.Image;
                             lblValidIDPhoto.Visible = false;
                             //btnCapturePhoto.Text = "Capture Asset Photo 1";
@@ -900,48 +1002,69 @@ namespace RFID_FEATHER_ASSETS
                             MessageBox.Show("Captured Images exceeds the maximum limit.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
-
                         SubmitImage();
-
-                        //if (string.IsNullOrEmpty(newImgFileNames)) 
-                        //    newImgFileNames = ImgFileName;
-                        //else
-                            //if (btnSubmit.Text.ToUpper() == "UPDATE")
-                            //{
-                            //    updatedImgFileNames = updatedImgFileNames + "," + ImgFileName;
-                            //}
-                            //else newImgFileNames = newImgFileNames + "," + ImgFileName;
-                            newImgFileNames = newImgFileNames + "," + ImgFileName;
-                        ////Saving for captured images
-                        //string dirPath = txtSaveImageDir.Text.Trim() + @"\";//@"C:\Users\USER\Pictures\";
-                        //string fileName = "Image";
-                        //string[] files = Directory.GetFiles(dirPath);
-                        //int count = files.Count(file => { return file.Contains(fileName); });
-
-                        //string newFileName = (count == 0) ? "Image.jpg" : String.Format("{0}{1}.jpg", fileName, count + 1);
-
-                        //cameraBox.Image.Save(dirPath + newFileName);
-                        //txtCapturedImagePath.Text = txtCapturedImagePath.Text + "," + dirPath + newFileName;
-
+                        newImgFileNames = newImgFileNames + "," + ImgFileName;
                         cam.Stop();
-                        //saveFileDialog1.InitialDirectory = @"C:\Users\USER\Pictures\";
-                        //if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-                        //{
-                        //    cameraBox.Image.Save(saveFileDialog1.FileName + ".jpg");
-                        //}
-                        //btnCaptureImg.Text = "Capturing Image. Please wait ...";
-                        //btnCaptureImg.Refresh();
-
-                        //StartCamera();
                         InitializeCamera();
                     }
                 }
-                //else
-                //{
-                //    cam.Stop();
-                //    return;
-                //}
-            //}
+                else
+                {
+                    if (cam == null || btnCapturePhoto.Text == "リフレッシュカメラ")
+                    {
+                        InitializeCamera();
+                    }
+                    else if (IsCameraConnected)
+                    {
+                        if (imgCapture5.Image == null)
+                        {
+                            btnCapturePhoto.Text = "処理. お待ちください...";
+                            btnCapturePhoto.Refresh();
+                        }
+
+                        //Assigned captured image in each picture box
+                        if (imgCapture1.Image == null)
+                        {
+                            imgCapture1.Image = cameraBox.Image;
+                            lblOwnerPhoto.Visible = false;
+                            //btnCapturePhoto.Text = "有効なIDの写真";
+                        }
+                        else if (imgCapture2.Image == null)
+                        {
+                            imgCapture2.Image = cameraBox.Image;
+                            lblValidIDPhoto.Visible = false;
+                            //btnCapturePhoto.Text = "キャプチャー資産写真一";
+                        }
+                        else if (imgCapture3.Image == null)
+                        {
+                            imgCapture3.Image = cameraBox.Image;
+                            lblAssetPhoto1.Visible = false;
+                            //btnCapturePhoto.Text = "キャプチャー資産写真二";
+                        }
+                        else if (imgCapture4.Image == null)
+                        {
+                            imgCapture4.Image = cameraBox.Image;
+                            lblAssetPhoto2.Visible = false;
+                            //btnCapturePhoto.Text = "キャプチャー資産写真三";
+                        }
+                        else if (imgCapture5.Image == null)
+                        {
+                            imgCapture5.Image = cameraBox.Image;
+                            lblAssetPhoto3.Visible = false;
+                            //btnCapturePhoto.Text = "撮影し完成";
+                        }
+                        else
+                        {
+                            MessageBox.Show("撮影した写真は、最大限に超え.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                        SubmitImage();
+                        newImgFileNames = newImgFileNames + "," + ImgFileName;
+                        cam.Stop();
+                        InitializeCamera();
+                    }
+                }
+            }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -1310,8 +1433,17 @@ namespace RFID_FEATHER_ASSETS
                            lblAssetPhoto3.Visible = false;
                        }
                    }
-                    btnCancel.Text = "Cancel";
-                    btnSubmit.Text = "Update";
+                   getCaptureButtonText();
+                   if (language == "English")
+                   {
+                       btnCancel.Text = "Cancel";
+                       btnSubmit.Text = "Update";
+                   }
+                   else
+                   {
+                       btnCancel.Text = "キャンセル";
+                       btnSubmit.Text = "更新する";
+                   }
                     btnSubmit.Focus();
 
                     getCaptureButtonText();
@@ -1319,7 +1451,8 @@ namespace RFID_FEATHER_ASSETS
                 }
                 else if (response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    MessageBox.Show("Error connecting to server.. please try again later");
+                    if (language == "English") MessageBox.Show("Error connecting to server.. please try again later");
+                    else MessageBox.Show("サーバーへの接続エラー.. 後でもう一度試してみてください");
                 }
                 else
                 {

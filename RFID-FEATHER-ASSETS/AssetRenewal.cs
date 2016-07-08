@@ -6,9 +6,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Reflection;
+using System.Resources;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -18,6 +22,7 @@ namespace RFID_FEATHER_ASSETS
     {
         string validUntilValue;
         string tokenvalue;
+        string language;
         int companyId;
         int userId;
         string readerInfo;
@@ -25,11 +30,59 @@ namespace RFID_FEATHER_ASSETS
         public AssetRenewal()
         {
             InitializeComponent();
-
+            getLanguage();
+            languageHandler();
             GetAssetSystemInfo();
             AssetValidUntilDateTime();
         }
+        private void getLanguage()
+        {
+            try
+            {
+                //opening the subkey  
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\AssetSystemInfo");
 
+                //if it does exist, retrieve the stored values  
+                if (key != null)
+                {
+                    language = (string)(key.GetValue("Language"));
+
+                    key.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void languageHandler()
+        {
+            if (language == "Japanese")
+            {
+                //Console.WriteLine(Properties.mainmenu.btnScan);
+                ResourceManager rm = new ResourceManager("RFID_FEATHER_ASSETS.Languages.mainmenu", Assembly.GetExecutingAssembly());
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("ja-JP");
+                groupBox1.Text = rm.GetString("groupBox1");
+                rbtnValidToday.Text = rm.GetString("rbtnValidToday");
+                rbtnValidUntil.Text = rm.GetString("rbtnValidUntil");
+                rbtnValidUnlimited.Text = rm.GetString("rbtnValidUnlimited");
+                lblSubmittingInformation.Text = rm.GetString("lblSubmittingInformation");
+                btnSubmit.Text = rm.GetString("btnSubmit");
+                btnCancel.Text = rm.GetString("btnCancel");
+            }
+            else
+            {
+                ChangeLanguage("en");
+            }
+        }
+        private void ChangeLanguage(string lang)
+        {
+            foreach (Control c in this.Controls)
+            {
+                ComponentResourceManager resources = new ComponentResourceManager(typeof(MainMenu));
+                resources.ApplyResources(c, c.Name, new CultureInfo(lang));
+            }
+        }
         private void AssetValidUntilDateTime()
         {
             //For Valid Until Date
@@ -78,18 +131,35 @@ namespace RFID_FEATHER_ASSETS
         {
             try
             {
-                
-                DialogResult result = MessageBox.Show("Are you sure you want to cancel the asset renewal?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
-                if (result == DialogResult.Yes)
+                if (language == "English")
                 {
-                    DialogResult = DialogResult.Cancel;
-                    this.Dispose();
+                    DialogResult result = MessageBox.Show("Are you sure you want to cancel the asset renewal?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                    if (result == DialogResult.Yes)
+                    {
+                        DialogResult = DialogResult.Cancel;
+                        this.Dispose();
+                    }
+                    else
+                    {
+                        //btnGetRFIDTag.Focus();
+                        //this.Dispose();
+                        return;
+                    }
                 }
                 else
                 {
-                    //btnGetRFIDTag.Focus();
-                    //this.Dispose();
-                    return;
+                    DialogResult result = MessageBox.Show("アセットの更新を取り消すにしてもよろしいですか？", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                    if (result == DialogResult.Yes)
+                    {
+                        DialogResult = DialogResult.Cancel;
+                        this.Dispose();
+                    }
+                    else
+                    {
+                        //btnGetRFIDTag.Focus();
+                        //this.Dispose();
+                        return;
+                    }
                 }
             }
             catch (Exception ex)
@@ -148,14 +218,14 @@ namespace RFID_FEATHER_ASSETS
                     if (restResult.result == "OK")
                     {
                         SaveTransaction();
-
-                        MessageBox.Show("Asset successfully renewed.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        if (language.ToLower() == "japanese") MessageBox.Show("アセットが正常に更新されました。", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        else MessageBox.Show("Asset successfully renewed.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                         DialogResult = DialogResult.OK;
                         this.Dispose();
                     }
                     else
                     {
-                        MessageBox.Show(restResult.result + " " + restResult.message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(restResult.result + restResult.message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                         
                 }
@@ -212,7 +282,8 @@ namespace RFID_FEATHER_ASSETS
 
                     if (restResult.result != "OK")
                     {
-                        MessageBox.Show("Saving transaction..." + "\n" + restResult.result + " " + restResult.message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        if (language.ToLower() == "japanese") MessageBox.Show("取引が保存されました..." + "\n" + restResult.result + " " + restResult.message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        else MessageBox.Show("transaction saved..." + "\n" + restResult.result + " " + restResult.message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
 
                 }

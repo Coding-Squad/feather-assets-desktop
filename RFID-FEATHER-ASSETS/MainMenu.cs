@@ -1,10 +1,15 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using System.Resources;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace RFID_FEATHER_ASSETS
@@ -13,45 +18,64 @@ namespace RFID_FEATHER_ASSETS
     {
         string tokenvalue;
         string roleValue;
+        string language;
         public MainMenu(string tokenvaluesource, /*string portnamesource,*/ string roleSource)
         {
             InitializeComponent();
             //cmbComPort.Text = portnamesource;
             tokenvalue = tokenvaluesource;
             roleValue = roleSource;
+            getLanguage();
+            languageHandler();
         }
 
+        private void getLanguage()
+        {
+            try
+            {
+                //opening the subkey  
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\AssetSystemInfo");
+
+                //if it does exist, retrieve the stored values  
+                if (key != null)
+                {
+                    language = (string)(key.GetValue("Language"));
+
+                    key.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void languageHandler()
+        {
+            if (language == "Japanese")
+            {
+                //Console.WriteLine(Properties.mainmenu.btnScan);
+                ResourceManager rm = new ResourceManager("RFID_FEATHER_ASSETS.Languages.mainmenu", Assembly.GetExecutingAssembly());
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("ja-JP");
+                btnRegisterUser.Text = rm.GetString("btnRegisterUser");
+                btnRegisterAsset.Text = rm.GetString("btnRegisterAsset");
+                btnScan.Text = rm.GetString("btnScan");
+                btnTransactionHistory.Text = rm.GetString("btnTransactionHistory");
+                btnLogout.Text = rm.GetString("btnLogout");
+                this.Text = rm.GetString("MainMenu");
+            }
+        }
         private void btnScan_Click(object sender, EventArgs e)
         {
-            /*if (string.IsNullOrEmpty(cmbComPort.Text))
-            {
-                MessageBox.Show("Please select Port number.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                cmbComPort.Focus();
-                return;
-            }
-            else
-            {*/
-                //TODO RFID SCAN CODE MISSING
                 this.Hide();
                 Verification m = new Verification();//tokenvalue, roleValue);
                 m.Show();
-            //}
         }
 
         private void btnRegisterAsset_Click(object sender, EventArgs e)
         {
-            /*if (string.IsNullOrEmpty(cmbComPort.Text))
-            {
-                MessageBox.Show("Please select Port number.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                cmbComPort.Focus();
-                return;
-            }
-            else
-            {*/
                 this.Hide();
                 AssetRegistration registerAsset = new AssetRegistration();
                 registerAsset.Show();
-            //} 
         }
 
         private void btnRegisterUser_Click(object sender, EventArgs e)

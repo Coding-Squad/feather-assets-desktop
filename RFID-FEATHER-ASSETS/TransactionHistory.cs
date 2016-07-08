@@ -7,10 +7,14 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
+using System.Resources;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -20,6 +24,7 @@ namespace RFID_FEATHER_ASSETS
     {
         string tokenValue;
         string roleValue;
+        string language;
         int companyId;
         string startDate;
         string endDate;
@@ -29,9 +34,61 @@ namespace RFID_FEATHER_ASSETS
         public TransactionHistory()
         {
             InitializeComponent();
+            getLanguage();
+            languageHandler();
             GetAssetSystemInfo();
         }
+        private void getLanguage()
+        {
+            try
+            {
+                //opening the subkey  
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\AssetSystemInfo");
 
+                //if it does exist, retrieve the stored values  
+                if (key != null)
+                {
+                    language = (string)(key.GetValue("Language"));
+                    key.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void languageHandler()
+        {
+            if (language == "Japanese")
+            {
+                ResourceManager rm = new ResourceManager("RFID_FEATHER_ASSETS.Languages.TransactionHistory", Assembly.GetExecutingAssembly());
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("ja-JP");
+
+                this.Text = rm.GetString("title");
+                grpSearchCriteria.Text = rm.GetString("grpSearchCriteria");
+                grpDetails.Text = rm.GetString("grpDetails");
+                lblDateFrom.Text = rm.GetString("lblDateFrom");
+                lblDateTo.Text = rm.GetString("lblDateTo");
+                btnGenerate.Text = rm.GetString("btnGenerate");
+                btnCancel.Text = rm.GetString("btnCancel");
+                lblLoadingInformation.Text = rm.GetString("lblLoadingInformation");
+                ColTransId.HeaderText = rm.GetString("ColTransId");
+                ColRegisterId.HeaderText = rm.GetString("ColRegisterId");
+                ColCompanyId.HeaderText = rm.GetString("ColCompanyId");
+                ColAssetId.HeaderText = rm.GetString("ColAssetId");
+                ColUpdatedAt.HeaderText = rm.GetString("ColUpdatedAt");
+                ColUpdateId.HeaderText = rm.GetString("ColUpdateId");
+                ColDescription.HeaderText = rm.GetString("ColDescription");
+                ColImgUrl.HeaderText = rm.GetString("ColImgUrl");
+                ColRFIDTag.HeaderText = rm.GetString("ColRFIDTag");
+                ColTakeOutNote.HeaderText = rm.GetString("ColTakeOutNote");
+                ColValidUntil.HeaderText = rm.GetString("ColValidUntil");
+                ColNotes.HeaderText = rm.GetString("ColNotes");
+                ColPersonImgUrl.HeaderText = rm.GetString("ColPersonImgUrl");
+                ColCreatedAt.HeaderText = rm.GetString("ColCreatedAt");
+                btnExport.Text = rm.GetString("btnExport");
+            }
+        }
         private void GetAssetSystemInfo()
         {
             try
@@ -61,7 +118,8 @@ namespace RFID_FEATHER_ASSETS
                 grdViewTransactions.Rows.Clear();
                 grdViewTransactions.Refresh();
 
-                lblLoadingInformation.Text = "Getting Information. Please wait...";
+                if (language == "English") lblLoadingInformation.Text = "Getting Information. Please wait...";
+                else lblLoadingInformation.Text = "情報の取得. お待ちください...";
                 lblLoadingInformation.Visible = true;
                 lblLoadingInformation.Refresh();
 
@@ -130,7 +188,8 @@ namespace RFID_FEATHER_ASSETS
                     else
                     {
                         grdViewTransactions.ColumnHeadersVisible = false;
-                        lblLoadingInformation.Text = "Transaction not found.";
+                        if (language == "English") lblLoadingInformation.Text = "Transaction not found.";
+                        else lblLoadingInformation.Text = "トランザクションが見つかりません.";
                         lblLoadingInformation.Visible = true;
                         //lblLoadingInformation.Refresh();
                     }
@@ -138,7 +197,8 @@ namespace RFID_FEATHER_ASSETS
                 }
                 else 
                 {
-                    MessageBox.Show("Error connecting to server.. please try again later");
+                    if (language == "English") MessageBox.Show("Error connecting to server.. Please try again later");
+                    else MessageBox.Show("サーバーへの接続エラー.. 後でもう一度試してください");
                 }  
             }
             catch (Exception ex)
@@ -222,12 +282,24 @@ namespace RFID_FEATHER_ASSETS
                     }
 
                     // Confirm to the user it has been completed.
-                    DialogResult result = MessageBox.Show("Transactions successfully exported." + "\n" + "Do you want to open this file?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
-                    if (result == DialogResult.Yes)
+                    if (language == "English")
                     {
-                        Process.Start(@sfd.FileName);
+                        DialogResult result = MessageBox.Show("Transactions successfully exported." + "\n" + "Do you want to open this file?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                        if (result == DialogResult.Yes)
+                        {
+                            Process.Start(@sfd.FileName);
+                        }
+                        else return;
                     }
-                    else return; 
+                    else
+                    {
+                        DialogResult result = MessageBox.Show("トランザクションは正常にエクスポート." + "\n" + "このファイルを開くようにしたいですか？", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                        if (result == DialogResult.Yes)
+                        {
+                            Process.Start(@sfd.FileName);
+                        }
+                        else return;
+                    }
                 }
                 else return;
             }

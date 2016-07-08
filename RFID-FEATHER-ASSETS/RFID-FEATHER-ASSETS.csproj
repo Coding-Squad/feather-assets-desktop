@@ -110,6 +110,14 @@
     <Compile Include="Assets.Designer.cs">
       <DependentUpon>Assets.cs</DependentUpon>
     </Compile>
+    <Compile Include="Languages\AssetRegistration.ja-JP.Designer.cs" />
+    <Compile Include="Languages\AssetRenewal.ja-JP.Designer.cs" />
+    <Compile Include="Languages\AssetVerification.ja-JP.Designer.cs" />
+    <Compile Include="Languages\login.ja-JP.Designer.cs" />
+    <Compile Include="Languages\mainmenu.ja-JP.Designer.cs" />
+    <Compile Include="Languages\ReportCreation.ja-JP.Designer.cs" />
+    <Compile Include="Languages\TransactionHistory.ja-JP.Designer.cs" />
+    <Compile Include="Languages\UserRegistration.ja-JP.Designer.cs" />
     <Compile Include="Login.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -177,6 +185,14 @@
     <EmbeddedResource Include="Assets.resx">
       <DependentUpon>Assets.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Languages\AssetRegistration.ja-JP.resx" />
+    <EmbeddedResource Include="Languages\AssetRenewal.ja-JP.resx" />
+    <EmbeddedResource Include="Languages\AssetVerification.ja-JP.resx" />
+    <EmbeddedResource Include="Languages\login.ja-JP.resx" />
+    <EmbeddedResource Include="Languages\mainmenu.ja-JP.resx" />
+    <EmbeddedResource Include="Languages\ReportCreation.ja-JP.resx" />
+    <EmbeddedResource Include="Languages\TransactionHistory.ja-JP.resx" />
+    <EmbeddedResource Include="Languages\UserRegistration.ja-JP.resx" />
     <EmbeddedResource Include="Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
     </EmbeddedResource>

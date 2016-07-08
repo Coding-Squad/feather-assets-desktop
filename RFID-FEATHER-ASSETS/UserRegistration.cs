@@ -14,6 +14,11 @@ using AForge.Video;
 using AForge.Video.DirectShow;
 using System.IO;
 using Microsoft.Win32;
+using System.Resources;
+using System.Reflection;
+using System.Globalization;
+using System.Threading;
+using System.Drawing.Imaging;
 
 namespace RFID_FEATHER_ASSETS
 {
@@ -21,7 +26,9 @@ namespace RFID_FEATHER_ASSETS
     public partial class RegisterUser : Form
     {
         string tokenvalue;
-        string imagePath;
+        string ImgFileName;
+        string language;
+        int companyId;
         private FilterInfoCollection webcam;
         private VideoCaptureDevice cam;
         bool IsCameraConnected = false;
@@ -29,19 +36,124 @@ namespace RFID_FEATHER_ASSETS
         public RegisterUser(string tokenvaluesource)
         {
             InitializeComponent();
+            getLanguage();
+            languageHandler();
             tokenvalue = tokenvaluesource;
-            InitializeCamera();
+            InitializeCamera();          
             GetRegDefaultImagePath();
+            GetCompanyPath();
             //CCT.Completed += new EventHandler<PhotoResult>(capture_completed);
 
             List<Role> roles = new List<Role>();
-            roles.Add(new Role() { roleName = "Administrator", value = "ROLE_ADMIN" });
-            roles.Add(new Role() { roleName = "Security", value = "ROLE_GUARD" });
-            roles.Add(new Role() { roleName = "User", value = "ROLE_USER" });
-
+            if (language == "Japanese")
+            {
+                roles.Add(new Role() { roleName = "管理者", value = "ROLE_ADMIN" });
+                roles.Add(new Role() { roleName = "警備", value = "ROLE_GUARD" });
+                //roles.Add(new Role() { roleName = "User", value = "ROLE_USER" });
+            }
+            else
+            {
+                roles.Add(new Role() { roleName = "Administrator", value = "ROLE_ADMIN" });
+                roles.Add(new Role() { roleName = "Security", value = "ROLE_GUARD" });
+                //roles.Add(new Role() { roleName = "User", value = "ROLE_USER" });
+            }
             this.authorities.DataSource = roles;
             this.authorities.ValueMember = "value";
             this.authorities.DisplayMember = "roleName";                   
+        }
+        private void GetCompanyPath()
+        {
+            try
+            {
+                //opening the subkey  
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\AssetSystemInfo");
+
+                //if it does exist, retrieve the stored values  
+                if (key != null)
+                {
+                    companyId = (int)(key.GetValue("companyId"));
+                    key.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void getLanguage()
+        {
+            try
+            {
+                //opening the subkey  
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\AssetSystemInfo");
+
+                //if it does exist, retrieve the stored values  
+                if (key != null)
+                {
+                    language = (string)(key.GetValue("Language"));
+                    key.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void languageHandler()
+        {
+            if (language == "Japanese")
+            {
+                ResourceManager rm = new ResourceManager("RFID_FEATHER_ASSETS.Languages.UserRegistration", Assembly.GetExecutingAssembly());
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("ja-JP");
+                btnCancel.Text = rm.GetString("btnCancel");
+                btnSubmit.Text = rm.GetString("btnSubmit");
+                groupBox1.Text = rm.GetString("groupBox1");
+                groupBox2.Text = rm.GetString("groupBox2");
+                lblAuthorities.Text = rm.GetString("lblAuthorities");
+                lblCpassword.Text = rm.GetString("lblCpassword");
+                lblDesc.Text = rm.GetString("lblDesc");
+                lblEmail.Text = rm.GetString("lblEmail");
+                lblFname.Text = rm.GetString("lblFname");
+                lblLname.Text = rm.GetString("lblLname");
+                lblNoCameraAvailable.Text = rm.GetString("lblNoCameraAvailable");
+                lblPassword.Text = rm.GetString("lblPassword");
+                lblPosition.Text = rm.GetString("lblPosition");
+                this.Text = rm.GetString("RegisterUser");
+            }
+        }
+        private void SubmitImage()
+        {
+            Bitmap Image = (Bitmap)cameraBox.Image;
+            Image.Save("user.jpg", ImageFormat.Jpeg);
+
+            RestClient client = new RestClient("http://52.163.93.95:8080/FeatherAssets/");
+            RestRequest upload = new RestRequest("/api/upload/image", Method.POST);
+
+            upload.AddHeader("X-Auth-Token", tokenvalue);
+            upload.AddHeader("Content-Type", "multipart/form-data");
+            upload.AlwaysMultipartFormData = true;
+            upload.AddFile("file", "user.jpg", "image/jpg");
+            upload.AddParameter("companyId", companyId);
+            upload.AddParameter("type", "asset");
+
+
+            IRestResponse response = client.Execute(upload);
+
+            var content = response.Content;
+
+            if (response.StatusCode == HttpStatusCode.OK)//if (response.IsSuccessStatusCode)
+            {
+                JsonDeserializer deserial = new JsonDeserializer();
+                ImageResult imageResult = deserial.Deserialize<ImageResult>(response);
+
+                ImgFileName = imageResult.message;
+            }
+            else
+            {
+                MessageBox.Show("Error Code " +
+                response.StatusCode /*+ " : Message - " + response.ErrorMessage*/);
+                return;
+            }
         }
         private void GetRegDefaultImagePath()
         {
@@ -99,7 +211,8 @@ namespace RFID_FEATHER_ASSETS
                     IsCameraConnected = false;
                     cameraBox.BackColor = Color.Black;
                     lblNoCameraAvailable.Visible = true;
-                    CaptureImg.Text = "Refresh Camera";
+                    if (language == "English") CaptureImg.Text = "Refresh Camera";
+                    else if (language == "Japanese") CaptureImg.Text = "リフレシュカメラ";
                 }
                 else
                 {
@@ -108,7 +221,8 @@ namespace RFID_FEATHER_ASSETS
                     IsCameraConnected = true;
                     cameraBox.BackColor = Color.White;
                     lblNoCameraAvailable.Visible = false;
-                    CaptureImg.Text = "Capture Image";
+                    if (language == "English") CaptureImg.Text = "Capture Owner Photo";
+                    else if (language == "Japanese") CaptureImg.Text = "所有者の写真";
                 }
             }
 
@@ -117,13 +231,14 @@ namespace RFID_FEATHER_ASSETS
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnSubmit_Click(object sender, EventArgs e)
+        private void btnSubmit_Click_1(object sender, EventArgs e)
         {
             userInfo userinfo = new userInfo();
 
             if (firstName.Text.Length == 0 || lastName.Text.Length == 0 || position.Text.Length == 0 || description.Text.Length == 0 || email.Text.Length == 0 || string.IsNullOrEmpty(password.Text) || string.IsNullOrEmpty(cpassword.Text) /*|| imgCapture.Image == null*/)
             {
-                MessageBox.Show("Complete information is required.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                if (language == "English") MessageBox.Show("Complete information is required.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                else MessageBox.Show("完全な情報が必要とされています.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
 
                 return;
             }
@@ -131,21 +246,22 @@ namespace RFID_FEATHER_ASSETS
             {
                 if (password.Text.Length < 5)
                 {
-                    MessageBox.Show("Password must have 6 or more characters");
+                    if (language == "English") MessageBox.Show("Password must have 6 or more characters");
+                    else MessageBox.Show("パスワードは6文字以上を持っている必要があります");
                     return;
                 }
                 else
                 {
                     if (password.Text != cpassword.Text)
                     {
-                        MessageBox.Show("Password do not match");
-
+                        if (language == "English") MessageBox.Show("Password do not match");
+                        else MessageBox.Show("パスワードが一致しません");
                         return;
                     }
                     else
                     {
-                        userinfo.companyId = 1;
-                        userinfo.imageUrl = imagePath;
+                        userinfo.companyId = companyId;
+                        userinfo.imageUrl = ImgFileName;
                         userinfo.password = password.Text;
                         userinfo.confirmPassword = cpassword.Text;
                         userinfo.authorities = authorities.SelectedValue.ToString();
@@ -171,11 +287,13 @@ namespace RFID_FEATHER_ASSETS
 
                             if (password.Text != cpassword.Text)
                             {
-                                MessageBox.Show("Password do not match");
+                                if (language == "English") MessageBox.Show("Password do not match");
+                                else MessageBox.Show("パスワードが一致しません");
 
                                 return;
                             }
-                            MessageBox.Show("User successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            if (language == "English") MessageBox.Show("User successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            else MessageBox.Show("ユーザーが正常に保存され.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                             ClearFields();
                             //this.Hide();
                             //MainMenu MenuForm = new MainMenu(tokenvalue, string.Empty);
@@ -193,7 +311,7 @@ namespace RFID_FEATHER_ASSETS
             }
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void btnCancel_Click_1(object sender, EventArgs e)
         {
             CallMainMenu();
             //cam.Stop();
@@ -236,53 +354,31 @@ namespace RFID_FEATHER_ASSETS
         {
             try
             {
-                if (string.IsNullOrEmpty(txtSaveImageDir.Text))
+                if (cam == null || CaptureImg.Text == "Refresh Camera" || CaptureImg.Text == "リフレシュカメラ")
                 {
-                    MessageBox.Show("Please select Image Path.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    btnBrowseImageDir.Focus();
-                    return;
+                    InitializeCamera();
                 }
-                else
+
+                else if (IsCameraConnected)
                 {
-                    if (cam == null || CaptureImg.Text == "Refresh Camera")
+                    SubmitImage();
+                    if (imgCapture.Image == null)
                     {
-                        InitializeCamera();
+                        imgCapture.Image = cameraBox.Image;
                     }
-
-                    else if (IsCameraConnected)
+                    else
                     {
-                        //DialogResult dialogResult = MessageBox.Show("Do you want to save image?", "Save", MessageBoxButtons.YesNo);
-                        //if (dialogResult == DialogResult.Yes)
-                        //{
-                        string dirPath = txtSaveImageDir.Text.Trim() + @"\";
-                        string fileName = "User" + ".jpg";
-                        string[] files = Directory.GetFiles(dirPath);
-                        int count = files.Count(file => { return file.Contains(fileName); });
-
-                        string newFileName = (count == 0) ? "User.jpg" : String.Format("{0}{1}.jpg", fileName, count + 1);
-                        cameraBox.Image.Save(dirPath + newFileName);
-                        imagePath = dirPath + fileName;
-
-                        if (imgCapture.Image == null) imgCapture.Image = cameraBox.Image;
-                        else
-                        {
-                            MessageBox.Show("You can save only 1 image.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
-                        }
-
-                        cam.Stop();
-                        InitializeCamera();
-
-
-                        //}
-                        //else if (dialogResult == DialogResult.No)
-                        //{
-                        //   InitializeCamera();
-                        //}
-                        //txtCapturedImagePath.Text = txtCapturedImagePath.Text + "," + dirPath + newFileName;
+                        if (language == "English") MessageBox.Show("You can save only 1 image.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        else MessageBox.Show("写真を一つだけ.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
                     }
+                    cam.Stop();
+                    InitializeCamera();
+                    if (language == "English") CaptureImg.Text = "Captured Completed";
+                    else CaptureImg.Text = "完成";
                 }
             }
+            //}
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -316,7 +412,7 @@ namespace RFID_FEATHER_ASSETS
         {
             if (e.KeyValue == 13)
             {
-                btnSubmit_Click(sender, e);
+                btnSubmit_Click_1(sender, e);
             }
         }
 
@@ -324,7 +420,7 @@ namespace RFID_FEATHER_ASSETS
         {
             if (e.KeyValue == 13)
             {
-                btnSubmit_Click(sender, e);
+                btnSubmit_Click_1(sender, e);
             }
         }
 
@@ -332,7 +428,7 @@ namespace RFID_FEATHER_ASSETS
         {
             if (e.KeyValue == 13)
             {
-                btnSubmit_Click(sender, e);
+                btnSubmit_Click_1(sender, e);
             }
         }
 
@@ -340,7 +436,7 @@ namespace RFID_FEATHER_ASSETS
         {
             if (e.KeyValue == 13)
             {
-                btnSubmit_Click(sender, e);
+                btnSubmit_Click_1(sender, e);
             }
         }
 
@@ -348,7 +444,7 @@ namespace RFID_FEATHER_ASSETS
         {
             if (e.KeyValue == 13)
             {
-                btnSubmit_Click(sender, e);
+                btnSubmit_Click_1(sender, e);
             }
         }
 
@@ -356,9 +452,10 @@ namespace RFID_FEATHER_ASSETS
         {
             if (e.KeyValue == 13)
             {
-                btnSubmit_Click(sender, e);
+                btnSubmit_Click_1(sender, e);
             }
         }
+
 
     }
 

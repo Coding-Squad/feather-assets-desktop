@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TransactionHistory));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.grpSearchCriteria = new System.Windows.Forms.GroupBox();
             this.btnExport = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnGenerate = new System.Windows.Forms.Button();
@@ -39,11 +39,11 @@
             this.label3 = new System.Windows.Forms.Label();
             this.txtUserID = new System.Windows.Forms.TextBox();
             this.txtAssetID = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblDateTo = new System.Windows.Forms.Label();
+            this.lblDateFrom = new System.Windows.Forms.Label();
             this.dtDateToPicker = new System.Windows.Forms.DateTimePicker();
             this.dtDateFromPicker = new System.Windows.Forms.DateTimePicker();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.grpDetails = new System.Windows.Forms.GroupBox();
             this.lblLoadingInformation = new System.Windows.Forms.Label();
             this.grdViewTransactions = new System.Windows.Forms.DataGridView();
             this.ColCreatedAt = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -65,204 +65,121 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.grpSearchCriteria.SuspendLayout();
+            this.grpDetails.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdViewTransactions)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            resources.ApplyResources(this.splitContainer1, "splitContainer1");
             this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.groupBox1);
+            this.splitContainer1.Panel1.Controls.Add(this.grpSearchCriteria);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
-            this.splitContainer1.Size = new System.Drawing.Size(1370, 385);
-            this.splitContainer1.SplitterDistance = 58;
-            this.splitContainer1.TabIndex = 0;
+            this.splitContainer1.Panel2.Controls.Add(this.grpDetails);
             // 
-            // groupBox1
+            // grpSearchCriteria
             // 
-            this.groupBox1.Controls.Add(this.btnExport);
-            this.groupBox1.Controls.Add(this.btnCancel);
-            this.groupBox1.Controls.Add(this.btnGenerate);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.txtUserID);
-            this.groupBox1.Controls.Add(this.txtAssetID);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.dtDateToPicker);
-            this.groupBox1.Controls.Add(this.dtDateFromPicker);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1370, 58);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Search Criteria";
+            this.grpSearchCriteria.Controls.Add(this.btnExport);
+            this.grpSearchCriteria.Controls.Add(this.btnCancel);
+            this.grpSearchCriteria.Controls.Add(this.btnGenerate);
+            this.grpSearchCriteria.Controls.Add(this.label4);
+            this.grpSearchCriteria.Controls.Add(this.label3);
+            this.grpSearchCriteria.Controls.Add(this.txtUserID);
+            this.grpSearchCriteria.Controls.Add(this.txtAssetID);
+            this.grpSearchCriteria.Controls.Add(this.lblDateTo);
+            this.grpSearchCriteria.Controls.Add(this.lblDateFrom);
+            this.grpSearchCriteria.Controls.Add(this.dtDateToPicker);
+            this.grpSearchCriteria.Controls.Add(this.dtDateFromPicker);
+            resources.ApplyResources(this.grpSearchCriteria, "grpSearchCriteria");
+            this.grpSearchCriteria.Name = "grpSearchCriteria";
+            this.grpSearchCriteria.TabStop = false;
             // 
             // btnExport
             // 
-            this.btnExport.Anchor = System.Windows.Forms.AnchorStyles.None;
+            resources.ApplyResources(this.btnExport, "btnExport");
             this.btnExport.BackColor = System.Drawing.Color.LightGreen;
-            this.btnExport.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnExport.Location = new System.Drawing.Point(575, 24);
             this.btnExport.Name = "btnExport";
-            this.btnExport.Size = new System.Drawing.Size(102, 29);
-            this.btnExport.TabIndex = 70;
-            this.btnExport.Text = "Export to CSV";
             this.btnExport.UseVisualStyleBackColor = false;
             this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
             // 
             // btnCancel
             // 
-            this.btnCancel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            resources.ApplyResources(this.btnCancel, "btnCancel");
             this.btnCancel.BackColor = System.Drawing.Color.Orange;
-            this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancel.Location = new System.Drawing.Point(468, 24);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(85, 30);
-            this.btnCancel.TabIndex = 69;
-            this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = false;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnGenerate
             // 
-            this.btnGenerate.Anchor = System.Windows.Forms.AnchorStyles.None;
+            resources.ApplyResources(this.btnGenerate, "btnGenerate");
             this.btnGenerate.BackColor = System.Drawing.Color.Orange;
-            this.btnGenerate.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnGenerate.Location = new System.Drawing.Point(377, 24);
             this.btnGenerate.Name = "btnGenerate";
-            this.btnGenerate.Size = new System.Drawing.Size(85, 30);
-            this.btnGenerate.TabIndex = 68;
-            this.btnGenerate.Text = "Generate";
             this.btnGenerate.UseVisualStyleBackColor = false;
             this.btnGenerate.Click += new System.EventHandler(this.btnGenerate_Click);
             // 
             // label4
             // 
-            this.label4.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(854, 21);
+            resources.ApplyResources(this.label4, "label4");
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(53, 16);
-            this.label4.TabIndex = 7;
-            this.label4.Text = "User ID";
-            this.label4.Visible = false;
             // 
             // label3
             // 
-            this.label3.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(694, 21);
+            resources.ApplyResources(this.label3, "label3");
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(58, 16);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Asset ID";
-            this.label3.Visible = false;
             // 
             // txtUserID
             // 
-            this.txtUserID.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.txtUserID.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtUserID.Location = new System.Drawing.Point(913, 18);
+            resources.ApplyResources(this.txtUserID, "txtUserID");
             this.txtUserID.Name = "txtUserID";
-            this.txtUserID.Size = new System.Drawing.Size(92, 22);
-            this.txtUserID.TabIndex = 5;
-            this.txtUserID.Visible = false;
             // 
             // txtAssetID
             // 
-            this.txtAssetID.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.txtAssetID.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtAssetID.Location = new System.Drawing.Point(758, 15);
+            resources.ApplyResources(this.txtAssetID, "txtAssetID");
             this.txtAssetID.Name = "txtAssetID";
-            this.txtAssetID.Size = new System.Drawing.Size(92, 22);
-            this.txtAssetID.TabIndex = 4;
-            this.txtAssetID.Visible = false;
             // 
-            // label2
+            // lblDateTo
             // 
-            this.label2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(196, 28);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(66, 20);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Date To";
+            resources.ApplyResources(this.lblDateTo, "lblDateTo");
+            this.lblDateTo.Name = "lblDateTo";
             // 
-            // label1
+            // lblDateFrom
             // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(12, 29);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(85, 20);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Date From";
+            resources.ApplyResources(this.lblDateFrom, "lblDateFrom");
+            this.lblDateFrom.Name = "lblDateFrom";
             // 
             // dtDateToPicker
             // 
-            this.dtDateToPicker.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.dtDateToPicker.CustomFormat = "MM/dd/yyyy";
-            this.dtDateToPicker.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            resources.ApplyResources(this.dtDateToPicker, "dtDateToPicker");
             this.dtDateToPicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtDateToPicker.Location = new System.Drawing.Point(263, 28);
             this.dtDateToPicker.Name = "dtDateToPicker";
-            this.dtDateToPicker.Size = new System.Drawing.Size(92, 22);
-            this.dtDateToPicker.TabIndex = 1;
             // 
             // dtDateFromPicker
             // 
-            this.dtDateFromPicker.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.dtDateFromPicker.CustomFormat = "MM/dd/yyyy";
-            this.dtDateFromPicker.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            resources.ApplyResources(this.dtDateFromPicker, "dtDateFromPicker");
             this.dtDateFromPicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtDateFromPicker.Location = new System.Drawing.Point(98, 28);
             this.dtDateFromPicker.Name = "dtDateFromPicker";
-            this.dtDateFromPicker.Size = new System.Drawing.Size(92, 22);
-            this.dtDateFromPicker.TabIndex = 0;
             // 
-            // groupBox2
+            // grpDetails
             // 
-            this.groupBox2.Controls.Add(this.lblLoadingInformation);
-            this.groupBox2.Controls.Add(this.grdViewTransactions);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(0, 0);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(1370, 323);
-            this.groupBox2.TabIndex = 0;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Transaction Details";
+            this.grpDetails.Controls.Add(this.lblLoadingInformation);
+            this.grpDetails.Controls.Add(this.grdViewTransactions);
+            resources.ApplyResources(this.grpDetails, "grpDetails");
+            this.grpDetails.Name = "grpDetails";
+            this.grpDetails.TabStop = false;
             // 
             // lblLoadingInformation
             // 
-            this.lblLoadingInformation.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.lblLoadingInformation.AutoSize = true;
+            resources.ApplyResources(this.lblLoadingInformation, "lblLoadingInformation");
             this.lblLoadingInformation.BackColor = System.Drawing.SystemColors.Window;
-            this.lblLoadingInformation.Font = new System.Drawing.Font("Microsoft Sans Serif", 32.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLoadingInformation.ForeColor = System.Drawing.Color.Green;
-            this.lblLoadingInformation.Location = new System.Drawing.Point(380, 136);
             this.lblLoadingInformation.Name = "lblLoadingInformation";
-            this.lblLoadingInformation.Size = new System.Drawing.Size(703, 51);
-            this.lblLoadingInformation.TabIndex = 68;
-            this.lblLoadingInformation.Text = "Getting Information. Please wait...";
-            this.lblLoadingInformation.Visible = false;
             // 
             // grdViewTransactions
             // 
@@ -270,15 +187,7 @@
             this.grdViewTransactions.AllowUserToDeleteRows = false;
             this.grdViewTransactions.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
             this.grdViewTransactions.BackgroundColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grdViewTransactions.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.grdViewTransactions.ColumnHeadersHeight = 25;
+            resources.ApplyResources(this.grdViewTransactions, "grdViewTransactions");
             this.grdViewTransactions.ColumnHeadersVisible = false;
             this.grdViewTransactions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ColCreatedAt,
@@ -296,153 +205,124 @@
             this.ColRegisterId,
             this.ColUpdateId,
             this.ColUpdatedAt});
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.grdViewTransactions.DefaultCellStyle = dataGridViewCellStyle2;
-            this.grdViewTransactions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grdViewTransactions.Location = new System.Drawing.Point(3, 22);
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.grdViewTransactions.DefaultCellStyle = dataGridViewCellStyle1;
             this.grdViewTransactions.Name = "grdViewTransactions";
             this.grdViewTransactions.ReadOnly = true;
-            this.grdViewTransactions.Size = new System.Drawing.Size(1364, 298);
-            this.grdViewTransactions.TabIndex = 1;
             // 
             // ColCreatedAt
             // 
-            this.ColCreatedAt.HeaderText = "Created Date";
+            resources.ApplyResources(this.ColCreatedAt, "ColCreatedAt");
             this.ColCreatedAt.Name = "ColCreatedAt";
             this.ColCreatedAt.ReadOnly = true;
-            this.ColCreatedAt.Width = 5;
             // 
             // ColTransId
             // 
-            this.ColTransId.HeaderText = "Trans ID";
+            resources.ApplyResources(this.ColTransId, "ColTransId");
             this.ColTransId.Name = "ColTransId";
             this.ColTransId.ReadOnly = true;
             this.ColTransId.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.ColTransId.Visible = false;
-            this.ColTransId.Width = 5;
             // 
             // ColCompanyId
             // 
-            this.ColCompanyId.HeaderText = "Company ID";
+            resources.ApplyResources(this.ColCompanyId, "ColCompanyId");
             this.ColCompanyId.Name = "ColCompanyId";
             this.ColCompanyId.ReadOnly = true;
-            this.ColCompanyId.Visible = false;
-            this.ColCompanyId.Width = 5;
             // 
             // ColAssetId
             // 
-            this.ColAssetId.HeaderText = "Asset ID";
+            resources.ApplyResources(this.ColAssetId, "ColAssetId");
             this.ColAssetId.Name = "ColAssetId";
             this.ColAssetId.ReadOnly = true;
-            this.ColAssetId.Visible = false;
-            this.ColAssetId.Width = 5;
             // 
             // ColRFIDTag
             // 
-            this.ColRFIDTag.HeaderText = "RFID Tag";
+            resources.ApplyResources(this.ColRFIDTag, "ColRFIDTag");
             this.ColRFIDTag.Name = "ColRFIDTag";
             this.ColRFIDTag.ReadOnly = true;
-            this.ColRFIDTag.Width = 5;
             // 
             // ColDescription
             // 
-            this.ColDescription.HeaderText = "Description";
+            resources.ApplyResources(this.ColDescription, "ColDescription");
             this.ColDescription.Name = "ColDescription";
             this.ColDescription.ReadOnly = true;
-            this.ColDescription.Width = 5;
             // 
             // ColImgUrl
             // 
-            this.ColImgUrl.HeaderText = "Image URL";
+            resources.ApplyResources(this.ColImgUrl, "ColImgUrl");
             this.ColImgUrl.Name = "ColImgUrl";
             this.ColImgUrl.ReadOnly = true;
-            this.ColImgUrl.Visible = false;
-            this.ColImgUrl.Width = 5;
             // 
             // ColTakeOutNote
             // 
-            this.ColTakeOutNote.HeaderText = "Take Out Note";
+            resources.ApplyResources(this.ColTakeOutNote, "ColTakeOutNote");
             this.ColTakeOutNote.Name = "ColTakeOutNote";
             this.ColTakeOutNote.ReadOnly = true;
-            this.ColTakeOutNote.Width = 5;
             // 
             // ColValidUntil
             // 
-            this.ColValidUntil.HeaderText = "Valid Until";
+            resources.ApplyResources(this.ColValidUntil, "ColValidUntil");
             this.ColValidUntil.Name = "ColValidUntil";
             this.ColValidUntil.ReadOnly = true;
-            this.ColValidUntil.Width = 5;
             // 
             // ColNotes
             // 
-            this.ColNotes.HeaderText = "Report Note";
+            resources.ApplyResources(this.ColNotes, "ColNotes");
             this.ColNotes.Name = "ColNotes";
             this.ColNotes.ReadOnly = true;
-            this.ColNotes.Width = 5;
             // 
             // ColPersonImgUrl
             // 
-            this.ColPersonImgUrl.HeaderText = "Person Image URL";
+            resources.ApplyResources(this.ColPersonImgUrl, "ColPersonImgUrl");
             this.ColPersonImgUrl.Name = "ColPersonImgUrl";
             this.ColPersonImgUrl.ReadOnly = true;
-            this.ColPersonImgUrl.Visible = false;
-            this.ColPersonImgUrl.Width = 5;
             // 
             // ColReaderInfo
             // 
-            this.ColReaderInfo.HeaderText = "Reader Information";
+            resources.ApplyResources(this.ColReaderInfo, "ColReaderInfo");
             this.ColReaderInfo.Name = "ColReaderInfo";
             this.ColReaderInfo.ReadOnly = true;
-            this.ColReaderInfo.Width = 5;
             // 
             // ColRegisterId
             // 
-            this.ColRegisterId.HeaderText = "Created By";
+            resources.ApplyResources(this.ColRegisterId, "ColRegisterId");
             this.ColRegisterId.Name = "ColRegisterId";
             this.ColRegisterId.ReadOnly = true;
-            this.ColRegisterId.Visible = false;
-            this.ColRegisterId.Width = 5;
             // 
             // ColUpdateId
             // 
-            this.ColUpdateId.HeaderText = "Update By";
+            resources.ApplyResources(this.ColUpdateId, "ColUpdateId");
             this.ColUpdateId.Name = "ColUpdateId";
             this.ColUpdateId.ReadOnly = true;
-            this.ColUpdateId.Visible = false;
-            this.ColUpdateId.Width = 5;
             // 
             // ColUpdatedAt
             // 
-            this.ColUpdatedAt.HeaderText = "Updated Date";
+            resources.ApplyResources(this.ColUpdatedAt, "ColUpdatedAt");
             this.ColUpdatedAt.Name = "ColUpdatedAt";
             this.ColUpdatedAt.ReadOnly = true;
-            this.ColUpdatedAt.Width = 5;
             // 
             // TransactionHistory
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1370, 385);
             this.Controls.Add(this.splitContainer1);
             this.MaximizeBox = false;
             this.Name = "TransactionHistory";
-            this.Text = "Transaction History";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TransactionHistory_FormClosed);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.grpSearchCriteria.ResumeLayout(false);
+            this.grpSearchCriteria.PerformLayout();
+            this.grpDetails.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.grdViewTransactions)).EndInit();
             this.ResumeLayout(false);
 
@@ -451,14 +331,14 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox grpSearchCriteria;
+        private System.Windows.Forms.GroupBox grpDetails;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtUserID;
         private System.Windows.Forms.TextBox txtAssetID;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblDateTo;
+        private System.Windows.Forms.Label lblDateFrom;
         private System.Windows.Forms.DateTimePicker dtDateToPicker;
         private System.Windows.Forms.DateTimePicker dtDateFromPicker;
         private System.Windows.Forms.DataGridView grdViewTransactions;

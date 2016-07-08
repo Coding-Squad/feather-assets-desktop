@@ -9,6 +9,9 @@ using System.Net;
 using RestSharp.Deserializers;
 using System.Threading;
 using Microsoft.Win32;
+using System.Resources;
+using System.Reflection;
+using System.Globalization;
 
 namespace RFID_FEATHER_ASSETS
 {
@@ -29,6 +32,7 @@ namespace RFID_FEATHER_ASSETS
         string baudrate = "115200";
         //bool IsPortError = false;
         string tokenvalue;
+        string language;
         bool IsCallingMainMenu = false;
         string roleValue;
         int userId;
@@ -37,13 +41,57 @@ namespace RFID_FEATHER_ASSETS
         public Verification()//string tokenvaluesource, string roleSource) //(string tokenvaluesource, string portnamesource, string roleSource)
         {
             InitializeComponent();
-
-            //portname = portnamesource;
+            getLanguage();
+            languageHandler();
             GetAssetSystemInfo();
             //tokenvalue = tokenvaluesource;
             //roleValue = roleSource;
         }
+        private void getLanguage()
+        {
+            try
+            {
+                //opening the subkey  
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\AssetSystemInfo");
 
+                //if it does exist, retrieve the stored values  
+                if (key != null)
+                {
+                    language = (string)(key.GetValue("Language"));
+                    key.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void languageHandler()
+        {
+            if (language == "Japanese")
+            {
+                ResourceManager rm = new ResourceManager("RFID_FEATHER_ASSETS.Languages.AssetVerification", Assembly.GetExecutingAssembly());
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("ja-JP");
+                lblOwnerPic.Text = rm.GetString("lblOwnerPic");
+                lblOwnerPhoto.Text = rm.GetString("lblOwnerPhoto");
+                lblValidIDPhoto.Text = rm.GetString("lblValidIDPhoto");
+                lblTag.Text = rm.GetString("lblTag");
+                lblDesc.Text = rm.GetString("lblDesc");
+                lblMemo.Text = rm.GetString("lblMemo");
+                btnSubmit.Text = rm.GetString("btnSubmit");
+                btnReport.Text = rm.GetString("btnReport");
+                btnBack.Text = rm.GetString("btnBack");
+                lblSubmittingInformation.Text = rm.GetString("lblSubmittingInformation");
+                lblLoadingInformation.Text = rm.GetString("lblLoadingInformation");
+                lblAssetPic.Text = rm.GetString("lblAssetPic");
+                lblAssetPhoto1.Text = rm.GetString("lblAssetPhoto1");
+                lblAssetPhoto2.Text = rm.GetString("lblAssetPhoto2");
+                lblAssetPhoto3.Text = rm.GetString("lblAssetPhoto3");
+                lblValidUntil.Text = rm.GetString("lblValidUntil");
+                groupBox2.Text = rm.GetString("groupBox2");
+                this.Text = rm.GetString("Verification");
+            }
+        }
         private void GetAssetSystemInfo()
         {
             try
@@ -65,7 +113,8 @@ namespace RFID_FEATHER_ASSETS
 
                     if (roleValue == "ROLE_GUARD")
                     {
-                        btnBack.Text = "Log Out";
+                        if (language == "English") btnBack.Text = "Log Out";
+                        else btnBack.Text = "ログアウト";
                         btnBack.BackColor = Color.Red;
                         btnBack.ForeColor = Color.White;
                     }
@@ -161,7 +210,7 @@ namespace RFID_FEATHER_ASSETS
         private void CheckRFIDTag()
         {
             try
-            { 
+            {
                 //btnVerifyAsset.Text = "Verifying Tag. Please wait ...";
                 //btnVerifyAsset.BackColor = Color.GreenYellow;
                 //btnVerifyAsset.Refresh();
@@ -299,28 +348,53 @@ namespace RFID_FEATHER_ASSETS
                         {
                             if (roleValue == "ROLE_ADMIN")
                             {
-                                DialogResult result = MessageBox.Show("Asset is already expired." + "\n" + "Do you want to renew the asset?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
-                                if (result == DialogResult.Yes)
+                                if (language == "English")
                                 {
-                                    IsCallingMainMenu = true;
-                                    reader.CloseCom();
-
-                                    using (AssetRenewal RenewalForm = new AssetRenewal())
+                                    DialogResult result = MessageBox.Show("Asset is already expired." + "\n" + "Do you want to renew the asset?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                                    if (result == DialogResult.Yes)
                                     {
-                                        if (RenewalForm.ShowDialog() == DialogResult.OK)
-                                        {
-                                            btnSubmit.Text = "Renewed";
-                                        }
+                                        IsCallingMainMenu = true;
+                                        reader.CloseCom();
 
-                                        IsCallingMainMenu = false;
-                                        ReaderMethodProc();
-                                        VerifyAssetProc(); 
+                                        using (AssetRenewal RenewalForm = new AssetRenewal())
+                                        {
+                                            if (RenewalForm.ShowDialog() == DialogResult.OK)
+                                            {
+                                                btnSubmit.Text = "Renewed";
+                                            }
+
+                                            IsCallingMainMenu = false;
+                                            ReaderMethodProc();
+                                            VerifyAssetProc();
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    DialogResult result = MessageBox.Show("アセットはすでに有効期限が切れています." + "\n" + "あなたは資産を更新したいですか？", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                                    if (result == DialogResult.Yes)
+                                    {
+                                        IsCallingMainMenu = true;
+                                        reader.CloseCom();
+
+                                        using (AssetRenewal RenewalForm = new AssetRenewal())
+                                        {
+                                            if (RenewalForm.ShowDialog() == DialogResult.OK)
+                                            {
+                                                btnSubmit.Text = "新たな";
+                                            }
+
+                                            IsCallingMainMenu = false;
+                                            ReaderMethodProc();
+                                            VerifyAssetProc();
+                                        }
                                     }
                                 }
                             }
                             else if (roleValue == "ROLE_GUARD")
                             {
-                                MessageBox.Show("Asset is already expired." + "\n" + "Please go to admin for renewal.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                                if (language == "English") MessageBox.Show("Asset is already expired." + "\n" + "Please go to admin for renewal.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                                else MessageBox.Show("アセットはすでに有効期限が切れています." + "\n" + "更新のため、管理者にいきますください.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
                             }
                         }
 
@@ -335,7 +409,8 @@ namespace RFID_FEATHER_ASSETS
                 }
                 else if (response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    MessageBox.Show("Error connecting to server.. please try again later");
+                    if (language == "English") MessageBox.Show("Error connecting to server.. Please try again later");
+                    else MessageBox.Show("サーバーへの接続エラー.. 後でもう一度試してみてください");
                 }
                 else
                 {
@@ -584,8 +659,17 @@ namespace RFID_FEATHER_ASSETS
             lblAssetPhoto2.Visible = true;
             lblAssetPhoto3.Visible = true;
 
-            btnSubmit.Text = "Submit";
-            btnReport.Text = "Report";
+            if (language == "English")
+            {
+                btnSubmit.Text = "Submit";
+                btnReport.Text = "Report";
+            }
+            else
+            {
+                btnSubmit.Text = "提出する";
+                btnReport.Text = "報告する";
+
+            }
             this.Refresh();
         }
 
@@ -672,7 +756,8 @@ namespace RFID_FEATHER_ASSETS
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message + "\n" + "Reader is not connected.");
+                if (language == "English") MessageBox.Show(ex.Message + "\n" + "Reader is not connected.");
+                else MessageBox.Show(ex.Message + "\n" + "リーダーが接続されていません.");
             }
         }
 
@@ -794,7 +879,8 @@ namespace RFID_FEATHER_ASSETS
                     if (ReportCreationForm.ShowDialog() == DialogResult.OK)
                     {
                         //btnSave.Visible = false;
-                        btnReport.Text = "Reported";//btnCreateReport.Visible = false;
+                        if (language == "English") btnReport.Text = "Reported";
+                        else btnReport.Text = "報告しました";//btnCreateReport.Visible = false;
                         //grpBoxReportedInfo.Visible = true;
 
                         //// Read the contents of PortSelectionForm's.
@@ -823,7 +909,7 @@ namespace RFID_FEATHER_ASSETS
         {
             try
             {
-                if (btnSubmit.Text.Trim().ToUpper() == "SUBMITTED" || btnSubmit.Text.Trim().ToUpper() == "RENEWED" || btnReport.Text.Trim().ToUpper() == "REPORTED" || txtRFIDTag.Text.Length == 0)
+                if (btnSubmit.Text.Trim().ToUpper() == "SUBMITTED" || btnSubmit.Text.Trim().ToUpper() == "提出" || btnSubmit.Text.Trim().ToUpper() == "RENEWED" || btnSubmit.Text.Trim().ToUpper() == "新たな" || btnReport.Text.Trim().ToUpper() == "REPORTED" || btnReport.Text.Trim().ToUpper() == "報告しました" || txtRFIDTag.Text.Length == 0)
                 {
                     ValidationMessage();
                     return;
@@ -868,8 +954,16 @@ namespace RFID_FEATHER_ASSETS
 
                     if (restResult.result == "OK")
                     {
-                        btnSubmit.Text = "SUBMITTED";
-                        MessageBox.Show("Record successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        if (language == "English")
+                        {
+                            btnSubmit.Text = "SUBMITTED";
+                            MessageBox.Show("Record successfully saved.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            btnSubmit.Text = "提出";
+                            MessageBox.Show("レコードが正常に保存され.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
 
                         IsCallingMainMenu = false;
                         ReaderMethodProc();
@@ -899,35 +993,66 @@ namespace RFID_FEATHER_ASSETS
         {
             IsCallingMainMenu = true;
             reader.CloseCom();
-
-            if (btnSubmit.Text.Trim().ToUpper() == "SUBMITTED")
+            if (language == "English")
             {
-                MessageBox.Show("Record is already submitted.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                btnSubmit.Focus();
-                IsCallingMainMenu = false;
-            }
+                if (btnSubmit.Text.Trim().ToUpper() == "SUBMITTED")
+                {
+                    MessageBox.Show("Record is already submitted.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    btnSubmit.Focus();
+                    IsCallingMainMenu = false;
+                }
 
-            if (btnSubmit.Text.Trim().ToUpper() == "RENEWED")
+                if (btnSubmit.Text.Trim().ToUpper() == "RENEWED")
+                {
+                    MessageBox.Show("Asset is already renewed.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    btnSubmit.Focus();
+                    IsCallingMainMenu = false;
+                }
+
+                if (btnReport.Text.Trim().ToUpper() == "REPORTED")
+                {
+                    MessageBox.Show("Record is already reported.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    btnReport.Focus();
+                    IsCallingMainMenu = false;
+                }
+
+                if (txtRFIDTag.Text.Length == 0)
+                {
+                    MessageBox.Show("RFID Tag is required. Please scan...", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    btnSubmit.Focus();
+                    IsCallingMainMenu = false;
+                }
+            }
+            else
             {
-                MessageBox.Show("Asset is already renewed.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                btnSubmit.Focus();
-                IsCallingMainMenu = false;
-            }
+                if (btnSubmit.Text.Trim().ToUpper() == "提出")
+                {
+                    MessageBox.Show("レコードが既に提出されています.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    btnSubmit.Focus();
+                    IsCallingMainMenu = false;
+                }
 
-            if (btnReport.Text.Trim().ToUpper() == "REPORTED")
-            {
-                MessageBox.Show("Record is already reported.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                btnReport.Focus();
-                IsCallingMainMenu = false;
-            }
+                if (btnSubmit.Text.Trim().ToUpper() == "新たな")
+                {
+                    MessageBox.Show("資産はすでに更新されます.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    btnSubmit.Focus();
+                    IsCallingMainMenu = false;
+                }
 
-            if (txtRFIDTag.Text.Length == 0)
-            {
-                MessageBox.Show("RFID Tag is required. Please scan...", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                btnSubmit.Focus();
-                IsCallingMainMenu = false;
-            }
+                if (btnReport.Text.Trim().ToUpper() == "報告しました")
+                {
+                    MessageBox.Show("レコードが既に報告されています.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    btnReport.Focus();
+                    IsCallingMainMenu = false;
+                }
 
+                if (txtRFIDTag.Text.Length == 0)
+                {
+                    MessageBox.Show("RFIDタグが必要とされます. スキャンしてください...", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    btnSubmit.Focus();
+                    IsCallingMainMenu = false;
+                }
+            }
             ReaderMethodProc();
             VerifyAssetProc();
             //return;

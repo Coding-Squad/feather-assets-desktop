@@ -4,8 +4,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using System.Resources;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -15,16 +19,48 @@ namespace RFID_FEATHER_ASSETS
     {
         string roleValue;
         string tokenvalue;
-
+        string language;
         public SerialPortSelection(string tokenvaluesource, string roleSource)
         {
             InitializeComponent();
-
+            getLanguage();
+            languageHandler();
             GetSavedSerialPort();
             tokenvalue = tokenvaluesource;
             roleValue = roleSource;
         }
+        private void getLanguage()
+        {
+            try
+            {
+                //opening the subkey  
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\AssetSystemInfo");
 
+                //if it does exist, retrieve the stored values  
+                if (key != null)
+                {
+                    language = (string)(key.GetValue("Language"));
+                    key.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void languageHandler()
+        {
+            if (language == "Japanese")
+            {
+                ResourceManager rm = new ResourceManager("RFID_FEATHER_ASSETS.Languages.AssetVerification", Assembly.GetExecutingAssembly());
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("ja-JP");
+                lblSerialPort.Text = rm.GetString("lblSerialPort");
+                lblConnected.Text = rm.GetString("lblConnected");
+                btnCancel.Text = rm.GetString("btnCancel");
+                this.Text = rm.GetString("title");
+            }
+        }
         private void GetSavedSerialPort()
         {
             try
@@ -64,7 +100,8 @@ namespace RFID_FEATHER_ASSETS
                 }
                 else
                 {
-                    MessageBox.Show("Please select Com Port No.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    if (language == "English") MessageBox.Show("Please select Com Port No.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    else MessageBox.Show("COMポート番号を選択してください", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     cmbComPortList.Focus();
                     return;
                 }

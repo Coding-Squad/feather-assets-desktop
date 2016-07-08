@@ -141,6 +141,7 @@ C:\Users\USER\Desktop\Desktop\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS
 C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\bin\Debug\RFID-FEATHER-ASSETS.exe.config
 C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\bin\Debug\RFID-FEATHER-ASSETS.exe
 C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\bin\Debug\RFID-FEATHER-ASSETS.pdb
+C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\bin\Debug\ja-JP\RFID-FEATHER-ASSETS.resources.dll
 C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\bin\Debug\AForge.Controls.dll
 C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\bin\Debug\AForge.dll
 C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\bin\Debug\AForge.Video.DirectShow.dll
@@ -203,7 +204,16 @@ C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-AS
 C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.SerialPortSelection.resources
 C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.TransactionHistory.resources
 C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.RegisterUser.resources
+C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.Languages.AssetRegistration.ja-JP.resources
+C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.Languages.AssetRenewal.ja-JP.resources
+C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.Languages.AssetVerification.ja-JP.resources
+C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.Languages.login.ja-JP.resources
+C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.Languages.mainmenu.ja-JP.resources
+C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.Languages.ReportCreation.ja-JP.resources
+C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.Languages.TransactionHistory.ja-JP.resources
+C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID_FEATHER_ASSETS.Languages.UserRegistration.ja-JP.resources
 C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID-FEATHER-ASSETS.csproj.GenerateResource.Cache
+C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\ja-JP\RFID-FEATHER-ASSETS.resources.dll
 C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID-FEATHER-ASSETS.exe
 C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID-FEATHER-ASSETS.pdb
 C:\Users\USER\Desktop\Desktop-Eng\feather-assets-desktop-desktop\RFID-FEATHER-ASSETS\obj\x86\Debug\RFID-FEATHER-ASSETS.csprojResolveAssemblyReference.cache
